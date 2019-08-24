@@ -32,4 +32,6 @@ for size in "${SIZES[@]}"; do
         done
 done
 
+[[ -f stop ]] && rm stop
+
 echo "Finished generating ${TOTAL} worlds for sizes ${SIZES[*]} in $(ellapsed)."
