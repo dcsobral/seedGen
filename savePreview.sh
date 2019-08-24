@@ -33,7 +33,8 @@ if [[ ! -f nodraw ]]; then
 	"${BIN}/drawPrefabs.sh" prefabs.xml "${PREVIEW}" "${SIZE}"
 	zip "${NAME}" "${PREVIEW}" "output-${PREVIEW}" "${PREFABS}" "${COUNTY_FILE}"
 else
-zip "${NAME}" "${PREVIEW}" "${PREFABS}" "${COUNTY_FILE}"
+	echo "Skipping prefab drawing"
+	zip "${NAME}" "${PREVIEW}" "${PREFABS}" "${COUNTY_FILE}"
 fi
 
 mkdir -p "${F7D2D}/previews"
