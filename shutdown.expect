@@ -1,0 +1,7 @@
+#!/usr/bin/env expect
+
+spawn telnet localhost 8081
+sleep 1
+send "shutdown\r"
+expect eof
+
