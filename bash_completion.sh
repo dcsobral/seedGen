@@ -7,5 +7,5 @@ complete -F _seedExtract extractPrefabs.sh
 complete -o dirnames -o filenames -f -X '!*.zip' extract.sh
 complete -o dirnames -o filenames -f -X '!*.xml' prefabGroups.sh
 complete -o dirnames -o filenames -f -X '!*.xml' missingPrefabs.sh
-complete -o dirnames -o filenames -f -X '!*.xml' interestingPrefabsCount.sh
+complete -o dirnames -o filenames -f -X '!*.xml' interestingPrefabs.sh
 complete -o dirnames -o filenames -f -X '!*.tts' prefabSize.sh
