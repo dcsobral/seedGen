@@ -17,5 +17,5 @@ cd "${F7D2D}"
 rm -f log.txt || { sleep 30; rm -f log.txt; }
 rm -fr UserData/
 
-./7DaysToDieServer.exe -quit -batchmode -nographics -logfile log.txt -configfile=serverconfig.xml -UserDataFolder=UserData -GameWorld=RWG -WorldGenSize=${SIZE} -WorldGenSeed="${SEED}" -GameName=test -dedicated &
+./7DaysToDieServer.exe -quit -batchmode -nographics -logfile log.txt -configfile=serverconfig.xml -UserDataFolder=UserData -GameWorld=RWG -WorldGenSize=${SIZE} -WorldGenSeed="${SEED}" -GameName=test -verbose -dedicated &
 
