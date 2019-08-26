@@ -5,7 +5,7 @@ BIN="$(cd "$(dirname "$0")" && pwd)"
 list() {
 	for file in *.xml; do
 		echo -n "$file "
-		xmlstarlet sel -t -m /prefabs -v "count(decoration[not(@name=preceding-sibling::*/@name)])" -n "$file"
+		grep -h decoration "$file" | cut -d '"' -f 4 | sort -u | wc -l
 	done
 }
 
