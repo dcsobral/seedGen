@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 
 BIN="$(cd "$(dirname "$0")" && pwd)"
-INTERESTING="${BIN}/interesting.xml"
+INTERESTING="${BIN}/interesting.txt"
 
 list() {
 	for file in *.xml; do
-		echo -n "$file "
-		xmlstarlet sel -t -m / --var "i=document('$INTERESTING')"  -v "count(/prefabs/decoration[@name=\$i/xsl-select/prefab/@name])" -n $file
+		printf "%4d %s\n" \
+			"$(cut -s -d '"' -f 4 "$file" | grep -c -F -x -f "${INTERESTING}")" \
+			"$file"
 	done
 }
 
-list | sort -k 2 -n
+list | sort -n
 

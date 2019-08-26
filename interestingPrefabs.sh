@@ -8,10 +8,9 @@ fi
 BIN="$(cd "$(dirname "$0")" && pwd)"
 INTERESTING="${BIN}/interesting.txt"
 
-grep -h decoration "$1" |
-	cut -d '"' -f 4 |
+cut -s -d '"' -f 4 "$1" |
+	grep -F -x -f "${INTERESTING}" |
 	sort |
 	uniq -c |
-	grep -F -f "${INTERESTING}" |
 	cut -c 4-
 
