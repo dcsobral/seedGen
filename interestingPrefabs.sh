@@ -14,8 +14,4 @@ grep -h decoration "$1" |
 	uniq -c |
 	grep -F -f "${INTERESTING}" |
 	cut -c 4-
-	#tr -s ' ' |
-	#awk '{ print $2 " " $1}'
-
-#xmlstarlet sel -t -m / --var "i=document('$INTERESTING')"  -m "/prefabs/decoration[@name=\$i/xsl-select/prefab/@name][not(@name=preceding-sibling::*/@name)]" --sort a:t:- @name -v @name -o " " -v "count(/prefabs/decoration[@name=current()/@name])" -n $1
 
