@@ -17,7 +17,7 @@ TOTAL="$1"
 shift
 SIZES=("$@")
 
-if [[ ${#SIZES} -eq 0 ]]; then
+if [[ ${#SIZES[@]} -eq 0 ]]; then
         SIZES=( 4096 6144 8192 )
 fi
 
