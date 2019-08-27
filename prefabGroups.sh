@@ -5,4 +5,6 @@ if [[ $# -ne 1 ]]; then
 	exit 1
 fi
 
-xmlstarlet sel -t -m / --var "p=document('$1')" -m "//prefab_rule[prefab[@name]]" -v @name -o " " --var "s=count(prefab[@name=\$p//decoration/@name])" --var "t=count(prefab[@name])" -v '$s' -o ' / ' -v '$t' -o ' (' -v 'round($s * 100 div $t)' -o '%)' -n ../../Data/Config/rwgmixer.xml
+: "${F7D2D:=/mnt/c/Users/Daniel/Desktop/RH5.5Server}"
+
+xmlstarlet sel -t -m / --var "p=document('$1')" -m "//prefab_rule[prefab[@name]]" -v @name -o " " --var "s=count(prefab[@name=\$p//decoration/@name])" --var "t=count(prefab[@name])" -v '$s' -o ' / ' -v '$t' -o ' (' -v 'round($s * 100 div $t)' -o '%)' -n "${F7D2D}/Data/Config/rwgmixer.xml"
