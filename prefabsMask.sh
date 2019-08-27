@@ -26,7 +26,7 @@ for decoration in "${MAPFILE[@]}"; do
 	if [[ -n ${DIM["$prefab"]+abc} ]]; then
 		dim="${DIM["$prefab"]}"
 	else
-		dim="$("${BIN}/prefabSize.sh" "${PREFABS}/${prefab}.tts")"
+		dim="$("${BIN}/prefabSize.sh" "${prefab}")"
 		DIM["$prefab"]="$dim"
 	fi
 	IFS=';' read tl br dim < <("${BIN}/coordsFor.sh" "${coords}" "${dim}" "${rotation}" "${SIZE}")

@@ -16,7 +16,7 @@ LOC="$2"
 ROT="$3"
 SIZE="${4:-4096}"
 
-DIM="$("${BIN}/prefabSize.sh" "${PREFABS}/${PREFAB}.tts")"
+DIM="$("${BIN}/prefabSize.sh" "${PREFAB}")"
 
 "${BIN}/coordsFor.sh" "${LOC}" "${DIM}" "${ROT}" "${SIZE}"
 

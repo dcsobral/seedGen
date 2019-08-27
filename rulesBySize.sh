@@ -31,7 +31,7 @@ for rule in "${RULES[@]}"; do
 		if [[ -n ${DIM["$prefab"]+abc} ]]; then
 			IFS=',' read x y z <<<"${DIM["$prefab"]}"
 		else
-			IFS=',' read x y z < <("${BIN}/prefabSize.sh" "${PREFABS}/${prefab}.tts")
+			IFS=',' read x y z < <("${BIN}/prefabSize.sh" "${prefab}")
 			DIM["$prefab"]="$x,$y,$z"
 		fi
 		area=$((x * z))
