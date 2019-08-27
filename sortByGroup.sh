@@ -16,6 +16,6 @@ groupCount() {
 }
 
 for file in *.xml; do
-	printf "%3d %3d %s\n" "$(prefabCount "$1")" "$(groupCount "$1")" "$file"
+	printf "%3d %3d %s\n" "$(prefabCount "$1")" "$(groupCount "$1")" "${file%.xml}"
 done | sort -n
 
