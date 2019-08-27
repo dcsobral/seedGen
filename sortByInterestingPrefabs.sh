@@ -6,10 +6,10 @@ INTERESTING="${BIN}/interesting.txt"
 list() {
 	for file in *.xml; do
                 printf "%4d %s\n" \
-                        "$(cut -s -d '"' -f 4 "$file" | grep -F -x -f "${INTERESTING}" | sort -u | wc -l)" \
-                        "$file"
+                        "$(grep decoration "$file" | cut -s -d '"' -f 4 | grep -F -x -f "${INTERESTING}" | sort -u | wc -l)" \
+                        "${file%.xml}"
 	done
 }
 
-list | sort -k 2 -n
+list | sort -n
 

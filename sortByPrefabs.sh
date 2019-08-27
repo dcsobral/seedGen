@@ -1,3 +1,7 @@
 #!/usr/bin/env bash
 
-grep -c decoration *.xml | tr : ' ' | sort -k 2 -n
+for file in *.xml; do
+	printf "%5d %s\n" \
+		"$(grep -c decoration "$file")" \
+		"${file%.xml}"
+done | sort -n

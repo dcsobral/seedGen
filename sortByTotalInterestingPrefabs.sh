@@ -7,7 +7,7 @@ list() {
 	for file in *.xml; do
 		printf "%4d %s\n" \
 			"$(cut -s -d '"' -f 4 "$file" | grep -c -F -x -f "${INTERESTING}")" \
-			"$file"
+			"${file%.xml}"
 	done
 }
 
