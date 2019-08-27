@@ -22,13 +22,14 @@ if [[ ${#SIZES[@]} -eq 0 ]]; then
 fi
 
 for size in "${SIZES[@]}"; do
+	[[ -f stop ]] && break
         COUNT=0
         while [[ $COUNT -lt $TOTAL ]]; do
+                [[ -f stop ]] && break
                 SEED="$("${BIN}"/seed.sh)"
                 "${BIN}"/randomGen.sh $size "${SEED}"
                 COUNT=$((COUNT + 1))
                 echo "World #${COUNT} for size ${size} done (time elapsed: $(ellapsed))"
-                [[ -f stop ]] && break 2
         done
 done
 
