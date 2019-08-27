@@ -18,7 +18,12 @@ prefabs() {
 declare -a RULES
 declare -A DIM
 
-mapfile -t RULES < <(prefabRules)
+if [[ $# -eq 0 ]]; then
+	mapfile -t RULES < <(prefabRules)
+else
+	RULES=( "$@" )
+fi
+
 for rule in "${RULES[@]}"; do
 	prefabs=( $(prefabs "$rule") )
 	echo "$rule"
