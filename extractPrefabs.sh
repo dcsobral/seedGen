@@ -10,6 +10,6 @@ SIZE="$1"
 mkdir -p "${SIZE}"
 
 for map in *"${SIZE}.zip"; do
-	[[ -f ${SIZE}/${map%.zip}.xml ]] || unzip $map ${map%.zip}.xml -d ${SIZE}
+	[[ -f ${SIZE}/${map%.zip}.xml ]] || unzip "$map" "${map%.zip}.xml" -d "${SIZE}"
 done
 

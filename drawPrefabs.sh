@@ -25,8 +25,8 @@ coordsFor() {
                 HEIGHT="$tmp"
         fi
 
-        X1=$((${COORDS%%,*} + ${SIZE}))
-        Z2=$((-(${COORDS##,*}) + ${SIZE}))
+        X1=$((${COORDS%%,*} + SIZE))
+        Z2=$((-(${COORDS##,*}) + SIZE))
         X2=$((X1 + WIDTH))
         Z1=$((Z2 - HEIGHT))
 

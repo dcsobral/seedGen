@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 _seedExtract() {
     COMPREPLY=($(compgen -f -X '!*.zip' | sed -nr '/-'"$2"'[0-9]+.zip/ s/.*-([0-9]+).zip/\1/p'))
 }

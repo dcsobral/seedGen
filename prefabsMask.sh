@@ -9,7 +9,6 @@ if [[ $# -ne 2 ]]; then
 	exit 1
 fi
 
-PREFABS="${F7D2D}/Data/Prefabs"
 BIN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 XML="$1"

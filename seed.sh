@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 
-HERE=$(cd $(dirname $0) && pwd)
-: ${ADJECTIVES:=${HERE}/adjectives/28K adjectives.txt}
-: ${NOUNS:=${HERE}/nouns/91K nouns.txt}
+BIN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+declare -g ADJECTIVES NOUNS
+
+: "${DICT_LOC:=${BIN}}"
+: "${ADJECTIVES:=${DICT_LOC}/adjectives/28K adjectives.txt}"
+: "${NOUNS:=${DICT_LOC}/nouns/91K nouns.txt}"
 
 ADJ_NUM=$(wc -l "${ADJECTIVES}" | cut -d ' ' -f 1)
 NOUNS_NUM=$(wc -l "${NOUNS}" | cut -d ' ' -f 1)

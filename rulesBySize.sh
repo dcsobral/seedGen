@@ -5,7 +5,6 @@ IFS=$'\t\n'
 BIN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 : "${F7D2D:=/mnt/c/Users/Daniel/Desktop/RH5.5Server}"
-PREFABS="${F7D2D}/Data/Prefabs"
 
 prefabRules() {
 	xmlstarlet sel -t -m "//prefab_rule[prefab[@name]]" -v @name -n "${F7D2D}/Data/Config/rwgmixer.xml"

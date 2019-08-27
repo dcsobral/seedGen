@@ -9,7 +9,6 @@ fi
 
 : "${F7D2D:=/mnt/c/Users/Daniel/Desktop/RH5.5Server}"
 
-PREFABS="${F7D2D}/Data/Prefabs"
 BIN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PREFAB="$1"
 LOC="$2"

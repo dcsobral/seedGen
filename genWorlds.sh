@@ -27,7 +27,7 @@ for size in "${SIZES[@]}"; do
         while [[ $COUNT -lt $TOTAL ]]; do
                 [[ -f stop ]] && break
                 SEED="$("${BIN}"/seed.sh)"
-                "${BIN}"/randomGen.sh $size "${SEED}"
+                "${BIN}"/randomGen.sh "$size" "${SEED}"
                 COUNT=$((COUNT + 1))
                 echo "World #${COUNT} for size ${size} done (time elapsed: $(ellapsed))"
         done
