@@ -33,6 +33,10 @@ for size in "${SIZES[@]}"; do
         done
 done
 
-[[ -f stop ]] && rm stop
+if [[ -f stop ]]; then
+	echo >&2 "'stop' file found. Aborting."
+	rm stop
+	exit 1
+fi
 
 echo "Finished generating ${TOTAL} worlds for sizes ${SIZES[*]} in $(ellapsed)."

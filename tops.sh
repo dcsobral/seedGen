@@ -11,6 +11,7 @@ OUTPUT="$("$@")"
 
 mapfile -d ' ' -t top < <(tail -1 <<<"$OUTPUT" | tr -d $'\n')
 
+# shellcheck disable=2154
 for i in "${!top[@]}"; do
 	if [[ ${top[$i]} =~ ^[0-9]*$ ]]; then
 		unset top[$i]

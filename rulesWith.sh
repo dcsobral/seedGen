@@ -6,6 +6,7 @@ if [[ $# -eq 0 ]]; then
 	echo >&2 "$0 <prefab_name>"
 	exit 1
 elif [[ $# -gt 1 ]]; then
+	# shellcheck disable=SC2016
 	PRECMD='echo "$prefab:"'
 	PREFIX=$'\t'
 else
