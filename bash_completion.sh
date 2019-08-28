@@ -17,7 +17,7 @@ _prefabNames() {
 }
 
 complete -F _seedExtract extractPrefabs.sh
-complete -F _prefabRules sortByRules.sh
+complete -F _prefabRules sortByRule.sh
 complete -F _prefabNames -o filenames rulesWith.sh
 complete -F _prefabNames -o filenames zoning.sh
 complete -F _prefabNames -o filenames prefabSize.sh
