@@ -22,7 +22,7 @@ until [ -f "${LOG}" ]
 do
      sleep 1
 done
-grep -E -m 1 "StartGame done|aborting generation" <(tail  ---disable-inotify --max-unchanged-stats=5 --sleep-interval=5 -F "${LOG}")
+grep -E -m 1 "StartGame done|aborting generation|Crash!!!" <(tail  ---disable-inotify --max-unchanged-stats=5 --sleep-interval=5 -F "${LOG}")
 duration=$SECONDS
 "${BIN}/shutdown.expect" > log.shutdown.txt
 if grep -q "StartGame done" "$LOG"; then
@@ -31,5 +31,6 @@ if grep -q "StartGame done" "$LOG"; then
 	echo "World preview saved"
 else
 	echo "Generation aborted after $((duration / 60)) minutes and $((duration % 60)) seconds"
+	exec "$0" "$@"
 fi
 

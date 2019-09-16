@@ -7,6 +7,8 @@ if [[ $# -lt 1 ]]; then
         exit 1
 fi
 
+: "${F7D2D:?Please export F7D2D with 7D2D install folder}"
+
 ellapsed() {
         echo -n "$(date -u -d @${SECONDS} +"%T")"
 }
