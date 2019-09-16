@@ -26,4 +26,4 @@ complete -o dirnames -o filenames -f -X '!*.zip' extract.sh
 complete -o dirnames -o filenames -f -X '!*.xml' prefabRules.sh
 complete -o dirnames -o filenames -f -X '!*.xml' missingPrefabs.sh
 complete -o dirnames -o filenames -f -X '!*.xml' interestingPrefabs.sh
-complete -o bashdefault -c tops.sh
+complete -F _command tops.sh
