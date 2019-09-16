@@ -25,8 +25,8 @@ coordsFor() {
                 HEIGHT="$tmp"
         fi
 
-        X1=$((${COORDS%%,*} + SIZE))
-        Z2=$((-(${COORDS##,*}) + SIZE))
+        X1=$((${COORDS%%,*} + CENTER))
+        Z2=$((-(${COORDS##,*}) + CENTER))
         X2=$((X1 + WIDTH))
         Z1=$((Z2 - HEIGHT))
 
@@ -40,14 +40,21 @@ BIN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 XML="$1"
 IMG="$2"
-SIZE="$(($3 / 2))"
-DRAW="draw-${XML%.xml}.txt"
+SIZE="$3"
+CENTER="$((SIZE / 2))"
+NAME="${XML%.xml}"
+DRAW="draw-${NAME}.txt"
+TRADERS="traders-${NAME}.txt"
+GRID="grid-${NAME}.txt"
+COORDS="coords-${NAME}.txt"
+
 declare -g -A DIM
 declare -a MAPFILE
 
 mapfile < <(xmlstarlet sel -t -m "/prefabs/decoration" -v "@name" -o ";" -v "@position" -o ";" -v "@rotation" -n "$XML")
 
-rm -f "${DRAW}"
+echo "stroke-width 0 fill 'rgba(0,0,0,0.5)'" > "${DRAW}"
+echo "stroke-width 3 fill none stroke pink" > "${TRADERS}"
 for decoration in "${MAPFILE[@]}"; do
         IFS=';' read  prefab coords rotation <<<"$decoration"
 
@@ -64,7 +71,29 @@ for decoration in "${MAPFILE[@]}"; do
         else
                 echo "rectangle ${tl} ${br}" >> "${DRAW}"
         fi
+
+	if [[ $prefab == *trader* ]]; then
+		#convert output-Ravenhearst_5_Official_Map.png -fill none -stroke pink -strokewidth 3 -draw "rectangle 1286,3577 1323,3614" output.png
+		echo "rectangle ${tl} ${br}" >> "${TRADERS}"
+	fi
 done
 
-convert "${IMG}" -strokewidth 0 -fill "rgba( 0, 0, 0 , 0.5 )" -draw "@${DRAW}" "output-${IMG}"
+echo "stroke-width 2 stroke black fill white stroke-opacity 0.6 fill-opacity 0.6 stroke-dasharray 5 5" > "${GRID}"
+echo "stroke-width 4 fill white stroke black stroke-opacity 0.6 fill-opacity 0.6" > "${COORDS}"
+echo "font Helvetica-Bold font-size 48" >> "${COORDS}"
+KMs=$((CENTER / 1000))
+for km in $(seq "-$KMs" "$KMs"); do
+	P=$((km * 1000 + CENTER))
+	echo "path 'M 0,$P L $SIZE,$P'" >> "${GRID}"
+	echo "path 'M $P,0 L $P,$SIZE'" >> "${GRID}"
+	printf "text 4,$((P - 8)) '%2d'" $((-km)) >> "${COORDS}"
+	echo "text $((P + 8)),$((SIZE - 8)) '$km'" >> "${COORDS}"
+done
+
+convert "${IMG}" \
+	-draw "@${DRAW}" \
+	-draw "@${TRADERS}" \
+	-draw "@${GRID}" \
+	-draw "@${COORDS}" \
+	"output-${IMG}"
 
