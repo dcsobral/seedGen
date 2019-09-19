@@ -23,7 +23,18 @@ LINE=$(grep -m 1 "Generating county" log.txt)
 COUNTY=$(cut -d "'" -f 2 <<<"$LINE")
 
 cd "UserData/GeneratedWorlds/${COUNTY}"
-convert biomes.png \( splat3.png -alpha off -transparent black -fill '#0000ff' -opaque '#00ff00' \) -composite \( -size "${IMGSIZE}" -depth 16 gray:dtm.raw -flip -auto-level \) -compose blend -set option:compose:args 50 -composite "${PREVIEW}"
+convert biomes.png \
+	\( splat3.png -alpha off -transparent black -fill '#0000ff' -opaque '#00ff00' \) \
+	-composite \
+	\( -size "${IMGSIZE}" -depth 16 gray:dtm.raw -flip -auto-level \) \
+	-compose blend -set option:compose:args 50 -composite \
+	\( radiation.png \
+		-channel rgba -fill "rgba(255,0,0,0.5)" -opaque "rgb(255,0,0)" +channel  \
+		-transparent black \
+		-resize "${IMGSIZE}" \
+	\) \
+	-compose Over -composite \
+	"${PREVIEW}"
 
 cp prefabs.xml "${PREFABS}"
 echo "$COUNTY" > "${COUNTY_FILE}"
