@@ -13,40 +13,54 @@ IMG="$2"
 SIZE="$3"
 DIM="${SIZE}x${SIZE}"
 CENTER="$((SIZE / 2))"
-LAKEIMG="lakes-${IMG}"
-TMPIMG="tmp=${IMG}"
+WATER_IMG="water-${IMG}"
+TMPIMG="tmp-${IMG}"
 
 mapfile -t < <(xmlstarlet sel -t -m "//Water" --sort a:n:- "str:tokenize(@pos, ',')[2]" -v @pos -n "$XML" )
 
-cp "${IMG}" "${LAKEIMG}"
+cp "${IMG}" "${WATER_IMG}"
 INDEX=0
 while [[ $INDEX -lt ${#MAPFILE[@]} ]]; do
 	IFS=", " read x y z <<<"${MAPFILE["$INDEX"]}"
 	pixelLevel=$((y * 256 + 128))
-	convert -size "${DIM}" -depth 16 gray:dtm.raw -flip -threshold $pixelLevel watermask.png
+	convert -size "${DIM}" -depth 16 gray:dtm.raw -flip \
+		-threshold $pixelLevel \
+		\( ${WATER_IMG} +transparent '#738cce' -fill white -opaque '#738cce' \) \
+		-composite watermask.png
 	rm -f water.txt
-	while [[ $INDEX -lt ${#MAPFILE[@]} && ${MAPFILE["$INDEX"]} == *,$y,* ]]; do
+	touch water.txt
+	PATTERN='.*, *'"$y"' *,.*'
+	COUNT=0
+	while [[ $INDEX -lt ${#MAPFILE[@]} && $COUNT -lt 10  && ${MAPFILE["$INDEX"]} =~ $PATTERN ]]; do
 		IFS=", " read x _ignored z <<<"${MAPFILE["$INDEX"]}"
 		xabs=$((x+CENTER))
 		zabs=$((CENTER-z))
-		level=$(convert -size "$DIM" -depth 16 "gray:dtm.raw" -flip \
-				-format "%[fx:round(65536*s.p{$xabs,$zabs})]\n" info:)
-		if [[ $level -le $pixelLevel ]]; then
-			echo "color $xabs,$zabs floodfill" >> water.txt
-		else
-			printf >&2 "Requested level %04x greater or equal than %04x at %d,%d" \
-				"$level" "$pixelLevel" "$x" "$z"
-		fi
+#		color=$(convert "${WATER_IMG}" -format "%[pixel:p{${xabs},${zabs}}]" info:-)
+#		if [[ $color != 'srgba(115,140,206,1)' ]]; then
+			level=$(convert watermask.png -format "%[pixel:p{${xabs},${zabs}}]" info:-)
+			if [[ $level == 'gray(0)' ]]; then
+				echo "color $xabs,$zabs floodfill" >> water.txt
+				COUNT=$((COUNT + 1))
+#			else
+#				printf >&2 "Requested level %04x >= %04x at %d,%d\n" \
+#					"$level" "$pixelLevel" "$x" "$z"
+			fi
+#		fi
 		INDEX=$((INDEX + 1))
+		if [[ $((INDEX % 100)) -eq 0 ]]; then
+			echo >&2 "$INDEX/${#MAPFILE[@]} completed"
+		fi
 	done
 	convert watermask.png \
 		-alpha on \
-		-fill blue \
+		-fill '#738cce' \
 		-draw "@water.txt" \
 		-fill black \
 		-opaque white \
 		-transparent black lakes.png
-	convert "${LAKEIMG}" lakes.png -composite "${TMPIMG}"
-	mv "${TMPIMG}" "${LAKEIMG}"
+	convert "${WATER_IMG}" lakes.png -composite "${TMPIMG}"
+	mv "${TMPIMG}" "${WATER_IMG}"
+	echo >&2 "$INDEX/${#MAPFILE[@]} completed"
 done
 
+echo "${WATER_IMG}"

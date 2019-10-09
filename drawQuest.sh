@@ -10,7 +10,7 @@ if [[ $# -ne 3 ]]; then
 fi
 
 coordsFor() {
-        declare -g tl br dim
+        declare -g tl br bl dim max_size
         declare COORDS DIM ROT
         COORDS="$1"
         DIM="$2"
@@ -32,7 +32,13 @@ coordsFor() {
 
         tl="${X1},${Z1}"
         br="${X2},${Z2}"
+	bl="${X1},${Z2}"
         dim="${WIDTH},${HEIGHT}"
+	if [[ $WIDTH -ge $HEIGHT ]]; then
+		max_size="${WIDTH}"
+	else
+		max_size="${HEIGHT}"
+	fi
 }
 
 PREFABS="${F7D2D}/Data/Prefabs"
@@ -47,19 +53,18 @@ DRAW="draw-${NAME}.txt"
 TRADERS="traders-${NAME}.txt"
 GRID="grid-${NAME}.txt"
 COORDS="coords-${NAME}.txt"
-PREVIEW="prefabs-${IMG}"
+PREVIEW="quest-${IMG}"
 
 declare -g -A DIM
 declare -a MAPFILE
 
 mapfile < <(xmlstarlet sel -t -m "/prefabs/decoration" -v "@name" -o ";" -v "@position" -o ";" -v "@rotation" -n "$XML")
 
-echo "stroke-width 0 fill 'rgba(0,0,0,0.5)'" > "${DRAW}"
+echo "stroke black font Helvetica-Bold" > "${DRAW}"
 echo "stroke-width 3 fill none stroke pink" > "${TRADERS}"
 for decoration in "${MAPFILE[@]}"; do
         IFS=';' read  prefab coords rotation <<<"$decoration"
 
-        #IFS=';' read tl br dim < <("${BIN}/prefabCoords.sh" "${prefab}" "${coords}" "${rotation}")
         if [[ -n ${DIM["$prefab"]+abc} ]]; then
                 dim="${DIM["$prefab"]}"
         else
@@ -67,14 +72,18 @@ for decoration in "${MAPFILE[@]}"; do
                 DIM["$prefab"]="$dim"
         fi
         coordsFor "${coords}" "${dim}" "${rotation}"
-        if [[ -f "${PREFABS}/${prefab}.jpg" ]]; then
-                echo "image multiply ${tl} ${dim} '${PREFABS}/${prefab}.jpg'" >> "${DRAW}"
-        else
-                echo "rectangle ${tl} ${br}" >> "${DRAW}"
+        if [[ -f "${PREFABS}/${prefab}.xml" ]]; then
+		tier="$(xmlstarlet sel -t -m "/prefab/property[@name='DifficultyTier']" -v @value "${PREFABS}/${prefab}.xml" || : )"
+		mapfile -d , -t tags < <(xmlstarlet sel -t -m "/prefab/property[@name='QuestTags']" -v @value "${PREFABS}/${prefab}.xml" || : )
+		key=""
+		for tag in "${tags[@]}"; do
+			key="${key}${tag[0]:0:1}"
+		done
+		desc="${key^^}${tier}"
+		[[ -n $desc ]] && font_size=$((max_size / ${#desc} - 1))
+		[[ -n $key && -n $tier ]] && echo "font-size ${font_size} text ${bl} '$desc'" >> "${DRAW}"
         fi
-
 	if [[ $prefab == *trader* ]]; then
-		#convert output-Ravenhearst_5_Official_Map.png -fill none -stroke pink -strokewidth 3 -draw "rectangle 1286,3577 1323,3614" output.png
 		echo "rectangle ${tl} ${br}" >> "${TRADERS}"
 	fi
 done
