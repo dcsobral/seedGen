@@ -2,16 +2,18 @@
 set -euo pipefail
 IFS=$'\t\n'
 
-if [[ $# -ne 2 ]]; then
-	echo >&2 "$0 <size> <seed>"
+if [[ $# -ne 3 ]]; then
+	echo >&2 "$0 <size> <seed> <water_level>"
 	exit 1
 fi
 
 SIZE="${1}"
 IMGSIZE="${SIZE}x${SIZE}"
 SEED="${2}"
+LEVEL="${3}"
 NAME="${SEED}-${SIZE}"
 PREVIEW="${NAME}.png"
+THRESHOLD=$((LEVEL * 256 + 128))
 
 convert \( biomes.png \
 		-fill '#949442' -opaque '#ffa800' \
@@ -23,10 +25,16 @@ convert \( biomes.png \
 		-fill '#ceb584' -opaque '#fe0000' \
 	\) \
 	-composite \
-	\( -size "${IMGSIZE}" -depth 16 gray:dtm.raw -flip -auto-level \) \
-	-compose blend -set option:compose:args 50 -composite \
+	\( -size "${IMGSIZE}" -depth 16 gray:dtm.raw -flip -black-threshold $THRESHOLD -auto-level \) \
+	+swap -compose multiply -composite \
+	\( -size "${IMGSIZE}" -depth 16 gray:dtm.raw -flip \
+		-threshold $THRESHOLD \
+		-transparent white \
+		-fill '#738cce' -opaque black \
+	\) \
+	-compose Over -composite \
 	\( radiation.png \
-		-channel rgba -fill "rgba(255,0,0,0.5)" -opaque "rgb(255,0,0)" +channel  \
+		-channel rgba -fill "rgba(255,0,0,0.9)" -opaque "rgb(255,0,0)" +channel  \
 		-transparent black \
 		-resize "${IMGSIZE}" \
 	\) \
