@@ -14,53 +14,82 @@ SIZE="$3"
 DIM="${SIZE}x${SIZE}"
 CENTER="$((SIZE / 2))"
 WATER_IMG="water-${IMG}"
+MASK_IMG="mask-${IMG}"
 TMPIMG="tmp-${IMG}"
 
-mapfile -t < <(xmlstarlet sel -t -m "//Water" --sort a:n:- "str:tokenize(@pos, ',')[2]" -v @pos -n "$XML" )
+water() {
+	xmlstarlet sel -t -m "//Water" --sort a:n:- "str:tokenize(@pos, ',')[2]" \
+		--var "c=str:tokenize(@pos, ',')" \
+		-v '$c[2]' -o ';' \
+		-v '$c[1]' -o , -v '$c[3]' -o ';' \
+		-v @minx -o , -v @maxx -o , -v @minz -o , -v @maxz \
+		-n water_info.xml | tr -d ' '
+}
 
-cp "${IMG}" "${WATER_IMG}"
-INDEX=0
-while [[ $INDEX -lt ${#MAPFILE[@]} ]]; do
-	IFS=", " read x y z <<<"${MAPFILE["$INDEX"]}"
-	pixelLevel=$((y * 256 + 128))
-	convert -size "${DIM}" -depth 16 gray:dtm.raw -flip \
-		-threshold $pixelLevel \
-		\( ${WATER_IMG} +transparent '#738cce' -fill white -opaque '#738cce' \) \
-		-composite watermask.png
-	rm -f water.txt
-	touch water.txt
-	PATTERN='.*, *'"$y"' *,.*'
-	COUNT=0
-	while [[ $INDEX -lt ${#MAPFILE[@]} && $COUNT -lt 10  && ${MAPFILE["$INDEX"]} =~ $PATTERN ]]; do
-		IFS=", " read x _ignored z <<<"${MAPFILE["$INDEX"]}"
-		xabs=$((x+CENTER))
-		zabs=$((CENTER-z))
-#		color=$(convert "${WATER_IMG}" -format "%[pixel:p{${xabs},${zabs}}]" info:-)
-#		if [[ $color != 'srgba(115,140,206,1)' ]]; then
-			level=$(convert watermask.png -format "%[pixel:p{${xabs},${zabs}}]" info:-)
-			if [[ $level == 'gray(0)' ]]; then
-				echo "color $xabs,$zabs floodfill" >> water.txt
-				COUNT=$((COUNT + 1))
-#			else
-#				printf >&2 "Requested level %04x >= %04x at %d,%d\n" \
-#					"$level" "$pixelLevel" "$x" "$z"
-			fi
-#		fi
-		INDEX=$((INDEX + 1))
-		if [[ $((INDEX % 100)) -eq 0 ]]; then
-			echo >&2 "$INDEX/${#MAPFILE[@]} completed"
-		fi
+water > water_info.txt
+
+mapfile -t DEPTHS < <(cut -d ';' -f 1 water_info.txt | sort -u)
+convert -size "${DIM}" xc:black -alpha on -transparent black "${MASK_IMG}"
+for depth in "${DEPTHS[@]}"; do
+	echo "Depth $depth"
+	file="water${depth}.txt"
+	threshold=$((depth * 256 + 128))
+	grep "^${depth};" water_info.txt > water_depth.txt
+
+	mapfile -t MASKS < <(cut -d ';' -f 3 water_depth.txt | sort -u)
+
+	echo "push defs" > "${file}"
+	for mask in "${MASKS[@]}"; do
+		echo "Clip path mask $mask"
+		IFS=',' read x1 x2 z1 z2 <<<"$mask"
+		xmin=$((CENTER + x1))
+		xmax=$((CENTER + x2 - 1))
+		zmin=$((CENTER - z2))
+		zmax=$((CENTER - z1 - 1))
+		#clip_path="${xmin}_${zmin}_${xmax}_${zmax}"
+		clip_path="$mask"
+		cat >> "${file}" <<-CLIPMASK
+			push clip-path "${clip_path}"
+				push graphic-context
+					rectangle ${xmin},${zmin} ${xmax},${zmax}
+				pop graphic-context
+			pop clip-path
+		CLIPMASK
 	done
-	convert watermask.png \
-		-alpha on \
-		-fill '#738cce' \
-		-draw "@water.txt" \
-		-fill black \
-		-opaque white \
-		-transparent black lakes.png
-	convert "${WATER_IMG}" lakes.png -composite "${TMPIMG}"
-	mv "${TMPIMG}" "${WATER_IMG}"
-	echo >&2 "$INDEX/${#MAPFILE[@]} completed"
+	echo "pop defs" >> "${file}"
+
+	echo "fill white" >> "${file}"
+	echo "border-color white" >> "${file}"
+	for mask in "${MASKS[@]}"; do
+		echo "Filling Mask $mask"
+		#IFS=',' read x1 x2 z1 z2 <<<"$mask"
+		clip_path="$mask"
+
+		mapfile -t POINTS < <(grep ";${mask}$" water_depth.txt | cut -d ';' -f 2)
+		echo "push graphic-context" >> "${file}"
+		echo "clip-path url(#${clip_path})" >> "${file}"
+		for point in "${POINTS[@]}"; do
+			IFS=',' read x z <<<"$point"
+			xabs=$((CENTER + x))
+			zabs=$((CENTER - z))
+			echo "color ${xabs},${zabs} filltoborder" >> "${file}"
+		done
+		echo "pop graphic-context" >> "${file}"
+	done
+	convert -size "${DIM}" -depth 16 gray:dtm.raw -flip \
+		-depth 8 \
+		-threshold "$threshold" -write mpr:mask \
+		-monitor -draw "@${file}" \
+		mpr:mask -compose minus_src -composite \
+		-alpha on -transparent black \
+		"${MASK_IMG}" -compose src-over -composite \
+		"${TMPIMG}"
+	mv -f "${TMPIMG}" "${MASK_IMG}"
 done
 
+convert "${IMG}" \
+	\( "${MASK_IMG}" -fill '#738cce' -opaque white \) \
+	-composite "${WATER_IMG}"
+
 echo "${WATER_IMG}"
+
