@@ -19,10 +19,10 @@ the most common ones being:
   - `uz.sh`: Extracts a preview into its own directory;
   - `extractPrefabs.sh`: Extracts prefab information of all previews of a size;
 * Comparing Seeds
-  - `sortByInterestingPrefabs.sh`:
-  - `sortByPrefabs.sh`:
-  - `sortByTotalInterestingPrefabs.sh`:
-  - `sortByUniquePrefabs.sh`:
+  - `sortByInterestingPrefabs.sh`: Sort prefabs by the number of unique "interesting" prefabs;
+  - `sortByPrefabs.sh`: Sort prefabs by number of prefabs;
+  - `sortByTotalInterestingPrefabs.sh`: Sort prefabs by number of "interesting" prefabs;
+  - `sortByUniquePrefabs.sh`: Sort prefabs by number of unique prefabs;
   - `allSorts.sh`: Displays seeds sorted by the four different criteria above side by side;
   - `highlight.sh`: Highlights words (seeds) from stdin (use: `allSorts.sh | highlight seedName`);
   - `tops.sh`: Highlights words in the last line (use: `tops.sh allSorts.sh`);
