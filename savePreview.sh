@@ -22,11 +22,11 @@ LINE=$(grep -m 1 "Generating county" log.txt)
 COUNTY=$(cut -d "'" -f 2 <<<"$LINE")
 
 cd "UserData/GeneratedWorlds/${COUNTY}"
-PREVIEW="$("${BIN}/drawMap.sh" "${SIZE}" "${SEED}")"
+PREVIEW="$("${BIN}/drawMap.sh" "${SIZE}" "${SEED}" 43)"
 if [[ ! -f nodraw ]]; then
 	PREFABS_PREVIEW="$("${BIN}/drawPrefabs.sh" prefabs.xml "${PREVIEW}" "${SIZE}")"
-	WATER_PREVIEW="$("${BIN}/drawWater.sh" water_info.xml "${PREFABS_PREVIEW}" "${SIZE}")"
-	mv "${WATER_PREVIEW}" "${PREVIEW}"
+	# WATER_PREVIEW="$("${BIN}/drawWater.sh" water_info.xml "${PREFABS_PREVIEW}" "${SIZE}")"
+	mv "${PREFABS_PREVIEW}" "${PREVIEW}"
 else
 	echo >&2 "Skipping prefab and water drawing"
 fi
