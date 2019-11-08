@@ -22,7 +22,7 @@ convert \( biomes.png \
 	\( splat3.png \
 		-alpha off -transparent black \
 		-fill '#9c8c7b' -opaque '#00ff00' \
-		-fill '#ceb584' -opaque '#fe0000' \
+		-fill '#ceb584' -opaque '#ff0000' \
 	\) \
 	-composite \
 	\( -size "${IMGSIZE}" -depth 16 gray:dtm.raw -flip -black-threshold $THRESHOLD -auto-level \) \
