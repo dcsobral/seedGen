@@ -34,3 +34,8 @@ else
 	exec "$0" "$@"
 fi
 
+TASK_LIST="$(tasklist.exe)"
+if grep -q ^7DaysToDieServer.exe <<<"$TASK_LIST"; then
+	taskkill.exe /IM "7DaysToDieServer.exe" /F /T
+fi
+
