@@ -9,7 +9,7 @@ fi
 
 OUTPUT="$("$@")"
 
-mapfile -d ' ' -t top < <(tail -1 <<<"$OUTPUT" | tr -d $'\n')
+mapfile -d ' ' -t top < <(tail -1 <<<"$OUTPUT" | tr $'\n\t' ' ' | tr -s ' ')
 
 # shellcheck disable=2154
 for i in "${!top[@]}"; do
