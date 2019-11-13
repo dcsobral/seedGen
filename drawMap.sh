@@ -39,6 +39,7 @@ convert \( biomes.png \
 		-resize "${IMGSIZE}" \
 	\) \
 	-compose Over -composite \
+	-depth 8 \
 	"${PREVIEW}"
 
 echo "${PREVIEW}"
