@@ -58,6 +58,21 @@ This is incomplete, most likely, but:
 * XMLStarlet
 * expect
 
+Note that ImageMagick comes with some rather restrictive (imho) limits by default. I fixed it
+doing something someone recommended on their forums, which is commenting out the policies in
+policy.xml (/etc/ImageMagick-6/policy.xml on Ubuntu). Like this:
+
+```xml
+  <!--
+  <policy domain="resource" name="memory" value="256MiB"/>
+  <policy domain="resource" name="map" value="512MiB"/>
+  <policy domain="resource" name="width" value="16KP"/>
+  <policy domain="resource" name="height" value="16KP"/>
+  <policy domain="resource" name="area" value="128MB"/>
+  <policy domain="resource" name="disk" value="1GiB"/>
+  -->
+```
+
 # How it works
 
 This whole setup expects to be run under WSL on Windows 10, with 7 Days to Die Server for
