@@ -57,6 +57,7 @@ This is incomplete, most likely, but:
 * ImageMagick 6 (if using 7, you'll need to fix calls on the `draw*` scripts);
 * XMLStarlet
 * expect
+* zip/unzip
 
 Note that ImageMagick comes with some rather restrictive (imho) limits by default. I fixed it
 doing something someone recommended on their forums, which is commenting out the policies in
