@@ -56,6 +56,7 @@ This is incomplete, most likely, but:
 
 * ImageMagick 6 (if using 7, you'll need to fix calls on the `draw*` scripts);
 * XMLStarlet
+* expect
 
 # How it works
 
