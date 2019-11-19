@@ -7,7 +7,7 @@ if [[ $# -lt 3 ]]; then
 	exit 1
 fi
 
-: "${F7D2D:=/mnt/c/Users/Daniel/Desktop/RH5.5Server}"
+: "${F7D2D:?Please export F7D2D with 7D2D install folder}"
 
 BIN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PREFAB="$1"

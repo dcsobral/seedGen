@@ -2,7 +2,7 @@
 set -euo pipefail
 IFS=$'\t\n'
 
-: "${F7D2D:=/mnt/c/Users/Daniel/Desktop/RH5.5Server}"
+: "${F7D2D:?Please export F7D2D with 7D2D install folder}"
 PREFABS="${F7D2D}/Data/Prefabs"
 
 if [[ $# -eq 0 ]]; then

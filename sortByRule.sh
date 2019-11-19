@@ -5,7 +5,7 @@ if [[ $# -ne 1 ]]; then
 	exit 1
 fi
 
-: "${F7D2D:=/mnt/c/Users/Daniel/Desktop/RH5.5Server}"
+: "${F7D2D:?Please export F7D2D with 7D2D install folder}"
 
 prefabCount() {
 	xmlstarlet sel -t -m / --var "p=document('$file')" -m "//prefab_rule[@name='$1']" -v "count(\$p//decoration[@name=current()/prefab/@name])" "${F7D2D}/Data/Config/rwgmixer.xml"

@@ -5,15 +5,19 @@ _seedExtract() {
 }
 
 _prefabRules() {
-	: "${F7D2D:=/mnt/c/Users/Daniel/Desktop/RH5.5Server}"
-
-	COMPREPLY=( $(xmlstarlet sel -t -m "//prefab_rule[starts-with(@name,'$2')][prefab[@name]]" -v @name -n "${F7D2D}/Data/Config/rwgmixer.xml") )
+	if [[ -n $F7D2D ]]; then
+		COMPREPLY=( $(xmlstarlet sel -t -m "//prefab_rule[starts-with(@name,'$2')][prefab[@name]]" -v @name -n "${F7D2D}/Data/Config/rwgmixer.xml") )
+	else
+		COMPREPLY=()
+	fi
 }
 
 _prefabNames() {
-	: "${F7D2D:=/mnt/c/Users/Daniel/Desktop/RH5.5Server}"
-
-	COMPREPLY=( $(xmlstarlet sel -t -m "//prefab_rule/prefab[starts-with(@name,'$2')]" -v @name -n "${F7D2D}/Data/Config/rwgmixer.xml" | sort -u) )
+	if [[ -n $F7D2D ]]; then
+		COMPREPLY=( $(xmlstarlet sel -t -m "//prefab_rule/prefab[starts-with(@name,'$2')]" -v @name -n "${F7D2D}/Data/Config/rwgmixer.xml" | sort -u) )
+	else
+		COMPREPLY=()
+	fi
 }
 
 complete -F _seedExtract extractPrefabs.sh

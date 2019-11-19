@@ -4,7 +4,7 @@ IFS=$'\t\n'
 
 BIN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-: "${F7D2D:=/mnt/c/Users/Daniel/Desktop/RH5.5Server}"
+: "${F7D2D:?Please export F7D2D with 7D2D install folder}"
 
 prefabRules() {
 	xmlstarlet sel -t -m "//prefab_rule[prefab[@name]]" -v @name -n "${F7D2D}/Data/Config/rwgmixer.xml"
