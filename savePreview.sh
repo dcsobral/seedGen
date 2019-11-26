@@ -18,8 +18,9 @@ PREFABS="${NAME}.xml"
 COUNTY_FILE="${NAME}.txt"
 
 cd  "${F7D2D}"
-LINE=$(grep -m 1 "GamePref.GameWorld" log.txt | tr -d $'\n\r')
-COUNTY=$(cut -d "=" -f 2 <<<"$LINE" | cut -c 2-)
+LINE=$(grep -E 'WorldGenerator:Generating.*(Territory|County|Valley|Mountains)' log.txt | tail -1 | tr -d $'\n\r')
+COUNTY=$(cut -d ' ' -f 5- <<<"$LINE")
+echo "Saving preview for '${COUNTY}'"
 
 cd "UserData/GeneratedWorlds/${COUNTY}"
 PREVIEW="$("${BIN}/drawMap.sh" "${SIZE}" "${SEED}" 43)"
