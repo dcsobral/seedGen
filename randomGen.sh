@@ -18,7 +18,8 @@ echo "Generating seed '$SEED' at $SIZE"
 sleep 1 # Last chance to abort
 
 SECONDS=0
-"${BIN}/startServer.sh" "$SIZE" "${SEED}" > log.startServer.txt
+#"${BIN}/startServer.sh" "$SIZE" "${SEED}" > log.startServer.txt
+"${BIN}/startClient.sh" "$SIZE" "${SEED}" > log.startClient.txt
 duration=$SECONDS
 
 if grep -q "BloodMoon SetDay" "$LOG"; then
