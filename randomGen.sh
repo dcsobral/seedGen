@@ -24,7 +24,7 @@ duration=$SECONDS
 
 if grep -q "BloodMoon SetDay" "$LOG"; then
 	echo "World generated in $((duration / 60)) minutes and $((duration % 60)) seconds"
-	"${BIN}/savePreview.sh" "${SIZE}" "${SEED}" > log.savePreview.txt
+	"${BIN}/savePreview.sh" "${SIZE}" "${SEED}" | tee log.savePreview.txt
 	echo "World preview saved"
 else
 	echo "Generation aborted after $((duration / 60)) minutes and $((duration % 60)) seconds"
