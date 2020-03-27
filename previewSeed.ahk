@@ -70,33 +70,44 @@ Send, %RWGSeed%
 
 Sleep, 500
 
+; Ravenhearst 6.2
+;if RWGSize = 4096
+;{
+;	Move := -2
+;}
+;else if RWGSize = 6144
+;{
+;	Move := -1
+;}
+;else if RWGSize = 8192
+;{
+;	Move := 0
+;}
+;else if RWGSize = 10240
+;{
+;	Move := 1
+;}
+;else if RWGSize = 12288
+;{
+;	Move := 2
+;}
+;else if RWGSize = 14366
+;{
+;	Move := 3
+;}
+;else if RWGSize = 16384
+;{
+;	Move := 4
+;}
+
+; Alpha 18.3
 if RWGSize = 4096
-{
-	Move := -2
-}
-else if RWGSize = 6144
 {
 	Move := -1
 }
 else if RWGSize = 8192
 {
 	Move := 0
-}
-else if RWGSize = 10240
-{
-	Move := 1
-}
-else if RWGSize = 12288
-{
-	Move := 2
-}
-else if RWGSize = 14366
-{
-	Move := 3
-}
-else if RWGSize = 16384
-{
-	Move := 4
 }
 
 While Move != 0

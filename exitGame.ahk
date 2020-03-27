@@ -12,8 +12,13 @@ Coordmode, Mouse, Screen
 
 ; Quit
 
+; Ravenhearst 6.2
 quitX := 581
 quitY := 1225
+
+; Alpha 18.3
+quitX := 1160
+quitY := 1326
 
 WinActivate, 7 Days To Die
 
