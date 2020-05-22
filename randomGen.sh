@@ -36,3 +36,7 @@ if grep -q ^7DaysToDieServer.exe <<<"$TASK_LIST"; then
 	taskkill.exe /IM "7DaysToDieServer.exe" /F /T
 fi
 
+if grep -q ^7DaysToDie.exe <<<"$TASK_LIST"; then
+	taskkill.exe /IM "7DaysToDie.exe" /F /T
+fi
+
