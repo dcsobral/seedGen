@@ -16,6 +16,8 @@ SEED="${2}"
 NAME="${SEED}-${SIZE}"
 PREFABS="${NAME}.xml"
 COUNTY_FILE="${NAME}.txt"
+GENERATION_INFO_FILE="${NAME}-GenerationInfo.txt"
+MAP_INFO_FILE="${NAME}-map_info.xml"
 
 cd  "${F7D2D}"
 LINE=$(grep -E 'WorldGenerator:Generating.*(Territory|County|Valley|Mountains)' log.txt | tail -1 | tr -d $'\n\r')
@@ -34,7 +36,15 @@ fi
 
 cp prefabs.xml "${PREFABS}"
 echo "$COUNTY" > "${COUNTY_FILE}"
-zip "${NAME}" "${PREVIEW}" "${PREFABS}" "${COUNTY_FILE}"
+touch "${GENERATION_INFO_FILE}" "${MAP_INFO_FILE}"
+if [[ -f GenerationInfo.txt ]]; then
+	cp GenerationInfo.txt "${GENERATION_INFO_FILE}"
+fi
+if [[ -f map_info.xml ]]; then
+	cp map_info.xml "${MAP_INFO_FILE}"
+fi
+
+zip "${NAME}" "${PREVIEW}" "${PREFABS}" "${COUNTY_FILE}" "${GENERATION_INFO_FILE}" "${MAP_INFO_FILE}"
 
 mkdir -p "${F7D2D}/previews"
 mv "${NAME}.zip" "${F7D2D}/previews/"
