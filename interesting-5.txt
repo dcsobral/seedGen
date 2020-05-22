@@ -1,0 +1,8 @@
+apartment_brick_6_flr
+bunker
+factory_lg_01
+factory_lg_02
+hospital_01
+skyscraper_01
+skyscraper_02
+skyscraper_03
