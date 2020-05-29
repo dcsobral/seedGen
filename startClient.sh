@@ -45,7 +45,7 @@ grep -E -m 1 "WorldStaticData.Init" <(tail  ---disable-inotify --max-unchanged-s
 "${AHK}" "$(wslpath -w "${BIN}/previewSeed.ahk")" "${SIZE}" "${SEED}"
 
 # Wait for generation to finish
-grep -E -m 1 "BloodMoon SetDay|aborting generation|Crash!!!" <(tail  ---disable-inotify --max-unchanged-stats=5 --sleep-interval=5 -F "${LOG}")
+grep -E -m 1 "BloodMoon SetDay|Opening OnScreen keyboard failed|aborting generation|Crash!!!" <(tail  ---disable-inotify --max-unchanged-stats=5 --sleep-interval=5 -F "${LOG}")
 sleep 2
 
 # Exit game
