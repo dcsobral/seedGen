@@ -3,6 +3,11 @@ set -euo pipefail
 IFS=$'\t\n'
 
 : "${F7D2D:?Please export F7D2D with 7D2D install folder}"
+
+if [[ -L "$F7D2D" ]]; then
+	F7D2D="$(readlink "$F7D2D")"
+fi
+
 : "${LOG:=${F7D2D}/log.txt}"
 : "${AHK:=/mnt/c/Program Files/AutoHotkey/AutoHotkey.exe}"
 
