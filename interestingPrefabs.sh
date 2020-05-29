@@ -9,9 +9,17 @@ BIN="$(cd "$(dirname "$0")" && pwd)"
 : "${INTERESTING_FOLDER:=${BIN}/interesting}"
 : "${INTERESTING:=interesting.txt}"
 
-cut -s -d '"' -f 4 "$1" |
-	grep -F -x -f "${INTERESTING_FOLDER}/${INTERESTING}" |
-	sort |
-	uniq -c |
-	cut -c 4-
+showIt() {
+	cut -s -d '"' -f 4 "$1" |
+		grep -F -x -f "${INTERESTING_FOLDER}/${INTERESTING}" |
+		sort |
+		uniq -c |
+		cut -c 4-
+}
+
+if [[ -t 1 ]]; then
+	showIt "$1" | column
+else
+	showIt "$1"
+fi
 
