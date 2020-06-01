@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+pushd "${F7D2D}/previews"
+
 if [[ $# -lt 1 ]]; then
 	set -- $(compgen -f -X '!*.zip' | sed -nr '/-'"$2"'[0-9]+.zip/ s/.*-([0-9]+).zip/\1/p' | sort -u)
 fi
@@ -12,4 +14,6 @@ for SIZE; do
 		[[ -f ${SIZE}/${map%.zip}.xml ]] || unzip "$map" "${map%.zip}.xml" -d "${SIZE}"
 	done
 done
+
+popd
 
