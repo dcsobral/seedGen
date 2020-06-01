@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
 if [[ $# -lt 1 ]]; then
-	echo >&2 "$0 <size>"
-	exit 1
+	set -- $(compgen -f -X '!*.zip' | sed -nr '/-'"$2"'[0-9]+.zip/ s/.*-([0-9]+).zip/\1/p' | sort -u)
 fi
 
 for SIZE; do

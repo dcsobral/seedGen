@@ -17,7 +17,7 @@ the most common ones being:
   - `drawPrefabs.sh`: overlay prefab previews on a map;
 * Retrieving Seeds
   - `uz.sh`: Extracts a preview into its own directory;
-  - `extractPrefabs.sh`: Extracts prefab information of all previews of a size;
+  - `prefabs.sh`: Extracts prefab information of all previews of a size;
 * Comparing Seeds
   - `sortByInterestingPrefabs.sh`: Sort prefabs by the number of unique "interesting" prefabs;
   - `sortByPrefabs.sh`: Sort prefabs by number of prefabs;
