@@ -20,13 +20,13 @@ _prefabNames() {
 	fi
 }
 
-complete -F _seedExtract extractPrefabs.sh
+complete -F _seedExtract prefabs.sh
 complete -F _prefabRules sortByRule.sh
 complete -F _prefabNames -o filenames rulesWith.sh
 complete -F _prefabNames -o filenames zoning.sh
 complete -F _prefabNames -o filenames prefabSize.sh
 complete -o dirnames -o filenames -f -X '!*.xml' uniquePrefabs.sh
-complete -o dirnames -o filenames -f -X '!*.zip' extract.sh
+complete -o dirnames -o filenames -f -X '!*.zip' uz.sh
 complete -o dirnames -o filenames -f -X '!*.xml' prefabRules.sh
 complete -o dirnames -o filenames -f -X '!*.xml' missingPrefabs.sh
 complete -o dirnames -o filenames -f -X '!*.xml' interestingPrefabs.sh
