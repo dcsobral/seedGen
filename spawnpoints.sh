@@ -11,7 +11,7 @@ for SIZE; do
 	mkdir -p "${SIZE}-spawnpoints"
 
 	for map in *"${SIZE}.zip"; do
-		[[ -f ${SIZE}/${map%.zip}-spawnpoints.xml ]] || unzip "$map" "${map%.zip}-spawnpoints.xml" -d "${SIZE}-spawnpoints"
+		[[ -f ${SIZE}-spawnpoints/${map%.zip}-spawnpoints.xml ]] || unzip "$map" "${map%.zip}-spawnpoints.xml" -d "${SIZE}-spawnpoints"
 	done
 done
 
