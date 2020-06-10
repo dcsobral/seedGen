@@ -24,6 +24,7 @@ cd "${F7D2D}"
 
 rm -f "${LOG}" || { sleep 30; rm -f "${LOG}"; }
 rm -fr UserData/
+touch "${LOG}"
 
 # Start game
 ./7DaysToDie.exe -logfile "$(wslpath -w "${LOG}")" \
