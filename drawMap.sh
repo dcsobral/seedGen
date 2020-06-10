@@ -10,7 +10,7 @@ fi
 SIZE="${1}"
 IMGSIZE="${SIZE}x${SIZE}"
 SEED="${2}"
-LEVEL="${3}"
+LEVEL="${3:-0}"
 NAME="${SEED}-${SIZE}"
 PREVIEW="${NAME}.png"
 THRESHOLD=$((LEVEL * 256 + 128))
