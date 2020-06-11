@@ -12,7 +12,7 @@ the most common ones being:
 
 * Generation & Preview
   - `genWorlds.sh`: generate multiple seeds, save preview and delete;
-  - `randomGen.sh`: generate a seed, and preview;
+  - `genSeed.sh`: generate a seed, and preview;
   - `drawMap.sh`: generate a map preview without prefabs;
   - `drawPrefabs.sh`: overlay prefab previews on a map;
 * Retrieving Seeds
@@ -90,7 +90,7 @@ folder `UserData`, which will be created inside `$F7D2D`. Not a very good locati
 admit, but the install locations I actually used were all on folders in my desktop, which
 is fine.
 
-The seed generatior, `randomGen.sh`, then looks at the log looking for a message that
+The seed generatior, `genSeed.sh`, then looks at the log looking for a message that
 the generation has finished, or that an error occurred and it has aborted. Not all errors
 are detected, unfortunately, so sometimes you have to kill 7 Days to Die Server by hand
 and cancel the generation.
@@ -111,7 +111,7 @@ location, and with that prefab's dimension. The preview image is "part" of the p
 though it is optional and, therefore, might not be present. In such cases, a rectangle is
 drawn.
 
-If you are using `randomGen.sh` directly, that's where it stops. If you are using
+If you are using `genSeed.sh` directly, that's where it stops. If you are using
 `genWorlds.sh`, however, it will go on to the next seed until it creates all the seeds you
 asked for for that size, and then on to the next size. Often enough, however, I want to
 stop the generation, but given how long it can take to generate a single seed, I'm loath
