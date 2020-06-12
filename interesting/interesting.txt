@@ -1,5 +1,4 @@
 apartment_brick_6_flr
-bunker
 business_burnt_02
 business_strip_old_03
 church_01

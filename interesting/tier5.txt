@@ -1,5 +1,4 @@
 apartment_brick_6_flr
-bunker
 factory_lg_01
 factory_lg_02
 hospital_01
