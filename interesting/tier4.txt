@@ -6,6 +6,7 @@ house_old_victorian_03
 installation_red_mesa
 school_01
 skyscraper_04
+store_clothing_02
 store_grocery_02
 store_gun_02
 utility_waterworks_01

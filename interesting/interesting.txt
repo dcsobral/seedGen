@@ -13,6 +13,7 @@ skyscraper_01
 skyscraper_02
 skyscraper_03
 skyscraper_04
+store_clothing_02
 store_grocery_02
 store_gun_02
 trader_bob
