@@ -1,4 +1,3 @@
-business_burnt_02
 business_strip_old_03
 church_01
 house_old_tudor_01
