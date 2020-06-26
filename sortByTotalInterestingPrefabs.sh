@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
 BIN="$(cd "$(dirname "$0")" && pwd)"
-: "${INTERESTING_FOLDER:=${BIN}/interesting}"
-: "${INTERESTING:=interesting.txt}"
+: "${SPECIAL_FOLDER:=${BIN}/special}"
+: "${SPECIAL:=special.txt}"
 
 list() {
 	for file in *.xml; do
 		printf "%4d %s\n" \
 			"$(cut -s -d '"' -f 4 "$file" | \
-			grep -c -F -x -f "${INTERESTING_FOLDER}/${INTERESTING}")" \
+			grep -c -F -x -f "${SPECIAL_FOLDER}/${SPECIAL}")" \
 			"${file%.xml}"
 	done
 }

@@ -6,12 +6,12 @@ if [[ $# -ne 1 ]]; then
 fi
 
 BIN="$(cd "$(dirname "$0")" && pwd)"
-: "${INTERESTING_FOLDER:=${BIN}/interesting}"
-: "${INTERESTING:=interesting.txt}"
+: "${SPECIAL_FOLDER:=${BIN}/special}"
+: "${SPECIAL:=special.txt}"
 
 showIt() {
 	cut -s -d '"' -f 4 "$1" |
-		grep -F -x -f "${INTERESTING_FOLDER}/${INTERESTING}" |
+		grep -F -x -f "${SPECIAL_FOLDER}/${SPECIAL}" |
 		sort |
 		uniq -c |
 		cut -c 4-
