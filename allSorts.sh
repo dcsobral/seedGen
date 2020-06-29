@@ -3,11 +3,11 @@
 BIN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 getSorts() {
-	echo $'      # of Prefabs\t     Uniq. Int.\t     # of Int.\t     Unique'
+	echo $'      # of Prefabs\t     Uniq. Spc.\t     # of Spc.\t     Unique'
 	paste \
 		<(sortByPrefabs.sh)  \
-		<(sortByInterestingPrefabs.sh) \
-		<(sortByTotalInterestingPrefabs.sh) \
+		<(sortBySpecialPrefabs.sh) \
+		<(sortByTotalSpecialPrefabs.sh) \
 		<(sortByUniquePrefabs.sh)
 }
 

@@ -19,11 +19,12 @@ the most common ones being:
   - `uz.sh`: Extracts a preview into its own directory;
   - `prefabs.sh`: Extracts prefab information of all previews of a size;
 * Comparing Seeds
-  - `sortByInterestingPrefabs.sh`: Sort prefabs by the number of unique "interesting" prefabs;
+  - `sortBySpecialPrefabs.sh`: Sort prefabs by the number of unique "interesting" prefabs;
   - `sortByPrefabs.sh`: Sort prefabs by number of prefabs;
-  - `sortByTotalInterestingPrefabs.sh`: Sort prefabs by number of "interesting" prefabs;
+  - `sortByTotalSpecialPrefabs.sh`: Sort prefabs by number of special prefabs;
   - `sortByUniquePrefabs.sh`: Sort prefabs by number of unique prefabs;
   - `allSorts.sh`: Displays seeds sorted by the four different criteria above side by side;
+  - `allSpecials.sh`: Displays seeds sorted by various special categories (work in progress);
   - `highlight.sh`: Highlights words (seeds) from stdin (use: `allSorts.sh | highlight seedName`);
   - `tops.sh`: Highlights words in the last line (use: `tops.sh allSorts.sh`);
 * Evaluating seed:
@@ -34,6 +35,12 @@ the most common ones being:
 There's more in here, some used by the above scripts, others used by me for more arcane
 purposes. Some, in fact, I no longer have use for at all. There's also `bash_completion.sh`
 which adds, you guessed it, bash completion for the stuff I use the most.
+
+Special prefabs come in many different types. By default, it includes all tier 4 and 5
+prefabs plus traders. It can be changed by setting SPECIAL to one of the included
+categories (check `special/` folder). You can point to your own separately maintained list
+of special prefabs with the `SPECIAL_FOLDER`, which is where files mentioned by `SPECIAL`
+will be looked for.
 
 Many of these scripts rely on an environment variable called `F7D2D`. You have to assign
 it to the path to the folder where 7 Days to Die Server is installed. It does work with

@@ -19,19 +19,19 @@ getSorts() {
 
 	# Hacks! I haven't figured out the best way of not hard coding this
 	paste \
-		<(SPECIAL=top7.txt sortByInterestingPrefabs.sh) \
-		<(SPECIAL=top15.txt sortByInterestingPrefabs.sh) \
-		<(SPECIAL=special.txt sortByInterestingPrefabs.sh) \
-		<(SPECIAL=stores.txt sortByInterestingPrefabs.sh) \
-		<(SPECIAL=skyscrapers.txt sortByInterestingPrefabs.sh)
+		<(SPECIAL=top7.txt sortBySpecialPrefabs.sh) \
+		<(SPECIAL=top15.txt sortBySpecialPrefabs.sh) \
+		<(SPECIAL=special.txt sortBySpecialPrefabs.sh) \
+		<(SPECIAL=stores.txt sortBySpecialPrefabs.sh) \
+		<(SPECIAL=skyscrapers.txt sortBySpecialPrefabs.sh)
 }
 
 #getSorts() {
 #	echo $'      # of Prefabs\t     Uniq. Int.\t     # of Int.\t     Unique'
 #	paste \
 #		<(sortByPrefabs.sh)  \
-#		<(sortByInterestingPrefabs.sh) \
-#		<(sortByTotalInterestingPrefabs.sh) \
+#		<(sortBySpecialPrefabs.sh) \
+#		<(sortByTotalSpecialPrefabs.sh) \
 #		<(sortByUniquePrefabs.sh)
 #}
 
