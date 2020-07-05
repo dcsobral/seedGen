@@ -25,6 +25,7 @@ the most common ones being:
   - `sortByUniquePrefabs.sh`: Sort prefabs by number of unique prefabs;
   - `allSorts.sh`: Displays seeds sorted by the four different criteria above side by side;
   - `allSpecials.sh`: Displays seeds sorted by various special categories (work in progress);
+  - `speadsheet.sh`: Saves various analysis as a csv file
   - `highlight.sh`: Highlights words (seeds) from stdin (use: `allSorts.sh | highlight seedName`);
   - `tops.sh`: Highlights words in the last line (use: `tops.sh allSorts.sh`);
 * Evaluating seed:
