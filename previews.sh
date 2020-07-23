@@ -15,7 +15,7 @@ for SIZE; do
 	done
 
 	pushd "${SIZE}-previews"
-	montage -label '%c' -title "Size ${SIZE} Seeds" "*-${SIZE}.png" "${SIZE}.png"
+	montage -title "Size ${SIZE} Seeds" -geometry '240x240>+4+3' -pointsize 16 -label '%c' "*-${SIZE}.png" "${SIZE}.png"
 	popd
 done
 
