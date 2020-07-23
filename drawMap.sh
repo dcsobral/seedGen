@@ -53,6 +53,7 @@ convert \( biomes.png \
 	\) \
 	-compose Over -composite \
 	-depth 8 \
+	-set comment "${SEED}" \
 	"${PREVIEW}"
 
 echo "${PREVIEW}"
