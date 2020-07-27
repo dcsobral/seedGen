@@ -14,10 +14,13 @@ for SIZE; do
 		[[ -f ${SIZE}-previews/${map%.zip}.png ]] || unzip "$map" "${map%.zip}.png" -d "${SIZE}-previews"
 	done
 
-	pushd "${SIZE}-previews"
+	cd "${SIZE}-previews"
 	DIM=$((SIZE / 16))
-	montage -title "Size ${SIZE} Seeds" -geometry "${DIM}x${DIM}>+4+3" -pointsize 16 -label '%c' "*-${SIZE}.png" "${SIZE}.png"
-	popd
+	rm -fr thumbs
+	mkdir thumbs
+	mogrify -format png -depth 8 -path thumbs -resize "${DIM}x${DIM}" "*-${SIZE}.png"
+	montage -title "Size ${SIZE} Seeds" -geometry "+4+3" -pointsize 16 -label '%c' "thumbs/*.png" "${SIZE}.png"
+	cd ..
 done
 
 popd
