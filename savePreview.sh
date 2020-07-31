@@ -26,17 +26,17 @@ COUNTY=$(cut -d ' ' -f 5- <<<"$LINE")
 echo "Saving preview for '${COUNTY}'"
 
 cd "UserData/GeneratedWorlds/${COUNTY}"
+cp prefabs.xml "${PREFABS}"
+cp spawnpoints.xml "${SPAWN}"
 PREVIEW="$("${BIN}/drawMap.sh" "${SIZE}" "${SEED}" 43)"
 if [[ ! -f nodraw ]]; then
-	PREFABS_PREVIEW="$("${BIN}/drawPrefabs.sh" prefabs.xml "${PREVIEW}" "${SIZE}")"
+	PREFABS_PREVIEW="$("${BIN}/drawPrefabs.sh" "${PREFABS}" "${PREVIEW}" "${SIZE}" "${SPAWN}")"
 	# WATER_PREVIEW="$("${BIN}/drawWater.sh" water_info.xml "${PREFABS_PREVIEW}" "${SIZE}")"
 	mv "${PREFABS_PREVIEW}" "${PREVIEW}"
 else
 	echo >&2 "Skipping prefab and water drawing"
 fi
 
-cp prefabs.xml "${PREFABS}"
-cp spawnpoints.xml "${SPAWN}"
 echo "$COUNTY" > "${COUNTY_FILE}"
 touch "${GENERATION_INFO_FILE}" "${MAP_INFO_FILE}"
 if [[ -f GenerationInfo.txt ]]; then

@@ -4,8 +4,8 @@ IFS=$'\t\n'
 
 : "${F7D2D:?Please export F7D2D with 7D2D install folder}"
 
-if [[ $# -ne 3 ]]; then
-        echo >&2 "$0 <prefabs.xml> <image> <size>"
+if [[ $# -lt 3 || $# -gt 4 ]]; then
+        echo >&2 "$0 <prefabs.xml> <image> <size> [<spawnspoints.xml>]"
         exit 1
 fi
 
@@ -41,10 +41,12 @@ BIN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 XML="$1"
 IMG="$2"
 SIZE="$3"
+SPAWN_XML="${4:-spawnspoints.xml}"
 CENTER="$((SIZE / 2))"
 NAME="${XML%.xml}"
 DRAW="draw-${NAME}.txt"
 TRADERS="traders-${NAME}.txt"
+SPAWN="spawn-${NAME}.txt"
 GRID="grid-${NAME}.txt"
 COORDS="coords-${NAME}.txt"
 PREVIEW="prefabs-${IMG}"
@@ -91,11 +93,23 @@ for km in $(seq "-$KMs" "$KMs"); do
 	echo "text $((P + 8)),$((SIZE - 8)) '$km'" >> "${COORDS}"
 done
 
+echo "stroke-width 1 fill yellow" > "${SPAWN}"
+if [[ -f $SPAWN_XML ]]; then
+	mapfile < <(xmlstarlet sel -t -m "/spawnpoints/spawnpoint" -v "@position" -n "$SPAWN_XML")
+	for spawnpoint in "${MAPFILE[@]}"; do
+		IFS=',' read x z y <<<"$spawnpoint"
+		x=$((x+CENTER))
+		y=$((-y+CENTER))
+		echo "circle $x,$y $((x+8)),$((y+8))" >> "${SPAWN}"
+	done
+fi
+
 convert "${IMG}" \
 	-draw "@${DRAW}" \
 	-draw "@${TRADERS}" \
 	-draw "@${GRID}" \
 	-draw "@${COORDS}" \
+	-draw "@${SPAWN}" \
 	"${PREVIEW}"
 
 echo "${PREVIEW}"
