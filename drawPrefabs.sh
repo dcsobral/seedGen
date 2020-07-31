@@ -93,7 +93,7 @@ for km in $(seq "-$KMs" "$KMs"); do
 	echo "text $((P + 8)),$((SIZE - 8)) '$km'" >> "${COORDS}"
 done
 
-echo "stroke-width 1 fill yellow" > "${SPAWN}"
+echo "stroke-width 1 fill red" > "${SPAWN}"
 if [[ -f $SPAWN_XML ]]; then
 	mapfile < <(xmlstarlet sel -t -m "/spawnpoints/spawnpoint" -v "@position" -n "$SPAWN_XML")
 	for spawnpoint in "${MAPFILE[@]}"; do
