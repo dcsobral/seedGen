@@ -54,8 +54,8 @@ declare -a MAPFILE
 
 mapfile < <(xmlstarlet sel -t -m "/prefabs/decoration" -v "@name" -o ";" -v "@position" -o ";" -v "@rotation" -n "$XML")
 
-echo "stroke-width 1 fill 'rgba(0,0,0,0.5)'" > "${DRAW}"
-echo "stroke-width 3 fill none stroke pink" > "${TRADERS}"
+echo "stroke-width 1 fill 'rgba(0,0,0,1)'" > "${DRAW}"
+echo "stroke-width 3 fill none stroke red" > "${TRADERS}"
 for decoration in "${MAPFILE[@]}"; do
         IFS=';' read  prefab coords rotation <<<"$decoration"
 
@@ -68,7 +68,7 @@ for decoration in "${MAPFILE[@]}"; do
         fi
         coordsFor "${coords}" "${dim}" "${rotation}"
         if [[ -f "${PREFABS}/${prefab}.jpg" ]]; then
-                echo "image linear-light ${tl} ${dim} '${PREFABS}/${prefab}.jpg'" >> "${DRAW}"
+                echo "image over ${tl} ${dim} '${PREFABS}/${prefab}.jpg'" >> "${DRAW}"
         else
                 echo "rectangle ${tl} ${br}" >> "${DRAW}"
         fi
