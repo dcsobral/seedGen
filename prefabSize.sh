@@ -6,7 +6,7 @@ IFS=$'\t\n'
 PREFABS="${F7D2D}/Data/Prefabs"
 
 if [[ $# -eq 0 ]]; then
-	echo >&2 "$0 <prefab.tts>"
+	echo >&2 "$0 <prefab>"
 	exit 1
 fi
 
