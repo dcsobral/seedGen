@@ -15,6 +15,7 @@ the most common ones being:
   - `genSeed.sh`: generate a seed, and preview;
   - `drawMap.sh`: generate a map preview without prefabs;
   - `drawPrefabs.sh`: overlay prefab previews on a map;
+  - `legend.png`: this is the color legend for the map previews;
 * Retrieving Seeds
   - `uz.sh`: Extracts a preview into its own directory;
   - `prefabs.sh`: Extracts prefab information of all previews of a size;

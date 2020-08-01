@@ -39,8 +39,8 @@ for prefab; do
 	[[ -n $RESIDENTIAL_OLD || -n $RESIDENTIAL_NEW ]] && RESIDENTIAL=1 || RESIDENTIAL=""
 
 	if [[ -n $DOWNTOWN && -n $COMMERCIAL && -n $INDUSTRIAL ]]; then echo orange
-	elif [[ -n $DOWNTOWN && -n $COMMERCIAL ]]; then echo slategray
 	elif [[ -n $DOWNTOWN && -n $RESIDENTIAL ]]; then echo teal
+	elif [[ -n $DOWNTOWN && -n $COMMERCIAL ]]; then echo slategray
 	elif [[ -n $DOWNTOWN ]]; then echo gray
 	elif [[ -n $RESIDENTIAL_OLD ]]; then echo green
 	elif [[ -n $RESIDENTIAL_NEW ]]; then echo chartreuse
