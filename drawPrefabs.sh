@@ -48,6 +48,7 @@ CENTER="$((SIZE / 2))"
 NAME="${XML%.xml}"
 DRAW="draw-${NAME}.txt"
 ZONING="zoning-${NAME}.txt"
+THUMB="thumb-${NAME}.txt"
 SPAWN="spawn-${NAME}.txt"
 GRID="grid-${NAME}.txt"
 COORDS="coords-${NAME}.txt"
@@ -61,6 +62,7 @@ mapfile < <(xmlstarlet sel -t -m "/prefabs/decoration" -v "@name" -o ";" -v "@po
 
 echo "stroke-width 1 fill 'rgba(0,0,0,0.5)'" > "${DRAW}"
 echo "stroke-width 3 fill none" > "${ZONING}"
+echo "stroke-width 1 stroke black" > "${THUMB}"
 for decoration in "${MAPFILE[@]}"; do
         IFS=';' read  prefab coords rotation <<<"$decoration"
 
@@ -85,6 +87,7 @@ for decoration in "${MAPFILE[@]}"; do
                 ZONE["$prefab"]="$zone"
         fi
 	echo "stroke $zone rectangle ${tlb} ${brb}" >> "${ZONING}"
+	echo "fill $zone rectangle ${tl} ${br}" >> "${THUMB}"
 done
 
 echo "stroke-width 2 stroke black fill white stroke-opacity 0.6 fill-opacity 0.6 stroke-dasharray 5 5" > "${GRID}"
@@ -117,6 +120,15 @@ convert "${IMG}" \
 	-draw "@${COORDS}" \
 	-draw "@${SPAWN}" \
 	"${PREVIEW}"
+
+mkdir -p thumbs
+NAILSIZE="$((SIZE/16))"
+convert "${IMG}" \
+	-draw "@${THUMB}" \
+	-draw "@${SPAWN}" \
+	-depth 8 \
+	-resize "${NAILSIZE}x${NAILSIZE}" \
+	"thumbs/${IMG}"
 
 echo "${PREVIEW}"
 

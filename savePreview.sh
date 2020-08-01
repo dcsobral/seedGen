@@ -33,7 +33,9 @@ if [[ ! -f nodraw ]]; then
 	PREFABS_PREVIEW="$("${BIN}/drawPrefabs.sh" "${PREFABS}" "${PREVIEW}" "${SIZE}" "${SPAWN}")"
 	# WATER_PREVIEW="$("${BIN}/drawWater.sh" water_info.xml "${PREFABS_PREVIEW}" "${SIZE}")"
 	mv "${PREFABS_PREVIEW}" "${PREVIEW}"
+	THUMBNAIL="thumbs/${PREVIEW}"
 else
+	THUMBNAIL=""
 	echo >&2 "Skipping prefab and water drawing"
 fi
 
@@ -46,7 +48,9 @@ if [[ -f map_info.xml ]]; then
 	cp map_info.xml "${MAP_INFO_FILE}"
 fi
 
-zip "${NAME}" "${PREVIEW}" "${PREFABS}" "${SPAWN}" "${COUNTY_FILE}" "${GENERATION_INFO_FILE}" "${MAP_INFO_FILE}"
+zip "${NAME}" "${PREVIEW}" "${PREFABS}" "${SPAWN}" "${COUNTY_FILE}" \
+	${THUMBNAIL:+"${THUMBNAIL}"} \
+	"${GENERATION_INFO_FILE}" "${MAP_INFO_FILE}"
 
 mkdir -p "${F7D2D}/previews"
 mv "${NAME}.zip" "${F7D2D}/previews/"

@@ -11,14 +11,15 @@ for SIZE; do
 	mkdir -p "${SIZE}"
 
 	for map in *"${SIZE}.zip"; do
-		[[ -f ${SIZE}-previews/${map%.zip}.png ]] || unzip "$map" "${map%.zip}.png" -d "${SIZE}-previews"
+		[[ -f ${SIZE}-previews/${map%.zip}.png ]] || unzip "$map" "${map%.zip}.png" "thumbs/${map%.zip}.png" -d "${SIZE}-previews"
 	done
 
 	cd "${SIZE}-previews"
 	DIM=$((SIZE / 16))
-	rm -fr thumbs
-	mkdir thumbs
-	mogrify -format png -depth 8 -path thumbs -resize "${DIM}x${DIM}" "*-${SIZE}.png"
+	if [[ ! -d thumbs ]]; then
+		mkdir thumbs
+		mogrify -format png -depth 8 -path thumbs -resize "${DIM}x${DIM}" "*-${SIZE}.png"
+	fi
 	montage -title "Size ${SIZE} Seeds" -geometry "+4+3" -pointsize 16 -label '%c' "thumbs/*.png" "${SIZE}.png"
 	cd ..
 done
