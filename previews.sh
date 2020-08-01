@@ -8,7 +8,7 @@ fi
 
 for SIZE; do
 	echo "Extracting ${SIZE}"
-	mkdir -p "${SIZE}"
+	mkdir -p "${SIZE}-previews"
 
 	for map in *"${SIZE}.zip"; do
 		[[ -f ${SIZE}-previews/${map%.zip}.png ]] || unzip "$map" "${map%.zip}.png" "thumbs/${map%.zip}.png" -d "${SIZE}-previews"
