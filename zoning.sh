@@ -10,7 +10,9 @@ fi
 
 for prefab; do
 	xmlstarlet sel -t -m /prefab -v "property[@name='Zoning']/@value" \
-		-o $'\t' -v "property[@name='AllowedBiomes']/@value" -n \
-		"$PREFABS/$prefab.xml"
+		-o $'\t' -v "property[@name='AllowedBiomes']/@value" \
+		-o $'\t' -v "property[@name='DisallowedBiomes']/@value" \
+		-o $'\t' -v "property[@name='AllowedTownships']/@value" \
+		-n "$PREFABS/$prefab.xml"
 done
 
