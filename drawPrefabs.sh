@@ -30,8 +30,10 @@ coordsFor() {
         X2=$((X1 + WIDTH))
         Z1=$((Z2 - HEIGHT))
 
-        tl="${X1},${Z1}"
-        br="${X2},${Z2}"
+	tl="$((X1)),$((Z1))"
+	br="$((X2)),$((Z2))"
+	tlb="$((X1 + 1)),$((Z1 + 1))"
+	brb="$((X2 - 2)),$((Z2 - 2))"
         dim="${WIDTH},${HEIGHT}"
 }
 
@@ -45,19 +47,20 @@ SPAWN_XML="${4:-spawnspoints.xml}"
 CENTER="$((SIZE / 2))"
 NAME="${XML%.xml}"
 DRAW="draw-${NAME}.txt"
-TRADERS="traders-${NAME}.txt"
+ZONING="zoning-${NAME}.txt"
 SPAWN="spawn-${NAME}.txt"
 GRID="grid-${NAME}.txt"
 COORDS="coords-${NAME}.txt"
 PREVIEW="prefabs-${IMG}"
 
 declare -g -A DIM
+declare -g -A ZONE
 declare -a MAPFILE
 
 mapfile < <(xmlstarlet sel -t -m "/prefabs/decoration" -v "@name" -o ";" -v "@position" -o ";" -v "@rotation" -n "$XML")
 
-echo "stroke-width 1 fill 'rgba(0,0,0,1)'" > "${DRAW}"
-echo "stroke-width 3 fill none stroke red" > "${TRADERS}"
+echo "stroke-width 1 fill 'rgba(0,0,0,0.5)'" > "${DRAW}"
+echo "stroke-width 3 fill none" > "${ZONING}"
 for decoration in "${MAPFILE[@]}"; do
         IFS=';' read  prefab coords rotation <<<"$decoration"
 
@@ -75,10 +78,13 @@ for decoration in "${MAPFILE[@]}"; do
                 echo "rectangle ${tl} ${br}" >> "${DRAW}"
         fi
 
-	if [[ $prefab == *trader* ]]; then
-		#convert output-Ravenhearst_5_Official_Map.png -fill none -stroke pink -strokewidth 3 -draw "rectangle 1286,3577 1323,3614" output.png
-		echo "rectangle ${tl} ${br}" >> "${TRADERS}"
-	fi
+        if [[ -n ${ZONE["$prefab"]+abc} ]]; then
+                zone="${ZONE["$prefab"]}"
+        else
+                zone="$("${BIN}/prefabZoningColor.sh" "${prefab}")"
+                ZONE["$prefab"]="$zone"
+        fi
+	echo "stroke $zone rectangle ${tlb} ${brb}" >> "${ZONING}"
 done
 
 echo "stroke-width 2 stroke black fill white stroke-opacity 0.6 fill-opacity 0.6 stroke-dasharray 5 5" > "${GRID}"
@@ -106,7 +112,7 @@ fi
 
 convert "${IMG}" \
 	-draw "@${DRAW}" \
-	-draw "@${TRADERS}" \
+	-draw "@${ZONING}" \
 	-draw "@${GRID}" \
 	-draw "@${COORDS}" \
 	-draw "@${SPAWN}" \
