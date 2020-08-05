@@ -11,7 +11,6 @@ fi
 
 BIN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SIZE="${1}"
-IMGSIZE="${SIZE}x${SIZE}"
 SEED="${2}"
 NAME="${SEED}-${SIZE}"
 PREFABS="${NAME}.xml"

@@ -18,12 +18,14 @@ MASK_IMG="mask-${IMG}"
 TMPIMG="tmp-${IMG}"
 
 water() {
+	# no argument expansion is intended with $c
+	# shellcheck disable=SC2016
 	xmlstarlet sel -t -m "//Water" --sort a:n:- "str:tokenize(@pos, ',')[2]" \
 		--var "c=str:tokenize(@pos, ',')" \
 		-v '$c[2]' -o ';' \
 		-v '$c[1]' -o , -v '$c[3]' -o ';' \
 		-v @minx -o , -v @maxx -o , -v @minz -o , -v @maxz \
-		-n water_info.xml | tr -d ' '
+		-n "${XML}" | tr -d ' '
 }
 
 water > water_info.txt
@@ -41,7 +43,7 @@ for depth in "${DEPTHS[@]}"; do
 	echo "push defs" > "${file}"
 	for mask in "${MASKS[@]}"; do
 		echo "Clip path mask $mask"
-		IFS=',' read x1 x2 z1 z2 <<<"$mask"
+		IFS=',' read -r x1 x2 z1 z2 <<<"$mask"
 		xmin=$((CENTER + x1))
 		xmax=$((CENTER + x2 - 1))
 		zmin=$((CENTER - z2))
@@ -56,20 +58,20 @@ for depth in "${DEPTHS[@]}"; do
 			pop clip-path
 		CLIPMASK
 	done
+	# shellcheck disable=SC2129
 	echo "pop defs" >> "${file}"
 
 	echo "fill white" >> "${file}"
 	echo "border-color white" >> "${file}"
 	for mask in "${MASKS[@]}"; do
 		echo "Filling Mask $mask"
-		#IFS=',' read x1 x2 z1 z2 <<<"$mask"
 		clip_path="$mask"
 
 		mapfile -t POINTS < <(grep ";${mask}$" water_depth.txt | cut -d ';' -f 2)
 		echo "push graphic-context" >> "${file}"
 		echo "clip-path url(#${clip_path})" >> "${file}"
 		for point in "${POINTS[@]}"; do
-			IFS=',' read x z <<<"$point"
+			IFS=',' read -r x z <<<"$point"
 			xabs=$((CENTER + x))
 			zabs=$((CENTER - z))
 			echo "color ${xabs},${zabs} filltoborder" >> "${file}"

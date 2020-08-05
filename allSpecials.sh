@@ -3,7 +3,7 @@
 BIN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 : "${SPECIAL_FOLDER:=${BIN}/special}"
 
-mapfile -t SPECIALS < <(ls ${SPECIAL_FOLDER})
+#mapfile -t SPECIALS < <(ls ${SPECIAL_FOLDER})
 
 getSorts() {
 #	declare -a SPECIAL_FILES

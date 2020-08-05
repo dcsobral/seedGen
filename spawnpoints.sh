@@ -3,6 +3,8 @@
 pushd "${F7D2D}/previews"
 
 if [[ $# -lt 1 ]]; then
+	# word splitting is intended
+	# shellcheck disable=SC2046
 	set -- $(compgen -f -X '!*.zip' | sed -nr '/-'"$2"'[0-9]+.zip/ s/.*-([0-9]+).zip/\1/p' | sort -u)
 fi
 

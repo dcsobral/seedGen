@@ -20,7 +20,7 @@ for prefab; do
 	fi
 
 	zones="$(xmlstarlet sel -t -m /prefab -v "property[@name='Zoning']/@value" \
-		"$PREFABS/$prefab.xml" | tr '[A-Z]' '[a-z]' || :)"
+		"$PREFABS/$prefab.xml" | tr '[:upper:]' '[:lower:]' || :)"
 
 	if [[ $zones == *any* ]]; then
 		echo white

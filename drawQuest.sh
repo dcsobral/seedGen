@@ -63,7 +63,7 @@ mapfile < <(xmlstarlet sel -t -m "/prefabs/decoration" -v "@name" -o ";" -v "@po
 echo "stroke black font Helvetica-Bold" > "${DRAW}"
 echo "stroke-width 3 fill none stroke pink" > "${TRADERS}"
 for decoration in "${MAPFILE[@]}"; do
-        IFS=';' read  prefab coords rotation <<<"$decoration"
+        IFS=';' read -r prefab coords rotation <<<"$decoration"
 
         if [[ -n ${DIM["$prefab"]+abc} ]]; then
                 dim="${DIM["$prefab"]}"

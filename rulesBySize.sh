@@ -28,9 +28,9 @@ for rule in "${RULES[@]}"; do
 	echo "$rule"
 	for prefab in "${prefabs[@]}"; do
 		if [[ -n ${DIM["$prefab"]+abc} ]]; then
-			IFS=',' read x y z <<<"${DIM["$prefab"]}"
+			IFS=',' read -r x y z <<<"${DIM["$prefab"]}"
 		else
-			IFS=',' read x y z < <("${BIN}/prefabSize.sh" "${prefab}")
+			IFS=',' read -r x y z < <("${BIN}/prefabSize.sh" "${prefab}")
 			DIM["$prefab"]="$x,$y,$z"
 		fi
 		area=$((x * z))

@@ -64,7 +64,7 @@ echo "stroke-width 1 fill 'rgba(0,0,0,0.5)'" > "${DRAW}"
 echo "stroke-width 3 fill none" > "${ZONING}"
 echo "stroke-width 1 stroke black" > "${THUMB}"
 for decoration in "${MAPFILE[@]}"; do
-        IFS=';' read  prefab coords rotation <<<"$decoration"
+        IFS=';' read -r prefab coords rotation <<<"$decoration"
 
         #IFS=';' read tl br dim < <("${BIN}/prefabCoords.sh" "${prefab}" "${coords}" "${rotation}")
         if [[ -n ${DIM["$prefab"]+abc} ]]; then
@@ -103,10 +103,10 @@ for km in $(seq "-$KMs" "$KMs"); do
 done
 
 echo "stroke-width 1 fill red" > "${SPAWN}"
-if [[ -f $SPAWN_XML ]]; then
+if [[ -f "$SPAWN_XML" ]]; then
 	mapfile < <(xmlstarlet sel -t -m "/spawnpoints/spawnpoint" -v "@position" -n "$SPAWN_XML")
 	for spawnpoint in "${MAPFILE[@]}"; do
-		IFS=',' read x z y <<<"$spawnpoint"
+		IFS=',' read -r x _ y <<<"$spawnpoint"
 		x=$((x+CENTER))
 		y=$((-y+CENTER))
 		echo "circle $x,$y $((x+8)),$((y+8))" >> "${SPAWN}"
