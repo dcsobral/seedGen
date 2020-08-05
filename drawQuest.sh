@@ -58,7 +58,7 @@ PREVIEW="quest-${IMG}"
 declare -g -A DIM
 declare -a MAPFILE
 
-mapfile < <(xmlstarlet sel -t -m "/prefabs/decoration" -v "@name" -o ";" -v "@position" -o ";" -v "@rotation" -n "$XML")
+mapfile < <(xmlstarlet sel -t -m "/prefabs/decoration" -v "@name" -o ";" -v "@position" -o ";" -v "@rotation" -n - < "$XML")
 
 echo "stroke black font Helvetica-Bold" > "${DRAW}"
 echo "stroke-width 3 fill none stroke pink" > "${TRADERS}"

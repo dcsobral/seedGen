@@ -58,7 +58,7 @@ declare -g -A DIM
 declare -g -A ZONE
 declare -a MAPFILE
 
-mapfile < <(xmlstarlet sel -t -m "/prefabs/decoration" -v "@name" -o ";" -v "@position" -o ";" -v "@rotation" -n "$XML")
+mapfile < <(xmlstarlet sel -t -m "/prefabs/decoration" -v "@name" -o ";" -v "@position" -o ";" -v "@rotation" -n - < "$XML")
 
 echo "stroke-width 1 fill 'rgba(0,0,0,0.5)'" > "${DRAW}"
 echo "stroke-width 3 fill none" > "${ZONING}"
@@ -104,7 +104,7 @@ done
 
 echo "stroke-width 1 fill red" > "${SPAWN}"
 if [[ -f "$SPAWN_XML" ]]; then
-	mapfile < <(xmlstarlet sel -t -m "/spawnpoints/spawnpoint" -v "@position" -n "$SPAWN_XML")
+	mapfile < <(xmlstarlet sel -t -m "/spawnpoints/spawnpoint" -v "@position" -n - < "$SPAWN_XML")
 	for spawnpoint in "${MAPFILE[@]}"; do
 		IFS=',' read -r x _ y <<<"$spawnpoint"
 		x=$((x+CENTER))
