@@ -1,5 +1,5 @@
+bombshelter_01
 church_01
 installation_red_mesa
 skyscraper_02
-store_grocery_02
 store_gun_02
