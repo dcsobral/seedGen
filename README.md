@@ -161,3 +161,35 @@ And I load my bash completions with this line in the file `~/.bash_completion`:
 source ~/seedGen/bash_completion.sh
 ```
 
+# Seed names
+
+The random seeds are created by `seed.sh`. It can be configured with the following
+variables:
+
+* `SEED_DICTIONARY_FOLDER`: folder containing word files to be used;
+* `SEED_FIRST_WORD_FILE`: file inside the folder above containing the first word;
+* `SEED_SECOND_WORD_FILE`: file inside the folder above containing the second word.
+
+By default, the `dictionary` folder inside the folder containing the scripts is
+used for the seed dicitonary folder, the first word file is a file containing a list
+of adjectives, and the second file is a file containing a list of nouns.
+
+The dictionary included comes from a "parts of speech files" file compiled by
+Ashley Bovan, which I found on the internet. See readme on that folder for more
+information. Also provided, and usable, are lists of adverbs and verbs. These lists
+are also broken down into 1, 2, 3 and 4 syllables, so if you want short seeds, you
+could set first and second word to dictionaries that are just one or two syllables.
+
+Examples:
+
+```
+$ export SEED_FIRST_WORD_FILE='adjectives/1syllableadjectives.txt'
+$ export SEED_SECOND_WORD_FILE='nouns/1syllablenouns.txt'
+$ seed.sh
+DenseBurk
+$ export SEED_FIRST_WORD_FILE='adverbs/2syllableadverbs.txt'
+$ export SEED_SECOND_WORD_FILE='verbs/2syllableverbs.txt'
+$ seed.sh
+MezzoConceal
+```
+

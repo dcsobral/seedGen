@@ -1,25 +1,25 @@
 #!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\t\n'
 
 BIN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-declare -g ADJECTIVES NOUNS
+declare -g SEED_DICTIONARY_FOLDER SEED_FIRST_WORD_FILE SEED_SECOND_WORD_FILE
 
-: "${DICT_LOC:=${BIN}}"
-: "${ADJECTIVES:=${DICT_LOC}/adjectives/28K adjectives.txt}"
-: "${NOUNS:=${DICT_LOC}/nouns/91K nouns.txt}"
-
-ADJ_NUM=$(wc -l "${ADJECTIVES}" | cut -d ' ' -f 1)
-NOUNS_NUM=$(wc -l "${NOUNS}" | cut -d ' ' -f 1)
+: "${SEED_DICTIONARY_FOLDER:=${BIN}/dictionary}"
+: "${SEED_FIRST_WORD_FILE:=adjectives/28K adjectives.txt}"
+: "${SEED_SECOND_WORD_FILE:=nouns/91K nouns.txt}"
 
 randomize() {
-	FILE="$1"
-	SIZE="$2"
+	FILE="${SEED_DICTIONARY_FOLDER}/$1"
+	SIZE=$(wc -l "${FILE}" | cut -d ' ' -f 1)
 	WORD_NUM=$((RANDOM % SIZE + 1))
-	tail -n "+${WORD_NUM}" "${FILE}" | head -1 | tr -d $'\r'
+	tail -n "+${WORD_NUM}" "${FILE}" | head -1 | tr -d $'\r' ||
+		if [[ $? -eq 141 ]]; then true; else exit $?; fi
 }
 
-ADJECTIVE=$(randomize "${ADJECTIVES}" "${ADJ_NUM}")
-NOUN=$(randomize "${NOUNS}" "${NOUNS_NUM}")
+FIRST_WORD=$(randomize "${SEED_FIRST_WORD_FILE}")
+SECOND_WORD=$(randomize "${SEED_SECOND_WORD_FILE}")
 
-echo "${ADJECTIVE^}${NOUN^}"
+echo "${FIRST_WORD^}${SECOND_WORD^}"
 
