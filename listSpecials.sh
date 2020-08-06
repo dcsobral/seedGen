@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-if [[ $# -ne 1 ]]; then
-	echo >&2 "$0 <prefab.xml>"
+if [[ $# -lt 1 || $# -gt 2 ]]; then
+	echo >&2 "$0 <prefab.xml> [<special.txt>]"
 	exit 1
 fi
 
 BIN="$(cd "$(dirname "$0")" && pwd)"
 : "${SPECIAL_FOLDER:=${BIN}/special}"
-: "${SPECIAL:=special.txt}"
+: "${SPECIAL:=${2-special.txt}}"
 
 showIt() {
 	cut -s -d '"' -f 4 "$1" |

@@ -31,27 +31,31 @@ the most common ones being:
   - `speadsheet.sh`: Saves various analysis as a csv file
   - `highlight.sh`: Highlights words (seeds) from stdin (use: `allSorts.sh | highlight seedName`);
   - `tops.sh`: Highlights words in the last line (use: `tops.sh allSorts.sh`);
+  - `special.sh`: Select special list (example: `special.sh -top5.txt allSorts.sh`);
 * Evaluating seed:
   - `prefabRules.sh`: Shows prefab distribution by rule;
-  - `interestingPrefabs.sh`: Shows insteresting prefabs on a preview;
-  - `interesting.txt`: List of prefabs deemed "interesting".
+  - `listSpecials.sh`: Shows insteresting prefabs on a preview;
+  - `missingPrefabs.sh`: Shows what prefabs are missing, optionally filtered by special list;
+  - `special/special.txt`: List of prefabs deemed "interesting". Other lists can be found on
+    the same folder.
 
 There's more in here, some used by the above scripts, others used by me for more arcane
 purposes. Some, in fact, I no longer have use for at all. There's also `bash_completion.sh`
-which adds, you guessed it, bash completion for the stuff I use the most.
+which adds, you guessed it, bash completion for the stuff I use the most. Completions can
+be particularly useful for commands that take prefab names or special list as a parameter.
 
 Special prefabs come in many different types. By default, it includes all tier 4 and 5
 prefabs plus traders. It can be changed by setting SPECIAL to one of the included
 categories (check `special/` folder). You can point to your own separately maintained list
 of special prefabs with the `SPECIAL_FOLDER`, which is where files mentioned by `SPECIAL`
-will be looked for.
+will be looked for. One can also use `special.sh` to pick a special file to use from
+the special folder, and both `listSpecials.sh` and `missingPrefabs.sh` accept an optional
+parameter with the special list to use, from the special folder.
 
 Many of these scripts rely on an environment variable called `F7D2D`. You have to assign
 it to the path to the folder where 7 Days to Die Server is installed. It does work with
 mods -- in fact, it was created to be used with Ravenhearst, though it doesn't depend on
-that. The list of interesting prefabs, however, does include Ravenhearst-specific prefabs,
-and would need to be adjusted for other mods. It will work fine with vanilla, since RH
-includes all of vanilla's prefabs.
+that.
 
 This should work to point to 7 Days to Die Server for most people:
 
@@ -132,9 +136,9 @@ as soon as the current seed has been generated. It will also delete "stop" at th
 so you don't risk starting a generation and leaving the computer, only to find out later
 that it stopped right after the first seed.
 
-When analysing seeds, I start by going to the `previews` folder and using `extractPrefabs.sh`
+When analysing seeds, I start by going to the `previews` folder and using `prefabs.sh`
 to get all prefabs.xml files (which were renamed before being saved, as described above)
-for a particular seed size into a directory. For example, `extractPrefabs.sh 4096`, run
+for a particular seed size into a directory. For example, `prefabs.sh 4096`, run
 from the `previews` folder, will extract all these xml files into the `previews/4096`
 folder. I then change into that folder, and use the sorting commands to examine the seeds.
 
@@ -151,7 +155,7 @@ My "open" alias, by the way, is this:
 
 ```bash
 open() {
-    cmd.exe /C start $(wslpath -w "$1")
+    cmd.exe /C start "" "$(wslpath -w "$1")"
     }
 ```
 

@@ -20,6 +20,32 @@ _prefabNames() {
 	fi
 }
 
+_special() {
+	if [[ "${COMP_CWORD}" == "1" ]]; then
+		BIN="$(cd "$(dirname "$(type -P special.sh)")" && pwd)"
+		: "${SPECIAL_FOLDER:=${BIN}/special}"
+		IFS=$'\n'
+		COMPREPLY=( $(cd "${SPECIAL_FOLDER}" && compgen -f -X '.*' -P '-' -- "${2#-}") )
+		IFS=$' \t\n'
+	else
+		_command "$@"
+	fi
+}
+
+_prefabThenSpecial() {
+	if [[ "${COMP_CWORD}" == "1" ]]; then
+		IFS=$'\n'
+		COMPREPLY=( $(compgen -o dirnames -o filenames -f -X '!*.xml' -- "$2") )
+		IFS=$' \t\n'
+	elif [[ "${COMP_CWORD}" == "2" ]]; then
+		BIN="$(cd "$(dirname "$(type -P special.sh)")" && pwd)"
+		: "${SPECIAL_FOLDER:=${BIN}/special}"
+		IFS=$'\n'
+		COMPREPLY=( $(cd "${SPECIAL_FOLDER}" && compgen -f -X '.*' -- "$2") )
+		IFS=$' \t\n'
+	fi
+}
+
 complete -F _seedExtract prefabs.sh
 complete -F _prefabRules sortByRule.sh
 complete -F _prefabNames -o filenames rulesWith.sh
@@ -28,6 +54,8 @@ complete -F _prefabNames -o filenames prefabSize.sh
 complete -o dirnames -o filenames -f -X '!*.xml' uniquePrefabs.sh
 complete -o dirnames -o filenames -f -X '!*.zip' uz.sh
 complete -o dirnames -o filenames -f -X '!*.xml' prefabRules.sh
-complete -o dirnames -o filenames -f -X '!*.xml' missingPrefabs.sh
-complete -o dirnames -o filenames -f -X '!*.xml' specialPrefabs.sh
+complete -F _prefabThenSpecial missingPrefabs.sh
+complete -F _prefabThenSpecial listSpecials.sh
 complete -F _command tops.sh
+complete -F _special special.sh
+
