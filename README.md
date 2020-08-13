@@ -69,6 +69,7 @@ Most scripts, when invoked, display a help message with the parameters it expect
 
 This is incomplete, most likely, but:
 
+* AutoHotKey (not needed for seed generation with server, though)
 * ImageMagick 6 (if using 7, you'll need to fix calls on the `draw*` scripts);
 * XMLStarlet
 * expect
