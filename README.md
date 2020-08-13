@@ -53,14 +53,13 @@ the special folder, and both `listSpecials.sh` and `missingPrefabs.sh` accept an
 parameter with the special list to use, from the special folder.
 
 Many of these scripts rely on an environment variable called `F7D2D`. You have to assign
-it to the path to the folder where 7 Days to Die Server is installed. It does work with
-mods -- in fact, it was created to be used with Ravenhearst, though it doesn't depend on
-that.
+it to the path to the folder where 7 Days to Die is installed. It does work with mods --
+in fact, it was created to be used with Ravenhearst, though it doesn't depend on that.
 
-This should work to point to 7 Days to Die Server for most people:
+This should work to point to 7 Days to Die for most people:
 
 ```bash
-export F7D2D='/mnt/c/Program Files (x86)/Steam/steamapps/common/7 Days to Die Dedicated Server'
+export F7D2D='/mnt/c/Program Files (x86)/Steam/steamapps/common/7 Days to Die'
 ```
 
 Most scripts, when invoked, display a help message with the parameters it expects to receive.
@@ -92,7 +91,7 @@ policy.xml (/etc/ImageMagick-6/policy.xml on Ubuntu). Like this:
 
 # How it works
 
-This whole setup expects to be run under WSL on Windows 10, with 7 Days to Die Server for
+This whole setup expects to be run under WSL on Windows 10, with 7 Days to Die for
 Windows. I have all of it on `~/seedGen`, and I often add that to the path when working,
 though it is not necessary.
 
@@ -100,22 +99,29 @@ I run everything from a wsl session, using Ubuntu. I require a number of extra p
 be installed, though I honestly can't say what all of them are. See requirements above for
 an incomplete list. My scripts, however, will start a *Windows* version of 7 Days to Die.
 
-Whenever a seed is generated, 7 Days to Die Server is started by `startServer.sh`, with
+Whenever a seed is generated, 7 Days to Die is started by `startClient.sh`, with
 seed and world size passed on the command line. Everything it writes is written to the
 folder `UserData`, which will be created inside `$F7D2D`. Not a very good location, I
 admit, but the install locations I actually used were all on folders in my desktop, which
 is fine.
 
+To make the client generate seeds, I use an AutoHotKey script, which is basically a
+program that simulates clicking and typing. It does require hard-coding locations for
+mouse clicks, and I couldn't make it keyboard-only. The locations work for screen
+resolutions of 2560x1440. If your resolution is different, you'll need to change the
+locations on the two scripts: `previewSeed.ahk` and `exitGame.ahk`. The locations are
+all defined as X and Y coordinates at the beginning of the files.
+
 The seed generatior, `genSeed.sh`, then looks at the log looking for a message that
 the generation has finished, or that an error occurred and it has aborted. Not all errors
-are detected, unfortunately, so sometimes you have to kill 7 Days to Die Server by hand
-and cancel the generation.
+are detected, unfortunately, so sometimes you have to kill 7 Days to Die by hand and
+cancel the generation.
 
-Once the server has started, and, therefore, the generation has finished, `savePreview.sh`
-is called and it creates a zip file with a text file called "<seed>-<size>.txt" with the
-"County" name (what 7d2d calls the seed when you look it up), the prefabs.xml file renamed
-to "<seed>-<size>.xml", and a preview image of the map called "<seed>-<size>.png". That
-zip file is then moved to `${F7D2D}/previews/`.
+Once the generation has finished, `savePreview.sh` is called and it creates a zip file
+with a text file called "<seed>-<size>.txt" with the "County" name (what 7d2d calls the
+seed when you look it up), the prefabs.xml file renamed to "<seed>-<size>.xml", and a
+preview image of the map called "<seed>-<size>.png". That zip file is then moved to
+`${F7D2D}/previews/`.
 
 By default the prefabs are draw in the map preview, but you can save time by creating
 a file called `nodraw`, and only the basic map will be created. It can still be slow, but
@@ -165,6 +171,16 @@ And I load my bash completions with this line in the file `~/.bash_completion`:
 ```bash
 source ~/seedGen/bash_completion.sh
 ```
+
+# Using Server for Seeds
+
+This can use the server for seed generation, which is how it worked at first. But
+since alpha 18, seed generation on servers is different than on clients. It uses
+alpha 17 code, essentially. I don't believe this has changed on alpha 19.
+
+You need to change `genSeed.sh` and uncomment `startServer.sh`, and comment
+`startClient.sh`. It is possible that other adjustments are necessary, since I
+haven't used that code in a long while.
 
 # Seed names
 
