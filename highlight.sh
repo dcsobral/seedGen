@@ -4,7 +4,7 @@ join_by() { local IFS="$1"; shift; echo "$*"; }
 
 highlightIt() {
 	if [[ $# -gt 0 ]]; then
-		REGEX="\\Q$(join_by $'\t' "$@" | sed 's/\t/\\E|\\Q/g;s/\.xml//g')\\E|$"
+		REGEX="\\Q$(join_by $'\t' "$@" | sed 's/\t/\\E|\\Q/g;s/-[0-9]*\.xml//g')\\E|$"
 		#echo >&2 "REGEX: $REGEX"
 		grep --color=always -P "$REGEX"
 	else

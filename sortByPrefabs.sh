@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
+BIN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 for file in *.xml; do
 	printf "%5d %s\n" \
 		"$(grep -c decoration "$file")" \
 		"${file%-*.xml}"
-done | sort -nr | awk '{if ($1 != prev) num=NR; printf "%3d %s\n", num, $0; prev=$1}' | tac
+done | "${BIN}/ordinalSort.sh"

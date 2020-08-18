@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-BIN="$(cd "$(dirname "$0")" && pwd)"
+BIN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 : "${SPECIAL_FOLDER:=${BIN}/special}"
 : "${SPECIAL:=special.txt}"
 
@@ -13,5 +13,5 @@ list() {
 	done
 }
 
-list | sort -nr | awk '{if ($1 != prev) num=NR; printf "%3d %s\n", num, $0; prev=$1}' | tac
+list | "${BIN}/ordinalSort.sh"
 

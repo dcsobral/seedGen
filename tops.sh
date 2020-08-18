@@ -9,7 +9,7 @@ fi
 
 OUTPUT="$("$@")"
 
-mapfile -t top < <(grep -Eo '  1 +[0-9]+ +\S+' <<<"$OUTPUT" | grep -Eo '[[:alpha:]]\S+')
+mapfile -t top < <("${BIN}/topSeeds.sh" <<<"$OUTPUT")
 
 "${BIN}/highlight.sh" "${top[@]}" <<<"$OUTPUT"
 

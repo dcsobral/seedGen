@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+BIN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 if [[ $# -ne 1 ]]; then
 	echo >&2 "$0 <rule>"
 	exit 1
@@ -17,5 +19,5 @@ ruleCount() {
 
 for file in *.xml; do
 	printf "%3d %3d %s\n" "$(prefabCount "$1")" "$(ruleCount "$1")" "${file%-*.xml}"
-done | sort -nr | awk '{if ($1 != prev) num=NR; printf "%3d %s\n", num, $0; prev=$1}' | tac
+done | "${BIN}/ordinalSort.sh"
 
