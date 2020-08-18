@@ -16,6 +16,6 @@ ruleCount() {
 }
 
 for file in *.xml; do
-	printf "%3d %3d %s\n" "$(prefabCount "$1")" "$(ruleCount "$1")" "${file%.xml}"
-done | sort -n
+	printf "%3d %3d %s\n" "$(prefabCount "$1")" "$(ruleCount "$1")" "${file%-*.xml}"
+done | sort -nr | awk '{if ($1 != prev) num=NR; printf "%3d %s\n", num, $0; prev=$1}' | tac
 

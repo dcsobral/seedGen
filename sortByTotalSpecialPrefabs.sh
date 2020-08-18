@@ -9,9 +9,9 @@ list() {
 		printf "%4d %s\n" \
 			"$(cut -s -d '"' -f 4 "$file" | \
 			grep -c -F -x -f "${SPECIAL_FOLDER}/${SPECIAL}")" \
-			"${file%.xml}"
+			"${file%-*.xml}"
 	done
 }
 
-list | sort -n
+list | sort -nr | awk '{if ($1 != prev) num=NR; printf "%3d %s\n", num, $0; prev=$1}' | tac
 

@@ -11,9 +11,9 @@ list() {
 				cut -s -d '"' -f 4 | \
 				grep -F -x -f "${SPECIAL_FOLDER}/${SPECIAL}" | \
 				sort -u | wc -l)" \
-                        "${file%.xml}"
+                        "${file%-*.xml}"
 	done
 }
 
-list | sort -n
+list | sort -nr | awk '{if ($1 != prev) num=NR; printf "%3d %s\n", num, $0; prev=$1}' | tac
 
