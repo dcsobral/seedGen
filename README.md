@@ -30,7 +30,9 @@ the most common ones being:
   - `allSpecials.sh`: Displays seeds sorted by various special categories (work in progress);
   - `speadsheet.sh`: Saves various analysis as a csv file
   - `highlight.sh`: Highlights words (seeds) from stdin (use: `allSorts.sh | highlight seedName`);
-  - `tops.sh`: Highlights words in the last line (use: `tops.sh allSorts.sh`);
+  - `greatest.sh`: Highlights seeds that are first in multiple criteria (use: `greatest.sh allSpecials.sh`);
+  - `tops.sh`: Highlights seeds that are first in at least one criteria (use: `tops.sh allSorts.sh`);
+  - `bestSeeds.sh`: Sort top seeds by number of criteria they are top of;
   - `special.sh`: Select special list (example: `special.sh -top5.txt allSorts.sh`);
 * Evaluating seed:
   - `prefabRules.sh`: Shows prefab distribution by rule;
@@ -147,12 +149,28 @@ When analysing seeds, I start by going to the `previews` folder and using `prefa
 to get all prefabs.xml files (which were renamed before being saved, as described above)
 for a particular seed size into a directory. For example, `prefabs.sh 4096`, run
 from the `previews` folder, will extract all these xml files into the `previews/4096`
-folder. I then change into that folder, and use the sorting commands to examine the seeds.
+folder.
+
+Next I go inside the size folder and run commands like `tops.sh allSorts.sh` and
+`greatest.sh allSpecials.sh` to get a quick summary of what seeds stand out according
+to multiple criteria. Sometimes I'll see seeds that are high-rated on multiple criteria
+right away. Sometimes nothing will stand out, so I pick some of the highest rate in one
+criteria and another and check how they fare overall. For example, if X, Y and Z are the
+top three seeds in unique prefabs, I might do `allSpecials.sh X Y Z` to hightlight them
+on the lists by special prefabs and see if any one of them fares well enough.
 
 Once I spot some candidate seeds, I use the seed evaluation commands to evaluate that seed.
-I then go back into the `previews` folder, and use the `uz.sh` command to extract a specific
-seed into a directory. That's basically `unzip`, but it creates a folder and extracts the
-preview into that folder, which keeps the `previews` folder cleaner.
+For example, I might do `listSpecials.sh X skyscrapers.txt` to see which skyscrapers seed
+X has, or `missingPrefabs.sh X top7.txt` to see which of my top 7 prefabs is missing on
+seed X. If a seed is really great, I might just do `missingPrefabs.sh X` to list all prefabs
+it does not have.
+
+The final step for me is to look at what the maps look like. I run `previews.sh` which,
+similar to `prefabs.sh`, will extract the map previews of seeds of a size (or all sizes)
+into a folder. For example, `preview.sh` will created the folders `4096-previews` and
+`8192-previews`, assuming I have seeds of both 4096 and 8192 sizes. It also creates
+a montage with the thumbnails of every map, in case I'm looking for seeds based on what
+the map looks like.
 
 I then go into that seed folder, look at the map (I have an "open" alias that makes it easy),
 and maybe do some more evaluation. Looking at maps for multiple seeds side by side is often
