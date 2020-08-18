@@ -56,6 +56,7 @@ complete -o dirnames -o filenames -f -X '!*.zip' uz.sh
 complete -o dirnames -o filenames -f -X '!*.xml' prefabRules.sh
 complete -F _prefabThenSpecial missingPrefabs.sh
 complete -F _prefabThenSpecial listSpecials.sh
+complete -F _command greatest.sh
 complete -F _command tops.sh
 complete -F _special special.sh
 
