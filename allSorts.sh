@@ -9,6 +9,7 @@ getSorts() {
 		<(sortBySpecialPrefabs.sh) \
 		<(sortByTotalSpecialPrefabs.sh) \
 		<(sortByUniquePrefabs.sh)
+	echo $'      # of Prefabs\t     Uniq. Spc.\t     # of Spc.\t     Unique'
 }
 
 if [[ -t 1 ]]; then

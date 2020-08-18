@@ -15,7 +15,7 @@ getSorts() {
 #	done
 #	echo
 
-	echo $'top7\ttop15\ttiers 4, 5 & traders\tstores\tskyscrapers'
+	echo $'     top7\t     top15\t     tiers 4, 5 & traders\t     stores\t     skyscrapers'
 
 	# Hacks! I haven't figured out the best way of not hard coding this
 	paste \
@@ -24,6 +24,8 @@ getSorts() {
 		<(SPECIAL=special.txt sortBySpecialPrefabs.sh) \
 		<(SPECIAL=stores.txt sortBySpecialPrefabs.sh) \
 		<(SPECIAL=skyscrapers.txt sortBySpecialPrefabs.sh)
+
+	echo $'     top7\t     top15\t     tiers 4, 5 & traders\t     stores\t     skyscrapers'
 }
 
 #getSorts() {
