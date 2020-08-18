@@ -90,16 +90,16 @@ for decoration in "${MAPFILE[@]}"; do
 	echo "fill $zone rectangle ${tl} ${br}" >> "${THUMB}"
 done
 
-echo "stroke-width 2 stroke black fill white stroke-opacity 0.6 fill-opacity 0.6 stroke-dasharray 5 5" > "${GRID}"
+echo "stroke-width 2 stroke black fill white stroke-opacity 0.6 fill-opacity 0.6 stroke-dasharray 16 16" > "${GRID}"
 echo "stroke-width 4 fill white stroke black stroke-opacity 0.6 fill-opacity 0.6" > "${COORDS}"
 echo "font Helvetica-Bold font-size 48" >> "${COORDS}"
-KMs=$((CENTER / 1000))
-for km in $(seq "-$KMs" "$KMs"); do
-	P=$((km * 1000 + CENTER))
+Ms=$((CENTER / 512 - 1))
+for m in $(seq $((-Ms)) $((Ms))); do
+	P=$((m * 512 + CENTER))
 	echo "path 'M 0,$P L $SIZE,$P'" >> "${GRID}"
 	echo "path 'M $P,0 L $P,$SIZE'" >> "${GRID}"
-	printf "text 4,$((P - 8)) '%2d'" $((-km)) >> "${COORDS}"
-	echo "text $((P + 8)),$((SIZE - 8)) '$km'" >> "${COORDS}"
+	printf "text 4,$((P - 8)) '%4d'" $((-m * 512)) >> "${COORDS}"
+	echo "text $((P + 8)),$((SIZE - 8)) '$((m * 512))'" >> "${COORDS}"
 done
 
 echo "stroke-width 1 fill red" > "${SPAWN}"
