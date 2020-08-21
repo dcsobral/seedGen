@@ -51,6 +51,7 @@ complete -F _prefabRules sortByRule.sh
 complete -F _prefabNames -o filenames rulesWith.sh
 complete -F _prefabNames -o filenames zoning.sh
 complete -F _prefabNames -o filenames prefabSize.sh
+complete -F _prefabNames -o filenames showPrefab.sh
 complete -o dirnames -o filenames -f -X '!*.xml' uniquePrefabs.sh
 complete -o dirnames -o filenames -f -X '!*.zip' uz.sh
 complete -o dirnames -o filenames -f -X '!*.xml' prefabRules.sh

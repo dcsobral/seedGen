@@ -39,12 +39,13 @@ the most common ones being:
   - `listSpecials.sh`: Shows insteresting prefabs on a preview;
   - `missingPrefabs.sh`: Shows what prefabs are missing, optionally filtered by special list;
   - `special/special.txt`: List of prefabs deemed "interesting". Other lists can be found on
-    the same folder.
+    the same folder;
+* Helpful stuff:
+ - `showPrefab.sh`: displays the image preview of a prefab.
+ - `bash_completion.sh`: auto-complete for these scripts;
 
 There's more in here, some used by the above scripts, others used by me for more arcane
-purposes. Some, in fact, I no longer have use for at all. There's also `bash_completion.sh`
-which adds, you guessed it, bash completion for the stuff I use the most. Completions can
-be particularly useful for commands that take prefab names or special list as a parameter.
+purposes. Some, in fact, I no longer have use for at all.
 
 Special prefabs come in many different types. By default, it includes all tier 4 and 5
 prefabs plus traders. It can be changed by setting SPECIAL to one of the included
