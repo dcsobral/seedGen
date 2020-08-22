@@ -2,6 +2,7 @@
 set -euo pipefail
 IFS=$'\t\n'
 
+: "${F7D2D:?Please export F7D2D with 7D2D install folder}"
 cd "${F7D2D}/previews"
 
 if [[ $# -lt 1 ]]; then

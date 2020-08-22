@@ -38,6 +38,7 @@ the most common ones being:
   - `prefabRules.sh`: Shows prefab distribution by rule;
   - `listSpecials.sh`: Shows insteresting prefabs on a preview;
   - `missingPrefabs.sh`: Shows what prefabs are missing, optionally filtered by special list;
+  - `showBiomeDistribution.sh`: Shows how prefabs are distributed among biomes;
   - `special/special.txt`: List of prefabs deemed "interesting". Other lists can be found on
     the same folder;
 * Helpful stuff:

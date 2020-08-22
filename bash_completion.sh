@@ -46,6 +46,13 @@ _prefabThenSpecial() {
 	fi
 }
 
+_seedName() {
+	COMPREPLY=( $(compgen -f -- "$2" | sed -e 's/\.[^ ]*//g') )
+	if [[ -d "$F7D2D/previews" ]]; then
+		COMPREPLY+=( $(cd "$F7D2D/previews" && compgen -f -- "$2" | sed -e 's/\.[^ ]*//g') )
+	fi
+}
+
 complete -F _seedExtract prefabs.sh
 complete -F _prefabRules sortByRule.sh
 complete -F _prefabNames -o filenames rulesWith.sh
@@ -60,4 +67,5 @@ complete -F _prefabThenSpecial listSpecials.sh
 complete -F _command greatest.sh
 complete -F _command tops.sh
 complete -F _special special.sh
+complete -F _seedName showBiomeDistribution.sh
 
