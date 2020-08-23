@@ -60,7 +60,7 @@ declare -a MAPFILE
 
 mapfile < <(xmlstarlet sel -t -m "/prefabs/decoration" -v "@name" -o ";" -v "@position" -o ";" -v "@rotation" -n - < "$XML")
 
-echo "stroke black font Helvetica-Bold" > "${DRAW}"
+echo "stroke black fill white font Helvetica-Bold" > "${DRAW}"
 echo "stroke-width 3 fill none stroke pink" > "${TRADERS}"
 for decoration in "${MAPFILE[@]}"; do
         IFS=';' read -r prefab coords rotation <<<"$decoration"
@@ -80,7 +80,8 @@ for decoration in "${MAPFILE[@]}"; do
 			key="${key}${tag[0]:0:1}"
 		done
 		desc="${key^^}${tier}"
-		[[ -n $desc ]] && font_size=$((max_size / ${#desc} - 1))
+		#[[ -n $desc ]] && font_size=$((max_size / ${#desc} - 1))
+		[[ -n $desc ]] && font_size=16
 		[[ -n $key && -n $tier ]] && echo "font-size ${font_size} text ${bl} '$desc'" >> "${DRAW}"
         fi
 	if [[ $prefab == *trader* ]]; then
