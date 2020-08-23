@@ -58,5 +58,6 @@ convert \( biomes.png \
 
 echo "${PREVIEW}"
 
-# convert prefabs-EthosMount-8192.png -sigmoidal-contrast 5x1% EthosMount.png
+# On Nitrogen, use this:
+# convert SEED-SIZE.png -sigmoidal-contrast 5x1% adj-SEED-SIZE.png
 
