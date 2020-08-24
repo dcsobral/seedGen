@@ -39,6 +39,7 @@ the most common ones being:
   - `listSpecials.sh`: Shows insteresting prefabs on a preview;
   - `missingPrefabs.sh`: Shows what prefabs are missing, optionally filtered by special list;
   - `showBiomeDistribution.sh`: Shows how prefabs are distributed among biomes;
+  - `showZoningDistribution.sh`: Shows the relative proportions of residential, commercial, etc;
   - `special/special.txt`: List of prefabs deemed "interesting". Other lists can be found on
     the same folder;
 * Helpful stuff:
