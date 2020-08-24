@@ -21,9 +21,11 @@ optional() {
 	OPTIONAL=( "$@" )
 }
 
+[[ ! -f dtm.png ]] && convert -size "${IMGSIZE}" -depth 16 gray:dtm.raw -flip dtm.png
+
 if [[ $# -eq 3 ]]; then
 	optional \
-		\( -size "${IMGSIZE}" -depth 16 gray:dtm.raw -flip \
+		\( dtm.png \
 			-threshold $THRESHOLD \
 			-transparent white \
 			-fill '#738cce' -opaque black \
@@ -43,7 +45,7 @@ convert \( biomes.png \
 		-fill '#ceb584' -opaque '#ff0000' \
 	\) \
 	-composite \
-	\( -size "${IMGSIZE}" -depth 16 gray:dtm.raw -flip -black-threshold $THRESHOLD -auto-level \) \
+	\( dtm.png -black-threshold $THRESHOLD -auto-level \) \
 	+swap -compose multiply -composite \
 	"${OPTIONAL[@]}" \
 	\( radiation.png \

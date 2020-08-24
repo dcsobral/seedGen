@@ -71,11 +71,19 @@ else
 	echo >&2 "Skipping splat"
 fi
 
+
+if [[ ! -f "${HERE}/nocontour" ]]; then
+	CONTOUR="$("${BIN}/drawContour.sh" "${SIZE}" "${SEED}")"
+else
+	CONTOUR=""
+fi
+
 zip "${NAME}" "${PREVIEW}" "${PREFABS}" "${SPAWN}" "${COUNTY_FILE}" \
 	${THUMBNAIL:+"${THUMBNAIL}"} \
 	"${GENERATION_INFO_FILE}" "${MAP_INFO_FILE}" \
 	"${BIOME_DIST_FILES[@]}" \
-	${SPLAT:+"${SPLAT}"}
+	${SPLAT:+"${SPLAT}"} \
+	${CONTOUR:+"${CONTOUR}"}
 
 mkdir -p "${F7D2D}/previews"
 mv "${NAME}.zip" "${F7D2D}/previews/"
