@@ -14,6 +14,7 @@ fi
 for SIZE; do (
 	echo "Generating thumbnail montage for ${SIZE}"
 	cd "${SIZE}-previews"
+
 	DIM=$((SIZE / 16))
 	if [[ ! -d thumbs ]]; then
 		mkdir thumbs
@@ -23,10 +24,20 @@ for SIZE; do (
 			-resize "${DIM}x${DIM}" \
 			"*-${SIZE}.png"
 	fi
+
+	COUNT="$(ls thumbs | wc -l || echo 0)"
+	if [[ $COUNT -gt 121 ]]; then
+		echo "Generating multiple montages"
+		TILING=( "-tile" "10x10" )
+	else
+		TILING=( )
+	fi
+
 	montage -title "Size ${SIZE} Seeds" \
 		-geometry "+4+3" \
 		-pointsize 16 -label '%c' \
 		"thumbs/*.png" \
+		"${TILING[@]}" \
 		"${SIZE}.png"
 	)
 done
