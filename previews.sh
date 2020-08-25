@@ -15,36 +15,13 @@ for SIZE; do
 	echo "Extracting ${SIZE}"
 	mkdir -p "${SIZE}-previews"
 
-	MODIFIED=''
-
 	for map in *"${SIZE}.zip"; do
 		if [[ ! -f ${SIZE}-previews/${map%.zip}.png ]]; then
 			unzip "$map" \
 				"${map%.zip}.png" \
 				"thumbs/${map%.zip}.png" \
 				-d "${SIZE}-previews"
-			MODIFIED=1
 		fi
 	done
-
-	if [[ -n $MODIFIED ]]; then (
-			echo "Generating thumbnail montage for ${SIZE}"
-			cd "${SIZE}-previews"
-			DIM=$((SIZE / 16))
-			if [[ ! -d thumbs ]]; then
-				mkdir thumbs
-				mogrify -format png \
-					-depth 8 \
-					-path thumbs \
-					-resize "${DIM}x${DIM}" \
-					"*-${SIZE}.png"
-			fi
-			montage -title "Size ${SIZE} Seeds" \
-				-geometry "+4+3" \
-				-pointsize 16 -label '%c' \
-				"thumbs/*.png" \
-				"${SIZE}.png"
-		)
-	fi
 done
 

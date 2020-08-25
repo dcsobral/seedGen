@@ -19,7 +19,8 @@ the most common ones being:
 * Retrieving Seeds
   - `uz.sh`: Extracts a preview into its own directory;
   - `prefabs.sh`: Extracts prefab information of all previews of a size;
-  - `previews.sh`: Extracts all previews of a size, and generates a montage;
+  - `previews.sh`: Extracts all previews of a size;
+  - `makeMontage.sh`: Makes a montage with thumbnails of all extracted previews;
   - `spawnpoints.sh`: Extracts spawn points from all seeds (for debugging);
 * Comparing Seeds
   - `sortBySpecialPrefabs.sh`: Sort prefabs by the number of unique "interesting" prefabs;
