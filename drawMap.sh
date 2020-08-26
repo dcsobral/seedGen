@@ -51,7 +51,7 @@ convert \( biomes.png \
 	\( radiation.png \
 		-channel rgba -fill "rgba(255,0,0,0.9)" -opaque "rgb(255,0,0)" +channel  \
 		-transparent black \
-		-resize "${IMGSIZE}" \
+		-scale "${IMGSIZE}" \
 	\) \
 	-compose Over -composite \
 	-depth 8 \
