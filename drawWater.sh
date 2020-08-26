@@ -79,8 +79,9 @@ for depth in "${DEPTHS[@]}"; do
 		echo "pop graphic-context" >> "${file}"
 	done
 	time convert -size "${DIM}" -depth 16 gray:dtm.raw -flip \
+		-threshold "$threshold" \
 		-depth 8 \
-		-threshold "$threshold" -write mpr:mask \
+		-write mpr:mask \
 		-monitor -draw "@${file}" \
 		mpr:mask -compose minus_src -composite \
 		-alpha on -transparent black \
