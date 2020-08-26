@@ -21,7 +21,7 @@ CONTOUR="${NAME}-contour.png"
 #	-fill '#393931' -opaque '#ba00ff' \
 #        -threshold 50% bw.png
 convert dtm.png -depth 8 \
-	\( -size 1x500 gradient: -rotate 90 -duplicate 49 +append +repage \) \
+	\( -size 1x500 gradient: -rotate 90 -duplicate 24 +append +repage \) \
 	-clut -morphology edgein diamond:1 -threshold 40% contour.png
 #convert contour.png bw.png -compose Plus -composite \
 #	\( bw.png -negate \) -compose Multiply -composite \
