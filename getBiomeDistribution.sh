@@ -85,16 +85,18 @@ done
 # Delete empty region
 SUBST="$SUBST;/#000000FF/d"
 
-echo 'Biome,Count,Area' > "${COUNT}"
+echo 'Biome,Prefab Count,Prefab Area,Area' > "${COUNT}"
 join -t , \
-	<(convert "$IMG" \
-		\( -size "${IMGSIZE}" xc:black -fill white -draw "@${COUNT_MASK}" -transparent white \) \
-		-composite \
-		-format %c histogram:info:- | sed -Ee "$SUBST") \
-	<(convert "$IMG" \
-		\( -size "${IMGSIZE}" xc:black -fill white -draw "@${AREA_MASK}" -transparent white \) \
-		-composite \
-		-format %c histogram:info:- | sed -Ee "$SUBST") \
+	<(join -t , \
+		<(convert "$IMG" \
+			\( -size "${IMGSIZE}" xc:black -fill white -draw "@${COUNT_MASK}" -transparent white \) \
+			-composite \
+			-format %c histogram:info:- | sed -Ee "$SUBST") \
+		<(convert "$IMG" \
+			\( -size "${IMGSIZE}" xc:black -fill white -draw "@${AREA_MASK}" -transparent white \) \
+			-composite \
+			-format %c histogram:info:- | sed -Ee "$SUBST")) \
+	<(convert "$IMG" -format %c histogram:info:- | sed -Ee "$SUBST") \
 		>> "${COUNT}"
 
 echo "$COUNT"

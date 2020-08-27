@@ -8,26 +8,44 @@ if [[ $# -lt 1 ]]; then
 fi
 
 printHistogram() {
+	declare FORMAT="$1"
 	declare TOTAL_AREA=0
 	declare TOTAL_COUNT=0
-	declare line biome count area perc_count perc_area
+	declare TOTAL_BIOME_AREA=0
+	declare line biome count area biome_area perc_count perc_area
 	mapfile -t -s 1
 
 	for line in "${MAPFILE[@]}"; do
-		IFS=',' read -r _ count area <<<"$line"
+		IFS=',' read -r _ count area biome_area <<<"$line"
 		TOTAL_AREA=$((TOTAL_AREA + area))
 		TOTAL_COUNT=$((TOTAL_COUNT + count))
+		TOTAL_BIOME_AREA=$((TOTAL_BIOME_AREA + biome_area))
 	done
 
-	echo $'Biome\tCount\t  %\tArea\t  %'
+	echo $'Biome\tPrefabs\t  %\tPrefab Area\t  %\tArea\t  %'
 	for line in "${MAPFILE[@]}"; do
-		IFS=',' read -r biome count area <<<"$line"
+		IFS=',' read -r biome count area biome_area <<<"$line"
 		perc_area=$((area * 1000 / TOTAL_AREA))
 		perc_count=$((count * 1000 / TOTAL_COUNT))
 		# round up & down
 		perc_area=$(((perc_area + 5) / 10))
 		perc_count=$(((perc_count + 5) / 10))
-		printf "%s\t%5d\t%3d\t%8d\t%3d\n" "$biome" "$count" "$perc_count" "$area" "${perc_area}"
+
+		# Newly added biome area
+		if [[ $TOTAL_BIOME_AREA -gt 0 ]]; then
+			perc_biome_area=$((biome_area * 1000 / TOTAL_BIOME_AREA))
+			perc_biome_area=$(((perc_biome_area + 5) / 10))
+		else
+			biome_area="n/a"
+			perc_biome_area="n/a"
+		fi
+
+		printf "$FORMAT" \
+			2> /dev/null \
+			"$biome" \
+			"$count" "$perc_count" \
+			"$area" "$perc_area" \
+			"$biome_area" "$perc_biome_area"
 	done
 }
 
@@ -44,9 +62,10 @@ for name; do
 	fi
 
 	if [[ -t 1 ]]; then
-		printHistogram <<< "$HIST" | column -t -s $'\t'
+		printHistogram "%s\t%'6d\t%3d\t%'10d\t%3d\t%'11d\t%3d\n" <<< "$HIST" \
+			| column -t -s $'\t'
 	else
-		printHistogram <<< "$HIST"
+		printHistogram "%s\t%5d\t%3d\t%8d\t%3d\t%9d\t%3d\n" <<< "$HIST"
 	fi
 done
 
