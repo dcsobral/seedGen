@@ -38,6 +38,7 @@ fi
 convert \( biomes.png \
 		-fill '#949442' -opaque '#ffa800' \
 		-fill '#393931' -opaque '#ba00ff' \
+		-fill '#c3c4d9' -opaque '#ffffff' \
 	\) \
 	\( splat3.png \
 		-alpha off -transparent black \
