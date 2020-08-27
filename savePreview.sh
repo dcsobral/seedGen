@@ -52,7 +52,7 @@ fi
 
 declare -a BIOME_DIST_FILES
 if [[ ! -f "${HERE}/nobiome" ]]; then
-	cp biomes.png "${BIOME}"
+	convert biomes.png "${BIOME}"
 	BIOME_COUNT=$("${BIN}/getBiomeDistribution.sh" "${PREFABS}" "${BIOME}" "${SIZE}" "${SEED}")
 	BIOME_DIST_FILES=( "${BIOME}" "${BIOME_COUNT}" )
 else
@@ -61,11 +61,7 @@ else
 fi
 
 if [[ ! -f "${HERE}/nosplat" ]]; then
-	convert splat3.png \
-                -alpha off -transparent black \
-                -fill '#9c8c7b' -opaque '#00ff00' \
-                -fill '#ceb584' -opaque '#ff0000' \
-		"${SPLAT}"
+	convert splat3.png "${SPLAT}"
 else
 	SPLAT=""
 	echo >&2 "Skipping splat"
