@@ -22,23 +22,21 @@ printHistogram() {
 		TOTAL_BIOME_AREA=$((TOTAL_BIOME_AREA + biome_area))
 	done
 
+	[[ $TOTAL_AREA -eq 0 ]] && TOTAL_AREA=1
+	[[ $TOTAL_COUNT -eq 0 ]] && TOTAL_COUNT=1
+	[[ $TOTAL_BIOME_AREA -eq 0 ]] && TOTAL_BIOME_AREA=1
+
 	echo $'Biome\tPrefabs\t  %\tPrefab Area\t  %\tArea\t  %'
 	for line in "${MAPFILE[@]}"; do
 		IFS=',' read -r biome count area biome_area <<<"$line"
 		perc_area=$((area * 1000 / TOTAL_AREA))
 		perc_count=$((count * 1000 / TOTAL_COUNT))
+		perc_biome_area=$((biome_area * 1000 / TOTAL_BIOME_AREA))
+
 		# round up & down
 		perc_area=$(((perc_area + 5) / 10))
 		perc_count=$(((perc_count + 5) / 10))
-
-		# Newly added biome area
-		if [[ $TOTAL_BIOME_AREA -gt 0 ]]; then
-			perc_biome_area=$((biome_area * 1000 / TOTAL_BIOME_AREA))
-			perc_biome_area=$(((perc_biome_area + 5) / 10))
-		else
-			biome_area="0"
-			perc_biome_area="0"
-		fi
+		perc_biome_area=$(((perc_biome_area + 5) / 10))
 
 		printf "$FORMAT" \
 			"$biome" \

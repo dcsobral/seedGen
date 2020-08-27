@@ -86,18 +86,28 @@ done
 SUBST="$SUBST;/#000000FF/d"
 
 echo 'Biome,Prefab Count,Prefab Area,Area' > "${COUNT}"
-join -t , \
-	<(join -t , \
+listBiomes() {
+	printf "%s\n" "${!BIOMES[@]}" | sort
+}
+
+showPrefabs() {
+	join -t , \
 		<(convert "$IMG" \
 			\( -size "${IMGSIZE}" xc:black -fill white -draw "@${COUNT_MASK}" -transparent white \) \
 			-composite \
-			-format %c histogram:info:- | sed -Ee "$SUBST") \
+			-format %c histogram:info:- | sed -Ee "$SUBST" | sort) \
 		<(convert "$IMG" \
 			\( -size "${IMGSIZE}" xc:black -fill white -draw "@${AREA_MASK}" -transparent white \) \
 			-composite \
-			-format %c histogram:info:- | sed -Ee "$SUBST")) \
-	<(convert "$IMG" -format %c histogram:info:- | sed -Ee "$SUBST") \
-		>> "${COUNT}"
+			-format %c histogram:info:- | sed -Ee "$SUBST" | sort)
+}
+
+showBiomes() {
+	convert "$IMG" -format %c histogram:info:- | sed -Ee "$SUBST" | sort
+}
+
+join -a 1 -e 0 -o 1.1,2.2,2.3,2.4 -t , <(listBiomes) \
+	<(join -a 2 -e 0 -o 2.1,1.2,1.3,2.2 -t , <(showPrefabs) <(showBiomes)) >> "${COUNT}"
 
 echo "$COUNT"
 
