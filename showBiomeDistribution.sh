@@ -65,7 +65,7 @@ for name; do
 		printHistogram "%s\t%'6d\t%3d\t%'10d\t%3d\t%'11d\t%3d\n" <<< "$HIST" \
 			| column -t -s $'\t'
 	else
-		printHistogram "%s\t%5d\t%3d\t%8d\t%3d\t%9d\t%3d\n" <<< "$HIST"
+		printHistogram "%s\t%d\t%d\t%d\t%d\t%d\t%d\n" <<< "$HIST"
 	fi
 done
 
