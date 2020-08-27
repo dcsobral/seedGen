@@ -36,12 +36,11 @@ printHistogram() {
 			perc_biome_area=$((biome_area * 1000 / TOTAL_BIOME_AREA))
 			perc_biome_area=$(((perc_biome_area + 5) / 10))
 		else
-			biome_area="n/a"
-			perc_biome_area="n/a"
+			biome_area="0"
+			perc_biome_area="0"
 		fi
 
 		printf "$FORMAT" \
-			2> /dev/null \
 			"$biome" \
 			"$count" "$perc_count" \
 			"$area" "$perc_area" \
