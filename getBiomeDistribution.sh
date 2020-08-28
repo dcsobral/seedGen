@@ -70,11 +70,11 @@ done
 
 declare -A BIOMES
 
-BIOMES[Forest]='#004000FF'
-BIOMES[Burnt Forest]='#BA00FFFF'
-BIOMES[Wasteland]='#FFA800FF'
-BIOMES[Desert]='#FFE477FF'
-BIOMES[Snow]='#FFFFFFFF'
+BIOMES[Forest]='#004000(FF)?'
+BIOMES[Burnt Forest]='#BA00FF(FF)?'
+BIOMES[Wasteland]='#FFA800(FF)?'
+BIOMES[Desert]='#FFE477(FF)?'
+BIOMES[Snow]='#FFFFFF(FF)?'
 
 # Change from histogram data to "<color> <count>"
 SUBST='s/^ *([0-9]*):.* (#[0-9A-Fa-f]*) .*$/\2,\1/'
@@ -83,7 +83,7 @@ for biome in "${!BIOMES[@]}"; do
 	SUBST="$SUBST;s/${BIOMES[$biome]}/$biome/"
 done
 # Delete empty region
-SUBST="$SUBST;/#000000FF/d"
+SUBST="$SUBST;/#000000(FF)?/d"
 
 echo 'Biome,Prefab Count,Prefab Area,Area' > "${COUNT}"
 listBiomes() {
