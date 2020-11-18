@@ -9,6 +9,12 @@ if [[ $# -lt 3 || $# -gt 4 ]]; then
         exit 1
 fi
 
+[[ ! -f splatmap.png ]] && convert splat3.png \
+        -alpha off -transparent black \
+        -fill '#9c8c7b' -opaque '#00ff00' \
+        -fill '#ceb584' -opaque '#ff0000' \
+        splatmap.png
+
 coordsFor() {
         declare -g tl br dim
         declare COORDS DIM ROT
@@ -119,6 +125,7 @@ convert "${IMG}" \
 	-draw "@${GRID}" \
 	-draw "@${COORDS}" \
 	-draw "@${SPAWN}" \
+	splatmap.png -composite \
 	"${PREVIEW}"
 
 mkdir -p thumbs

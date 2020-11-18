@@ -16,10 +16,10 @@ NAME="${SEED}-${SIZE}"
 PREVIEW="${NAME}-m.png"
 THRESHOLD=$((LEVEL * 256 + 128))
 
-declare -a OPTIONAL
-
 optional() {
-	OPTIONAL=( "$@" )
+	declare -n VAR="$1"
+	shift
+	VAR=( "$@" )
 }
 
 [[ ! -f dtm.png ]] && convert -size "${IMGSIZE}" -depth 16 gray:dtm.raw -flip dtm.png
@@ -36,13 +36,22 @@ optional() {
 	-fill '#ceb584' -opaque '#ff0000' \
 	splatmap.png
 
-[[ ! -f watermap.png && $# -eq 3 ]] && convert dtm.png \
-	-threshold $THRESHOLD \
+[[ ! -f splat4map.png ]] && convert splat4.png \
+	-alpha off  -transparent black \
+	-fill '#738cce' -opaque '#001c00'\
+	splat4map.png
+
+[[ ! -f watermap.png && $# -eq 3 ]] && convert splat4map.png \
+	\( \
+		dtm.png \
+		-threshold $THRESHOLD \
+		-transparent black \
+	\) \
+	-composite \
 	-transparent white \
-	-fill '#738cce' -opaque black \
 	watermap.png
 
-[[ ! -f radiationmap.png ]] && convert radiation.png \
+[[ -f radiation.png && ! -f radiationmap.png ]] && convert radiation.png \
 	-channel rgba -fill "rgba(255,0,0,0.7)" -opaque "rgb(255,0,0)" +channel  \
 	-transparent black \
 	-scale "${IMGSIZE}" \
@@ -50,20 +59,28 @@ optional() {
 
 IFS=$' \t\n' MOUNTAINS=( $( "${BIN}/drawMountains.sh" "$SIZE" ) )
 
+declare -a WATER_ARGS
 if [[ $# -eq 3 ]]; then
-	optional \
+	optional WATER_ARGS \
 		watermap.png \
 		-compose Over -composite
 else
-	optional
+	optional WATER_ARGS
+fi
+
+if [[ -f radiationmap.png ]]; then
+	optional RADIATION_ARGS \
+		radiationmap.png -compose Over -composite
+else
+	optional RADIATION_ARGS
 fi
 
 convert biomemap.png \
 	splatmap.png -composite \
 	"${MOUNTAINS[0]}" -compose screen -composite \
 	\( "${MOUNTAINS[1]}" -negate \) -compose multiply -composite \
-	"${OPTIONAL[@]}" \
-	radiationmap.png -compose Over -composite \
+	"${WATER_ARGS[@]}" \
+	"${RADIATION_ARGS[@]}" \
 	-depth 8 \
 	-set comment "${SEED}" \
 	"${PREVIEW}"
