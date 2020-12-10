@@ -16,11 +16,16 @@ for SIZE; do
 	mkdir -p "${SIZE}-previews"
 
 	for map in *"${SIZE}.zip"; do
-		if [[ ! -f ${SIZE}-previews/${map%.zip}.png ]]; then
+		if [[ ! -f ${SIZE}-previews/${map%.zip}.png && ! -f ${SIZE}-previews/${map%.zip}-m.png ]]; then
 			unzip "$map" \
 				"${map%.zip}.png" \
 				"thumbs/${map%.zip}.png" \
+				-d "${SIZE}-previews" ||
+			unzip "$map" \
+				"${map%.zip}-m.png" \
+				"thumbs/${map%.zip}-m.png" \
 				-d "${SIZE}-previews"
+
 		fi
 	done
 done

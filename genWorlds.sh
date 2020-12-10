@@ -20,7 +20,7 @@ shift
 SIZES=("$@")
 
 if [[ ${#SIZES[@]} -eq 0 ]]; then
-        SIZES=( 4096 8192 )
+        SIZES=( 6144 8192 10240 )
 fi
 
 for size in "${SIZES[@]}"; do

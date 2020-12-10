@@ -7,6 +7,7 @@ if [[ $# -lt 2 || $# -gt 3 ]]; then
 	exit 1
 fi
 
+BIN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SIZE="${1}"
 IMGSIZE="${SIZE}x${SIZE}"
 SEED="${2}"
@@ -15,52 +16,74 @@ NAME="${SEED}-${SIZE}"
 PREVIEW="${NAME}.png"
 THRESHOLD=$((LEVEL * 256 + 128))
 
-declare -a OPTIONAL
-
 optional() {
-	OPTIONAL=( "$@" )
+	declare -n VAR="$1"
+	shift
+	VAR=( "$@" )
 }
 
 [[ ! -f dtm.png ]] && convert -size "${IMGSIZE}" -depth 16 gray:dtm.raw -flip dtm.png
 
-if [[ $# -eq 3 ]]; then
-	optional \
-		\( dtm.png \
-			-threshold $THRESHOLD \
-			-transparent white \
-			-fill '#738cce' -opaque black \
-		\) \
-		-compose Over -composite
-else
-	optional
-fi
+[[ ! -f biomemap.png ]] && convert biomes.png \
+	-fill '#949442' -opaque '#ffa800' \
+	-fill '#393931' -opaque '#ba00ff' \
+	-fill '#c3c4d9' -opaque '#ffffff' \
+	biomemap.png
 
-convert \( biomes.png \
-		-fill '#949442' -opaque '#ffa800' \
-		-fill '#393931' -opaque '#ba00ff' \
-		-fill '#c3c4d9' -opaque '#ffffff' \
-	\) \
-	\( splat3.png \
-		-alpha off -transparent black \
-		-fill '#9c8c7b' -opaque '#00ff00' \
-		-fill '#ceb584' -opaque '#ff0000' \
+[[ ! -f splatmap.png ]] && convert splat3.png \
+	-alpha off -transparent black \
+	-fill '#9c8c7b' -opaque '#00ff00' \
+	-fill '#ceb584' -opaque '#ff0000' \
+	splatmap.png
+
+[[ ! -f splat4map.png ]] && convert splat4.png \
+	-alpha off  -transparent black \
+	-fill '#738cce' -opaque '#001c00'\
+	splat4map.png
+
+[[ ! -f watermap.png && $# -eq 3 ]] && convert splat4map.png \
+	\( \
+		dtm.png \
+		-threshold $THRESHOLD \
+		-transparent black \
 	\) \
 	-composite \
-	\( dtm.png -black-threshold $THRESHOLD -auto-level \) \
-	+swap -compose multiply -composite \
-	"${OPTIONAL[@]}" \
-	\( radiation.png \
-		-channel rgba -fill "rgba(255,0,0,0.9)" -opaque "rgb(255,0,0)" +channel  \
-		-transparent black \
-		-scale "${IMGSIZE}" \
-	\) \
-	-compose Over -composite \
+	-transparent white \
+	watermap.png
+
+[[ -f radiation.png && ! -f radiationmap.png ]] && convert radiation.png \
+	-channel rgba -fill "rgba(255,0,0,0.7)" -opaque "rgb(255,0,0)" +channel  \
+	-transparent black \
+	-scale "${IMGSIZE}" \
+	radiationmap.png
+
+IFS=$' \t\n' MOUNTAINS=( $( "${BIN}/drawMountains.sh" "$SIZE" ) )
+
+declare -a WATER_ARGS
+if [[ $# -eq 3 ]]; then
+	optional WATER_ARGS \
+		watermap.png \
+		-compose Over -composite
+else
+	optional WATER_ARGS
+fi
+
+if [[ -f radiationmap.png ]]; then
+	optional RADIATION_ARGS \
+		radiationmap.png -compose Over -composite
+else
+	optional RADIATION_ARGS
+fi
+
+convert biomemap.png \
+	splatmap.png -composite \
+	"${MOUNTAINS[0]}" -compose screen -composite \
+	\( "${MOUNTAINS[1]}" -negate \) -compose multiply -composite \
+	"${WATER_ARGS[@]}" \
+	"${RADIATION_ARGS[@]}" \
 	-depth 8 \
 	-set comment "${SEED}" \
 	"${PREVIEW}"
 
 echo "${PREVIEW}"
-
-# On Nitrogen, use this:
-# convert SEED-SIZE.png -sigmoidal-contrast 5x1% adj-SEED-SIZE.png
 

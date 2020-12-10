@@ -4,9 +4,40 @@ IFS=$'\t\n'
 
 : "${F7D2D:?Please export F7D2D with 7D2D install folder}"
 
-if [[ $# -ne 2 ]]; then
-	echo >&2 "$0 <size> <seed>"
+usage() {
+	cat >&2 <<-USAGE
+		$0 [options] <size> <seed>
+
+		Options:
+		  --towns Yes | No
+		  --rivers None | Few | Default | Many
+		  --craters None | Few | Default | Many
+		  --cracks None | Few | Default | Many
+		  --lakes None | Few | Default | Many
+		  --plains 0 .. 10
+		  --hills 0 .. 10
+		  --mountains 0 .. 10
+		  --random 0 .. 10
+	USAGE
 	exit 1
+}
+
+declare -a ARGS
+ARGS=( )
+while [[ $# -gt 0 && $1 == -* ]]; do
+        case "$1" in
+        --towns | --rivers | --craters | --cracks | --lakes | --plains | --hills | --mountains | --random)
+		ARGS=( "${ARGS[@]}" "$1" "$2" )
+		shift 2
+                ;;
+        *)
+		usage
+		;;
+        esac
+done
+
+if [[ $# -ne 2 ]]; then
+	usage
 fi
 
 SIZE="$1"
@@ -19,12 +50,32 @@ sleep 1 # Last chance to abort
 
 SECONDS=0
 #"${BIN}/startServer.sh" "$SIZE" "${SEED}" > log.startServer.txt
-"${BIN}/startClient.sh" "$SIZE" "${SEED}" > log.startClient.txt
+"${BIN}/startClient.sh" "${ARGS[@]}" "$SIZE" "${SEED}" > log.startClient.txt
 duration=$SECONDS
 
 if grep -q "BloodMoon SetDay" "$LOG"; then
 	echo "World generated in $((duration / 60)) minutes and $((duration % 60)) seconds"
-	"${BIN}/savePreview.sh" "${SIZE}" "${SEED}" | tee log.savePreview.txt
+
+	# Get county name
+	# shellcheck disable=SC2012
+	if ! COUNTY=$( \
+		ls -1rt "${F7D2D}/UserData/GeneratedWorlds/" \
+			| tail -1 \
+		) && [[ -n $COUNTY ]]; then
+		echo >&2 "Cannot figure out generated world"
+		exit 1
+	fi
+
+	WORLD="${F7D2D}/UserData/GeneratedWorlds/$COUNTY"
+
+	mkdir -p "${F7D2D}/previews"
+
+	"${BIN}/savePreview.sh" \
+		--world "${WORLD}" \
+		--name "${COUNTY}" \
+		--output "${F7D2D}/previews/${SEED}-${SIZE}.zip" \
+		--options "${ARGS[@]}" --endoptions \
+		"${SIZE}" "${SEED}" 2>&1 | tee log.savePreview.txt
 	echo "World preview saved"
 else
 	echo "Generation aborted after $((duration / 60)) minutes and $((duration % 60)) seconds"

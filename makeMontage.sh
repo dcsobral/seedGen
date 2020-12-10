@@ -22,7 +22,7 @@ for SIZE; do (
 			-depth 8 \
 			-path thumbs \
 			-resize "${DIM}x${DIM}" \
-			"*-${SIZE}.png"
+			"*-${SIZE}.png" "*-${SIZE}-m.png"
 	fi
 
 	COUNT="$(ls thumbs | wc -l || echo 0)"

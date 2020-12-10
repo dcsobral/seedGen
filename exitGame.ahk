@@ -3,6 +3,9 @@ SetWorkingDir %A_ScriptDir%
 ;if not A_IsAdmin
 ;    Run *RunAs "%A_ScriptFullPath%"
 
+#Include %A_ScriptDir%
+#Include stdio.ahk
+
 /*
 * Defined Co-ordinates
 *
@@ -20,7 +23,30 @@ quitY := 1225
 quitX := 1160
 quitY := 1326
 
-WinActivate, 7 Days To Die
+if WinExist("7 Days to die")
+{
+    Stdout("Activating 7 Days to die")
+    WinActivate, 7 Days to die
+}
+else if WinExist("7 Days to Die")
+{
+    Stdout("Activating 7 Days to Die")
+    WinActivate, 7 Days to Die
+}
+else if WinExist("7 Days To Die")
+{
+    Stdout("Activating 7 Days To Die")
+    WinActivate, 7 Days To Die
+}
+else
+{
+    Stdout("Could not find 7 days to die application to close it.")
+    Exit, 1
+}
+
+Sleep, 5000
+
+MouseClick, Left, quitX, quitY ; Click on screen to ensure it's active
 
 Sleep, 500
 
