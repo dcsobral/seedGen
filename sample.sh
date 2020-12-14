@@ -80,6 +80,7 @@ genOpt() {
 	OPTS=( "$@" )
 	declare opt
 	for opt in "${OPTS[@]}"; do
+		[[ -f stop ]] && break
 		NAME="${OPT_NAME}-${opt}"
 
 		if [[ -f "${OUTDIR}/${NAME}.zip" ]]; then
@@ -108,6 +109,7 @@ genOpt() {
 if [[ ${#FEATURES[@]} -gt 0 ]]; then
 	echo "Generating features ${FEATURES[*]}"
 	for feature in "${FEATURES[@]}"; do
+		[[ -f stop ]] && break
 		genOpt "${feature}" None Few Default Many
 	done
 fi
@@ -117,11 +119,12 @@ if [[ ${#TERRAIN[@]} -gt 0 ]]; then
 	declare -a SEQ
 	SEQ=( $( seq 0 10 ) )
 	for topology in "${TERRAIN[@]}"; do
+		[[ -f stop ]] && break
 		genOpt "${topology}" "${SEQ[@]}"
 	done
 fi
 
-if [[ ${#FEATURES[@]} -gt 0 ]]; then
+if [[ ${#FEATURES[@]} -gt 0 && ! -f stop ]]; then
 	cd "${OUTDIR}"
 	find . -name '*.zip' -print0 | xargs -0 -x -n1 -i unzip -u {} 'thumbs/*'
 
@@ -187,14 +190,14 @@ if [[ ${#FEATURES[@]} -gt 0 ]]; then
 
 fi
 
-if [[ ${#TERRAIN[@]} -gt 0 ]]; then
+if [[ ${#TERRAIN[@]} -gt 0 && ! -f stop ]]; then
 	cd "${OUTDIR}"
 	find . -name '*.zip' -print0 | xargs -0 -x -n1 -i unzip -u {} 'thumbs/*'
 	cd "${THUMBS}"
 	declare -a FILES=( )
 	FILES=( )
 	for topology in "${TERRAIN[@]}"; do
-		FILES=( "${FILES[@]}" "${topology}-"[0-9]"-${SIZE}png" "${topology}-10-${SIZE}.png" )
+		FILES=( "${FILES[@]}" "${topology}-"[0-9]"-${SIZE}.png" "${topology}-10-${SIZE}.png" )
 	done
 	montage -geometry "+4+3" \
 		-tile 11x \
@@ -202,6 +205,8 @@ if [[ ${#TERRAIN[@]} -gt 0 ]]; then
 		"${FILES[@]}" \
 		terrain.png
 fi
+
+[[ -f stop ]] && rm -f stop
 
 [[ -f "${THUMBS}/features.png" ]] && echo "${THUMBS}/features.png"
 [[ -f "${THUMBS}/features-diff.png" ]] && echo "${THUMBS}/features-diff.png"
