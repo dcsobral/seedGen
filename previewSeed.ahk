@@ -184,7 +184,14 @@ changeZeroToTenOption(name, value, leftArrowX, rightArrowX, arrowY)
 {
     if value = Default
     {
-        move := 0
+        if name = Random Weight
+        {
+            move := -5
+        }
+            else
+        {
+            move := 0
+        }
     }
     else
     {
