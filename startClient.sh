@@ -17,6 +17,7 @@ usage() {
 
 		Options:
 		  --towns Yes | No
+		  --wilderness Yes | No
 		  --rivers None | Few | Default | Many
 		  --craters None | Few | Default | Many
 		  --cracks None | Few | Default | Many
@@ -34,6 +35,10 @@ while [[ $# -gt 0 && $1 == -* ]]; do
 	--towns)
 		shift
 		RWGTowns="$1"
+		;;
+	--wilderness)
+		shift
+		RWGWilderness="$1"
 		;;
 	--rivers)
 		shift
@@ -107,6 +112,7 @@ grep -E -m 1 "WorldStaticData.Init" <(tail  ---disable-inotify --max-unchanged-s
 # Generate seed
 "${AHK}" "$(wslpath -w "${BIN}/previewSeed.ahk")" "${SIZE}" "${SEED}" \
 	"${RWGTowns:-Default}" \
+	"${RWGWilderness:-Default}" \
 	"${RWGRivers:-Default}" \
 	"${RWGCraters:-Default}" \
 	"${RWGCracks:-Default}" \

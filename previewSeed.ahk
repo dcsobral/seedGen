@@ -15,14 +15,15 @@ SetWorkingDir %A_ScriptDir%
 RWGSize := A_Args[1]
 RWGSeed := A_Args[2]
 RWGTowns := A_Args[3]
-RWGRivers := A_Args[4]
-RWGCraters := A_Args[5]
-RWGCracks := A_Args[6]
-RWGLakes := A_Args[7]
-RWGPlains := A_Args[8]
-RWGHills := A_Args[9]
-RWGMountains := A_Args[10]
-RWGRandom := A_Args[11]
+RWGWilderness := A_Args[4]
+RWGRivers := A_Args[5]
+RWGCraters := A_Args[6]
+RWGCracks := A_Args[7]
+RWGLakes := A_Args[8]
+RWGPlains := A_Args[9]
+RWGHills := A_Args[10]
+RWGMountains := A_Args[11]
+RWGRandom := A_Args[12]
 
 /*
 * Defined Co-ordinates
@@ -50,40 +51,44 @@ townsArrowY := 516
 
 ; Rivers vertical arrows
 
-riversArrowY := 566
+wildernessArrowY := 566
 
 ; Craters vertical arrows
 
-cratersArrowY := 626
+riversArrowY := 626
 
 ; Cracks vertical arrows
 
-cracksArrowY := 676
+cratersArrowY := 676
 
 ; Lakes vertical arrows
 
-lakesArrowY := 736
+cracksArrowY := 736
 
 ; Plains Weight vertical arrows
 
-plainsArrowY := 796
+lakesArrowY := 796
 
 ; Hills Weight vertical arrows
 
-hillsArrowY := 846
+plainsArrowY := 846
 
 ; Mountains Weight vertical arrows
 
-mountainsArrowY := 906
+hillsArrowY := 906
 
 ; Random Weight vertical arrows
 
-randomArrowY := 956
+mountainsArrowY := 956
+
+; Random Weight vertical arrows
+
+randomArrowY := 1016
 
 ; World Generation Button
 
 worldGenX := 900
-worldGenY := 1000
+worldGenY := 1066
 
 WinActivate, 7 Days To Die
 
@@ -134,20 +139,8 @@ else if RWGSize = Default
 
 changeOption("World Size", RWGSize, move, leftArrowX, rightArrowX, sizeArrowY)
 
-move := 10 ; Default to avoid errors
-if RWGTowns = No
-{
-    move := -1
-}
-else if RWGTowns = Yes
-{
-    move := 0
-}
-else if RWGTowns = Default
-{
-    move := 0
-}
-changeOption("Gen Towns", RWGTowns, move, leftArrowX, rightArrowX, townsArrowY)
+changeYesNoOption("Gen Towns", RWGTowns, leftArrowX, rightArrowX, townsArrowY)
+changeYesNoOption("Gen Wilderness", RWGWilderness, leftArrowX, rightArrowX, wildernessArrowY)
 
 changeNoneToManyOption("Rivers", RWGRivers, leftArrowX, rightArrowX, riversArrowY)
 changeNoneToManyOption("Craters", RWGCraters, leftArrowX, rightArrowX, cratersArrowY)
@@ -162,6 +155,30 @@ changeZeroToTenOption("Random Weight", RWGRandom, leftArrowX, rightArrowX, rando
 ; Start generation
 Stdout("Generate World")
 MouseClick, Left, worldGenX, worldGenY ; Location of the Generate World Button
+
+changeYesNoOption(name, value, leftArrowX, rightArrowX, arrowY)
+{
+    move := 10 ; Default to avoid errors
+    if value = No
+    {
+        move := -1
+    }
+    else if value = Yes
+    {
+        move := 0
+    }
+    else if value = Default
+    {
+        move := 0
+    }
+    else
+    {
+        Stdout("Unknown option '" . value . "' for " . name)
+        return
+    }
+
+    changeOption(name, value, move, leftArrowX, rightArrowX, arrowY)
+}
 
 changeZeroToTenOption(name, value, leftArrowX, rightArrowX, arrowY)
 {
