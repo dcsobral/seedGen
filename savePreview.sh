@@ -107,7 +107,7 @@ cd "${WORLD}"
 cp prefabs.xml "${PREFABS}"
 cp spawnpoints.xml "${SPAWN_FILE}"
 
-PREVIEW="$("${BIN}/drawMap.sh" "${SIZE}" "${SEED}" 43)"
+PREVIEW="$("${BIN}/drawMap.sh" "${SIZE}" "${SEED}" 29)"
 timeIt "Map drawn"
 
 if [[ ! -f "${HERE}/nodraw" ]]; then

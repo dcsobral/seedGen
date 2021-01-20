@@ -38,7 +38,7 @@ optional() {
 
 [[ ! -f splat4map.png ]] && convert splat4.png \
 	-alpha off  -transparent black \
-	-fill '#738cce' -opaque '#001c00'\
+	-fill '#738cce' +opaque '#00000000' \
 	splat4map.png
 
 [[ ! -f watermap.png && $# -eq 3 ]] && convert splat4map.png \
