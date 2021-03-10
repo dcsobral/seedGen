@@ -9,10 +9,16 @@ if [[ $# -eq 0 ]]; then
 fi
 
 for prefab; do
+	if [[ "$prefab" =~ rwg_tile* ]]; then
+		FILE="${PREFABS}/RWGTiles/${prefab}.xml"
+	else
+		FILE="${PREFABS}/${prefab}.xml"
+	fi
+	[[ -f "${FILE}" ]] || FILE="$(find "${PREFABS}" -name "${prefab}.xml" -print)"
 	xmlstarlet sel -t -m /prefab -v "property[@name='Zoning']/@value" \
 		-o $'\t' -v "property[@name='AllowedBiomes']/@value" \
 		-o $'\t' -v "property[@name='DisallowedBiomes']/@value" \
 		-o $'\t' -v "property[@name='AllowedTownships']/@value" \
-		-n "$PREFABS/$prefab.xml"
+		-n "${FILE}"
 done
 

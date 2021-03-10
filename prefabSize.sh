@@ -35,7 +35,13 @@ readUint16() {
 }
 
 for prefab; do
-	mapfile -t COORDS < <(readUint16 "$PREFABS/$prefab.tts" 8 3)
+	if [[ "$prefab" =~ rwg_tile* ]]; then
+		FILE="${PREFABS}/RWGTiles/${prefab}.tts"
+	else
+		FILE="${PREFABS}/${prefab}.tts"
+	fi
+	[[ -f "$FILE" ]] || FILE="$(find "${PREFABS}" -name "${prefab}.tts" -print)"
+	mapfile -t COORDS < <(readUint16 "${FILE}" 8 3)
 	X=${COORDS[0]}
 	Y=${COORDS[1]}
 	Z=${COORDS[2]}

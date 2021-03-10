@@ -38,6 +38,7 @@ printHistogram() {
 		perc_count=$(((perc_count + 5) / 10))
 		perc_biome_area=$(((perc_biome_area + 5) / 10))
 
+		#shellcheck disable=SC2059
 		printf "$FORMAT" \
 			"$biome" \
 			"$count" "$perc_count" \

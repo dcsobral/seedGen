@@ -19,8 +19,14 @@ for prefab; do
 		exit 0
 	fi
 
+        if [[ "$prefab" =~ rwg_tile* ]]; then
+		FILE="${PREFABS}/RWGTiles/${prefab}.xml"
+	else
+		FILE="${PREFABS}/${prefab}.xml"
+	fi
+	[[ -f "${FILE}" ]] || FILE="$(find "${PREFABS}" -name "${prefab}.xml" -print)"
 	zones="$(xmlstarlet sel -t -m /prefab -v "property[@name='Zoning']/@value" \
-		"$PREFABS/$prefab.xml" | tr '[:upper:]' '[:lower:]' || :)"
+		"${FILE}" | tr '[:upper:]' '[:lower:]' || :)"
 
 	if [[ $zones == *any* ]]; then
 		echo white

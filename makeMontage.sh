@@ -25,6 +25,7 @@ for SIZE; do (
 			"*-${SIZE}.png" "*-${SIZE}-m.png"
 	fi
 
+	#shellcheck disable=SC2012
 	COUNT="$(ls thumbs | wc -l || echo 0)"
 	if [[ $COUNT -gt 121 ]]; then
 		echo "Generating multiple montages"

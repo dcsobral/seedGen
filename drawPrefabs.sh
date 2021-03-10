@@ -25,7 +25,7 @@ coordsFor() {
         WIDTH="${DIM%%,*}"
         HEIGHT="${DIM##*,}"
 
-        if [[ $ROT =~ [13] ]]; then
+        if [[ $((ROT % 2)) -eq 1 ]]; then
                 tmp="$WIDTH"
                 WIDTH="$HEIGHT"
                 HEIGHT="$tmp"
@@ -80,11 +80,28 @@ for decoration in "${MAPFILE[@]}"; do
                 DIM["$prefab"]="$dim"
         fi
         coordsFor "${coords}" "${dim}" "${rotation}"
-        if [[ -f "${PREFABS}/${prefab}.jpg" ]]; then
-                echo "image over ${tl} ${dim} '${PREFABS}/${prefab}.jpg'" >> "${DRAW}"
-        else
-                echo "rectangle ${tl} ${br}" >> "${DRAW}"
-        fi
+	if [[ "${prefab}" =~ rwg_tile* ]]; then
+		PREFAB_PREVIEW="${PREFABS}/RWGTiles/${prefab}.jpg"
+		x_offset=$((-WIDTH / 2))
+		z_offset=$((-HEIGHT / 2))
+		tl="$((X1 - x_offset)),$((Z1 - z_offset))"
+		echo "push graphic-context" >> "${DRAW}"
+		echo "translate ${tl}" >> "${DRAW}"
+		echo "rotate $(((4 - rotation) % 4 * 90))" >> "${DRAW}"
+		echo "image over ${x_offset},${z_offset} ${dim} '${PREFAB_PREVIEW}'" >> "${DRAW}"
+		echo "pop graphic-context" >> "${DRAW}"
+	else
+		PREFAB_PREVIEW="${PREFABS}/${prefab}.jpg"
+		if [[ ! -f "${PREFAB_PREVIEW}" ]]; then
+			PREFAB_PREVIEW="$(find "${PREFABS}" -name "${prefab}.jpg" -print)"
+		fi
+
+		if [[ -n "${PREFAB_PREVIEW}" && -f "${PREFAB_PREVIEW}" ]]; then
+			echo "image over ${tl} ${dim} '${PREFAB_PREVIEW}'" >> "${DRAW}"
+		else
+			echo "rotation 0 rectangle ${tl} ${br}" >> "${DRAW}"
+		fi
+	fi
 
         if [[ -n ${ZONE["$prefab"]+abc} ]]; then
                 zone="${ZONE["$prefab"]}"

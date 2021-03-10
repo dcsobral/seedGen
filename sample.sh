@@ -117,7 +117,7 @@ fi
 if [[ ${#TERRAIN[@]} -gt 0 ]]; then
 	echo "Generating topologies ${TERRAIN[*]}"
 	declare -a SEQ
-	SEQ=( $( seq 0 10 ) )
+	SEQ=( $( seq 1 10 ) )
 	for topology in "${TERRAIN[@]}"; do
 		[[ -f stop ]] && break
 		genOpt "${topology}" "${SEQ[@]}"

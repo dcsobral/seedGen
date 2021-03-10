@@ -19,7 +19,7 @@ coordsFor() {
         WIDTH="${DIM%%,*}"
         HEIGHT="${DIM##*,}"
 
-        if [[ $ROT =~ [13] ]]; then
+	if [[ $((ROT % 2)) -eq 1 ]]; then
                 tmp="$WIDTH"
                 WIDTH="$HEIGHT"
                 HEIGHT="$tmp"

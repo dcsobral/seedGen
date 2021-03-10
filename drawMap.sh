@@ -19,6 +19,7 @@ THRESHOLD=$((LEVEL * 256 + 128))
 optional() {
 	declare -n VAR="$1"
 	shift
+	#shellcheck disable=SC2034
 	VAR=( "$@" )
 }
 
