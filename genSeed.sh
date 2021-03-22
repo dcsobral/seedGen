@@ -53,7 +53,7 @@ SECONDS=0
 "${BIN}/startClient.sh" "${ARGS[@]}" "$SIZE" "${SEED}" > log.startClient.txt
 duration=$SECONDS
 
-if grep -q "BloodMoon SetDay" "$LOG"; then
+if grep "Generation Complete" "$LOG"; then
 	echo "World generated in $((duration / 60)) minutes and $((duration % 60)) seconds"
 
 	# Get county name
