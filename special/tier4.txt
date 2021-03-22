@@ -1,5 +1,9 @@
 business_strip_old_03
 church_01
+downtown_building_02
+downtown_building_03
+hotel_01
+house_modern_18
 house_old_tudor_01
 house_old_victorian_03
 installation_red_mesa
@@ -8,4 +12,6 @@ skyscraper_04
 store_clothing_02
 store_grocery_02
 store_gun_02
+store_hardware_03
 utility_waterworks_01
+warehouse_01
