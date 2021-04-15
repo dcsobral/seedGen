@@ -142,6 +142,14 @@ else
 	echo >&2 "Skipping biome and prefab biome distribution"
 fi
 
+if [[ ! -f "${HERE}/notraderinfo" ]]; then
+	TRADERS_INFO=$("${BIN}/traderBiomes.sh" "${PREFABS}" "${BIOME}" "${SIZE}" "${SEED}")
+	timeIt "Trader information extracted"
+else
+	TRADERS_INFO=""
+	echo >&2 "Skipping trader information"
+fi
+
 declare -a SPLATS
 if [[ ! -f "${HERE}/nosplat" ]]; then
 	convert splat3.png "${SPLAT3}"
@@ -177,6 +185,7 @@ zip "${ZIP}" "${PREVIEW}" "${PREFABS}" "${SPAWN_FILE}" "${COUNTY_FILE}" \
 	${THUMBNAIL:+"${THUMBNAIL}"} \
 	"${GENERATION_INFO_FILE}" "${MAP_INFO_FILE}" "${OPTS_FILE}" \
 	"${BIOME_DIST_FILES[@]}" \
+	${TRADERS_INFO:+"${TRADERS_INFO}"} \
 	"${SPLATS[@]}" \
 	${CONTOUR_FILE:+"${CONTOUR_FILE}"} \
 	${DTM_FILE:+"${DTM_FILE}"}
