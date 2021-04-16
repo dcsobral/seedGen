@@ -3,13 +3,13 @@
 BIN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 getSorts() {
-	echo $'          # of Prefabs\t         Uniq. Spc.\t         # of Spc.\t         Unique'
+	echo $'          # of Prefabs\t         # of Traders\t         Unique Specials\t         Unique'
 	paste \
 		<(sortByPrefabs.sh)  \
+		<(special.sh -traders.txt sortByTotalSpecialPrefabs.sh) \
 		<(sortBySpecialPrefabs.sh) \
-		<(sortByTotalSpecialPrefabs.sh) \
 		<(sortByUniquePrefabs.sh)
-	echo $'          # of Prefabs\t         Uniq. Spc.\t         # of Spc.\t         Unique'
+	echo $'          # of Prefabs\t         # of Traders\t         Unique Specials\t         Unique'
 }
 
 if [[ -t 1 ]]; then
