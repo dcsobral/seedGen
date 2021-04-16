@@ -24,12 +24,29 @@ fi
 # sed -i 's/\xef\xbb\xbf//' $filename
 
 findIt() {
-	xmlstarlet sel -t -m / --var "p=document('$1')" -m "//prefab_rule[prefab[@name]]" --if "prefab[@name][not(@name=\$p//decoration/@name)]" -v @name -n -b -m "prefab[@name][not(@name=\$p//decoration/@name)]" --sort a:t:u @name -o "  " -v '@name' --var "x=document(concat('${F7D2D}/Data/Prefabs/',@name,'.xml'))" -o " (" -v "\$x/prefab/property[@name='Zoning']/@value" -o ")" -n "${F7D2D}/Data/Config/rwgmixer.xml"
+	declare -A prefabs
+	mapfile -t < <(xmlstarlet sel -t -m "/prefabs/decoration/@name" -v . -n  "$1" | sort -u)
+	for decoration in "${MAPFILE[@]}"; do
+		prefabs["${decoration}"]=1
+	done
+
+
+	mapfile -t < <( \
+		cd "${F7D2D}/Data/Prefabs" \
+		&& grep -L -E -i "zoning.*none" -- *.xml \
+		|| : \
+		)
+	for file in "${MAPFILE[@]}"; do
+		prefab="${file%.xml}"
+		if [[ -z ${prefabs["$prefab"]+abc} ]]; then
+			echo "$prefab"
+		fi
+	done
 }
 
 showIt() {
 	if [[ -n $SPECIAL ]]; then
-		findIt "$1" | grep -F -f "${SPECIAL_FOLDER}/${SPECIAL}"
+		findIt "$1" | grep -F -x -f "${SPECIAL_FOLDER}/${SPECIAL}"
 	else
 		findIt "$1"
 	fi
