@@ -65,7 +65,7 @@ if Responding = 0 ; 1= responding, 0 = Not Responding
     Exit, 1
 }
 
-Sleep, 500
+Sleep, 2500
 
 MouseClick, Left, quitX, quitY ; Click on screen to ensure it's active
 
@@ -77,7 +77,7 @@ if Responding = 0 ; 1= responding, 0 = Not Responding
     Exit, 1
 }
 
-Sleep, 2000
+Sleep, 500
 
 MouseClick, Left, quitX, quitY ; Click on screen to ensure it's active
 
