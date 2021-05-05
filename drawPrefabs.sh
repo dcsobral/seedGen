@@ -143,8 +143,8 @@ convert "${IMG}" \
 	-draw "@${ZONING}" \
 	-draw "@${GRID}" \
 	-draw "@${COORDS}" \
-	-draw "@${SPAWN}" \
 	splatmap.png -composite \
+	-draw "@${SPAWN}" \
 	"${PREVIEW}"
 
 mkdir -p thumbs
