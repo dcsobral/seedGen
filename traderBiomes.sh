@@ -97,6 +97,7 @@ getTraderData() {
 
 if [[ $# -eq 4 ]]; then
 	getTraderData > "${OUTPUT}"
+	echo "${OUTPUT}"
 else
 	getTraderData
 fi
