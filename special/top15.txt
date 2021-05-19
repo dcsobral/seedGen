@@ -1,5 +1,6 @@
-bombshelter_01
 church_01
+house_modern_14
+house_modern_18
 installation_red_mesa
 skyscraper_02
 store_book_01
@@ -9,7 +10,6 @@ store_electronics_02
 store_hardware_01
 store_hardware_02
 store_hardware_03
-store_grocery_02
 store_gun_01
 store_gun_02
 warehouse_01
