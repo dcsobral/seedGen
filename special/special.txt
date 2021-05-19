@@ -27,3 +27,4 @@ trader_joel
 trader_rekt
 utility_waterworks_01
 warehouse_01
+warehouse_03

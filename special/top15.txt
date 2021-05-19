@@ -4,7 +4,6 @@ installation_red_mesa
 skyscraper_02
 store_book_01
 store_book_02
-store_clothing_02
 store_electronics_01
 store_electronics_02
 store_hardware_01
@@ -13,3 +12,4 @@ store_hardware_03
 store_grocery_02
 store_gun_01
 store_gun_02
+warehouse_01

@@ -13,6 +13,7 @@ store_gun_02
 store_hardware_01
 store_hardware_02
 store_hardware_03
+store_laundry_01
 store_pawn_01
 store_pharmacy_01
 store_pharmacy_02

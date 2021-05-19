@@ -15,3 +15,4 @@ store_gun_02
 store_hardware_03
 utility_waterworks_01
 warehouse_01
+warehouse_03
