@@ -99,7 +99,8 @@ for decoration in "${MAPFILE[@]}"; do
 		if [[ -n "${PREFAB_PREVIEW}" && -f "${PREFAB_PREVIEW}" ]]; then
 			echo "image over ${tl} ${dim} '${PREFAB_PREVIEW}'" >> "${DRAW}"
 		else
-			echo "rotation 0 rectangle ${tl} ${br}" >> "${DRAW}"
+			echo >&2 "${prefab} not found!"
+			echo "rotate 0 rectangle ${tl} ${br}" >> "${DRAW}"
 		fi
 	fi
 
