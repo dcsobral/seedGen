@@ -32,7 +32,7 @@ findIt() {
 
 
 	mapfile -t < <( \
-		cd "${F7D2D}/Data/Prefabs" \
+		cd "${F7D2D}/Data/Prefabs/POIs" \
 		&& grep -L -E -i "zoning.*none" -- *.xml \
 		|| : \
 		)

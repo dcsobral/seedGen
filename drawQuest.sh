@@ -41,7 +41,7 @@ coordsFor() {
 	fi
 }
 
-PREFABS="${F7D2D}/Data/Prefabs"
+PREFABS="${F7D2D}/Data/Prefabs/POIs"
 BIN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 XML="$1"

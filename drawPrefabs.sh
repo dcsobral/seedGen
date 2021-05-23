@@ -91,7 +91,7 @@ for decoration in "${MAPFILE[@]}"; do
 		echo "image over ${x_offset},${z_offset} ${dim} '${PREFAB_PREVIEW}'" >> "${DRAW}"
 		echo "pop graphic-context" >> "${DRAW}"
 	else
-		PREFAB_PREVIEW="${PREFABS}/${prefab}.jpg"
+		PREFAB_PREVIEW="${PREFABS}/POIs/${prefab}.jpg"
 		if [[ ! -f "${PREFAB_PREVIEW}" ]]; then
 			PREFAB_PREVIEW="$(find "${PREFABS}" -name "${prefab}.jpg" -print)"
 		fi

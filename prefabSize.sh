@@ -38,7 +38,7 @@ for prefab; do
 	if [[ "$prefab" =~ rwg_tile* ]]; then
 		FILE="${PREFABS}/RWGTiles/${prefab}.tts"
 	else
-		FILE="${PREFABS}/${prefab}.tts"
+		FILE="${PREFABS}/POIs/${prefab}.tts"
 	fi
 	[[ -f "$FILE" ]] || FILE="$(find "${PREFABS}" -name "${prefab}.tts" -print)"
 	mapfile -t COORDS < <(readUint16 "${FILE}" 8 3)
