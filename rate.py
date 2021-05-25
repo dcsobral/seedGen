@@ -152,7 +152,7 @@ for x in bucket_range:
 
 if max_position != "none":
     for special in specials:
-        print("%s (%d/%d): " % (special, len(vertical_aggregate[special][max_bucket]), len(special_prefabs[special])), end = '')
+        print("%s (%d/%d):\t" % (special, len(vertical_aggregate[special][max_bucket]), len(special_prefabs[special])), end = '')
         for prefab in vertical_aggregate[special][max_bucket]:
             print("%s " % prefab, end = '')
         print()
