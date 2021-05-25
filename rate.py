@@ -107,11 +107,13 @@ for x in bucket_range:
             max_bucket = bucket
             max_position = "%d,%d" % (x * 512 + 256, y * 512 + 256)
 
-#for bucket in sorted(vertical_aggregate):
-#    print("%s %f: " % (bucket, score[bucket]), end = '')
-#    for special in specials:
-#        print("%s %d/%d/%d/%d " % (special, len(bucket_specials[bucket][special]), len(horizontal_aggregate[bucket][special]), len(vertical_aggregate[bucket][special]), len(special_prefabs[special])), end = '')
-#    print()
+for x in bucket_range:
+    for y in bucket_range:
+        bucket = "%d,%d" % (x, y)
+        print("%s %f: " % (bucket, score[bucket]), end = '')
+        for special in specials:
+            print("%s %d/%d/%d/%d " % (special, len(bucket_specials[bucket][special]), len(horizontal_aggregate[bucket][special]), len(vertical_aggregate[bucket][special]), len(special_prefabs[special])), end = '')
+        print()
 
 if max_position != "none":
     for special in specials:
