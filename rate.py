@@ -2,6 +2,7 @@
 
 from __future__ import print_function
 from collections import Counter
+import argparse
 import inspect
 import os
 import sys
@@ -12,15 +13,25 @@ def eprint(*args, **kwargs):
 
 bin = os.path.dirname(os.path.realpath(__file__))
 
-if len(sys.argv) != 3:
-    eprint("Syntax: %s <prefabs.xml> <size>" % __file__)
-    sys.exit(1)
+parser = argparse.ArgumentParser(description = "Rate best base location")
+parser.add_argument("--radius", dest = "radius", type = int, default = 1)
+parser.add_argument("--precision", dest = "precision", type = int, default = 512)
+parser.add_argument("prefabs")
+parser.add_argument("size", type = int)
+args = parser.parse_args()
 
-prefabs_file = sys.argv[1]
-size = int(sys.argv[2])
+
+#if len(sys.argv) != 3:
+#    eprint("Syntax: %s <prefabs.xml> <size>" % __file__)
+#    sys.exit(1)
+
+precision = args.precision
+radius = args.radius
+prefabs_file = args.prefabs
+size = args.size
 center = size / 2
-start = -center / 512
-end = center / 512
+start = -center / precision
+end = center / precision
 bucket_range = range(start, end)
 
 special_folder = "%s/special" % bin
@@ -44,7 +55,7 @@ def get_bucket(position):
     xyz = position.split(",")
     x = int(xyz[0])
     z = int(xyz[2])
-    return "%d,%d" % (x / 512, z / 512)
+    return "%d,%d" % (x / precision, z / precision)
 
 bucket_specials = {}
 for x in bucket_range:
@@ -64,8 +75,6 @@ for prefab in prefabs:
         for special in prefab_specials[name]:
             bucket_specials[bucket][special].add(name)
 #print(bucket_specials)
-
-radius = 1
 
 horizontal_aggregate = {}
 for special in specials:
@@ -87,7 +96,7 @@ for special in specials:
             if x in bucket_range:
                 bucket = "%d,%d" % (x, y)
                 horizontal_aggregate[special][bucket] = current + Counter()
-                #print("Setting %d,%d: %s" % (x * 512, y * 512, horizontal_aggregate[special][bucket]))
+                #print("Setting %d,%d: %s" % (x * precision, y * precision, horizontal_aggregate[special][bucket]))
 #print(horizontal_aggregate)
 
 vertical_aggregate = {}
@@ -110,7 +119,7 @@ for special in specials:
             if y in bucket_range:
                 bucket = "%d,%d" % (x, y)
                 vertical_aggregate[special][bucket] = current + Counter()
-                #print("Setting %d,%d: %s" % (x * 512, y * 512, vertical_aggregate[special][bucket]))
+                #print("Setting %d,%d: %s" % (x * precision, y * precision, vertical_aggregate[special][bucket]))
 #print(vertical_aggregate)
 
 score = {}
@@ -126,7 +135,7 @@ for x in bucket_range:
         if score[bucket] > max_score:
             max_score = score[bucket]
             max_bucket = bucket
-            max_position = "%d,%d" % (x * 512 + 256, y * 512 + 256)
+            max_position = "%d,%d" % (x * precision + (precision / 2), y * precision + (precision / 2))
 
 #for x in bucket_range:
 #    for y in bucket_range:
