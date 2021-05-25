@@ -2,7 +2,7 @@
 set -euo pipefail
 IFS=$'\t\n'
 
-BIN="$(cd "$(dirname "$0")" && pwd)"
+BIN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 : "${SPECIAL_FOLDER:=${BIN}/special}"
 
 if [[ $# -lt 2 || ! -f "${SPECIAL_FOLDER}/${1#-}" ]]; then

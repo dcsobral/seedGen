@@ -9,7 +9,7 @@ if [[ $# -lt 1 || $# -gt 2 ]]; then
 	exit 1
 fi
 
-BIN="$(cd "$(dirname "$0")" && pwd)"
+BIN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 : "${SPECIAL_FOLDER:=${BIN}/special}"
 
 # "SPECIAL" used differently here than the exported version used by other scripts

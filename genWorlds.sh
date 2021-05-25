@@ -44,7 +44,7 @@ ellapsed() {
         echo -n "$(date -u -d @${SECONDS} +"%T")"
 }
 
-BIN="$(cd "$(dirname "$0")" && pwd)"
+BIN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SECONDS=0
 TOTAL="$1"
 shift

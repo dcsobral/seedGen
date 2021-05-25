@@ -42,7 +42,7 @@ fi
 
 SIZE="$1"
 SEED="$2"
-BIN="$(cd "$(dirname "$0")" && pwd)"
+BIN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LOG="${F7D2D}/log.txt"
 
 echo "Generating seed '$SEED' at $SIZE"
@@ -67,6 +67,8 @@ if grep "Generation Complete" "$LOG"; then
 	fi
 
 	WORLD="${F7D2D}/UserData/GeneratedWorlds/$COUNTY"
+
+	echo "Rating: $("${BIN}/rate.py" --size "${SIZE}" "${WORLD}/prefabs.xml")"
 
 	mkdir -p "${F7D2D}/previews"
 
