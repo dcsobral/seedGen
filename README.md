@@ -27,6 +27,7 @@ the most common ones being:
   - `sortByPrefabs.sh`: Sort prefabs by number of prefabs;
   - `sortByTotalSpecialPrefabs.sh`: Sort prefabs by number of special prefabs;
   - `sortByUniquePrefabs.sh`: Sort prefabs by number of unique prefabs;
+  - `sortByRate.sh`: Sort prefabs by best base location;
   - `allSorts.sh`: Displays seeds sorted by the four different criteria above side by side;
   - `allSpecials.sh`: Displays seeds sorted by various special categories (work in progress);
   - `speadsheet.sh`: Saves various analysis as a csv file
@@ -36,6 +37,7 @@ the most common ones being:
   - `bestSeeds.sh`: Sort top seeds by number of criteria they are top of;
   - `special.sh`: Select special list (example: `special.sh -top5.txt allSorts.sh`);
 * Evaluating seed:
+  - `rate.py`: Shows best base location and prefabs around it;
   - `prefabRules.sh`: Shows prefab distribution by rule;
   - `listSpecials.sh`: Shows insteresting prefabs on a preview;
   - `missingPrefabs.sh`: Shows what prefabs are missing, optionally filtered by special list;
@@ -57,6 +59,12 @@ of special prefabs with the `SPECIAL_FOLDER`, which is where files mentioned by 
 will be looked for. One can also use `special.sh` to pick a special file to use from
 the special folder, and both `listSpecials.sh` and `missingPrefabs.sh` accept an optional
 parameter with the special list to use, from the special folder.
+
+The best base location (`rate.py`) is checked by region. The region size and the radius
+of regions around is set by default to 512 and 1 respectively, meaning the best location
+depends on the prefabs found on a 1.5km by 1.5km square. The script accepts parameters
+to change these defaults, and `sortByRate.ph` will pass parameters found on the environment
+variable `RATE_OPTS` to it.
 
 Many of these scripts rely on an environment variable called `F7D2D`. You have to assign
 it to the path to the folder where 7 Days to Die is installed. It does work with mods --

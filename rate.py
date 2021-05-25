@@ -5,6 +5,7 @@ from collections import Counter
 import argparse
 import inspect
 import os
+import re
 import sys
 import xml.etree.ElementTree as ET
 
@@ -14,10 +15,10 @@ def eprint(*args, **kwargs):
 bin = os.path.dirname(os.path.realpath(__file__))
 
 parser = argparse.ArgumentParser(description = "Rate best base location")
-parser.add_argument("--radius", dest = "radius", type = int, default = 1)
-parser.add_argument("--precision", dest = "precision", type = int, default = 512)
+parser.add_argument("--radius", dest = "radius", type = int, default = 1, help = 'radius in number of regions from the center')
+parser.add_argument("--precision", dest = "precision", type = int, default = 512, help = 'region size')
+parser.add_argument("--size", type = int, default = 0, help = 'map size')
 parser.add_argument("prefabs")
-parser.add_argument("size", type = int)
 args = parser.parse_args()
 
 
@@ -28,7 +29,11 @@ args = parser.parse_args()
 precision = args.precision
 radius = args.radius
 prefabs_file = args.prefabs
-size = args.size
+if args.size > 0:
+    size = args.size
+else:
+    m = re.search('-(\d+)\.xml', prefabs_file)
+    size = int(m.group(1))
 center = size / 2
 start = -center / precision
 end = center / precision

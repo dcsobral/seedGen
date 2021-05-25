@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\t\n'
 
 BIN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-if [[ $# -ne 1 ]]; then
-        echo >&2 "$0 <size>"
-        exit 1
+if [[ -v RATE_OPTS && -n "${RATE_OPTS}" ]]; then
+	IFS=' ' RATE_OPTS=( ${RATE_OPTS} )
+else
+	RATE_OPTS=( )
 fi
-
-SIZE="$1"
 
 for file in *.xml; do
 	printf "%6d %s\n" \
-		"$("${BIN}/rate.py" "$file" "$SIZE" | tail -1 | cut -d ' ' -f 1)" \
+		"$("${BIN}/rate.py" "${RATE_OPTS[@]}" "$file" | tail -1 | cut -d ' ' -f 1)" \
 		"${file%-*.xml}"
 done | "${BIN}/ordinalSort.sh"
