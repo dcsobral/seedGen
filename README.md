@@ -37,6 +37,7 @@ the most common ones being:
   - `bestSeeds.sh`: Sort top seeds by number of criteria they are top of;
   - `special.sh`: Select special list (example: `special.sh -top5.txt allSorts.sh`);
 * Evaluating seed:
+  - `showSeed.sh`: Opens seed preview image on windows;
   - `rate.py`: Shows best base location and prefabs around it;
   - `prefabRules.sh`: Shows prefab distribution by rule;
   - `listSpecials.sh`: Shows insteresting prefabs on a preview;
