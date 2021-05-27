@@ -16,21 +16,30 @@ def eprint(*args, **kwargs):
 
 bin = os.path.dirname(os.path.realpath(__file__))
 
-default_specials = ["traders", "tier3", "tier4",
-                    "tier5", "stores", "top15", "industrial"]
+default_specials = [
+    "traders", "tier3", "tier4", "tier5", "stores", "top15", "industrial"
+]
 parser = argparse.ArgumentParser(description="Rate best base location")
-parser.add_argument("--specials", nargs='+',
-                    default=default_specials, help="special files")
-parser.add_argument("--diameter", type=int, default=8,
+parser.add_argument("--specials",
+                    nargs='+',
+                    default=default_specials,
+                    help="special files")
+parser.add_argument("--diameter",
+                    type=int,
+                    default=8,
                     help='diameter in number of regions')
 parser.add_argument("--precision", type=int, default=256, help='region size')
 parser.add_argument("--size", type=int, default=0, help='map size')
-parser.add_argument("--verbose", action='store_true',
+parser.add_argument("--verbose",
+                    action='store_true',
                     help='print specials list (default)')
-parser.add_argument("--quiet", action='store_false',
-                    dest='verbose', help='suppress specials list')
+parser.add_argument("--quiet",
+                    action='store_false',
+                    dest='verbose',
+                    help='suppress specials list')
 parser.set_defaults(verbose=True)
-parser.add_argument("--debug", action='store_true',
+parser.add_argument("--debug",
+                    action='store_true',
                     help='print debugging information')
 parser.add_argument("prefabs")
 args = parser.parse_args()
@@ -144,22 +153,33 @@ for x in bucket_range:
         if score[bucket] > max_score:
             max_score = score[bucket]
             max_bucket = bucket
-            max_position = "%d,%d" % (
-                x * precision + offset, y * precision + offset)
+            max_position = "%d,%d" % (x * precision + offset,
+                                      y * precision + offset)
 
 if debug:
     for x in bucket_range:
         for y in bucket_range:
             bucket = "%d,%d" % (x, y)
-            if [vertical_aggregate[special][bucket] for special in specials if vertical_aggregate[special][bucket]]:
+            if [
+                    vertical_aggregate[special][bucket] for special in specials
+                    if vertical_aggregate[special][bucket]
+            ]:
                 print("%s %f: " % (bucket, score[bucket]), end='')
                 for special in specials:
-                    print("%s %d/%d/%d/%d " % (special, len(bucket_specials[bucket][special]), len(horizontal_aggregate[special][bucket]), len(vertical_aggregate[special][bucket]), len(special_prefabs[special])), end='')
+                    print("%s %d/%d/%d/%d " %
+                          (special, len(bucket_specials[bucket][special]),
+                           len(horizontal_aggregate[special][bucket]),
+                           len(vertical_aggregate[special][bucket]),
+                           len(special_prefabs[special])),
+                          end='')
                 print()
 
 if verbose and max_position != "none":
     for special in specials:
-        print("%s (%d/%d):\t" % (special, len(vertical_aggregate[special][max_bucket]), len(special_prefabs[special])), end='')
+        print("%s (%d/%d):\t" %
+              (special, len(vertical_aggregate[special][max_bucket]),
+               len(special_prefabs[special])),
+              end='')
         for prefab in vertical_aggregate[special][max_bucket]:
             print("%s " % prefab, end='')
         print()
