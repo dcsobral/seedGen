@@ -14,9 +14,11 @@ def eprint(*args, **kwargs):
 
 bin = os.path.dirname(os.path.realpath(__file__))
 
+default_specials = [ "traders", "tier3", "tier4", "tier5", "stores", "top15", "industrial" ]
 parser = argparse.ArgumentParser(description = "Rate best base location")
-parser.add_argument("--diameter", dest = "diameter", type = int, default = 3, help = 'diameter in number of regions')
-parser.add_argument("--precision", dest = "precision", type = int, default = 512, help = 'region size')
+parser.add_argument("--specials", dest = "specials", nargs = '+', default = default_specials, help = "special files")
+parser.add_argument("--diameter", dest = "diameter", type = int, default = 8, help = 'diameter in number of regions')
+parser.add_argument("--precision", dest = "precision", type = int, default = 256, help = 'region size')
 parser.add_argument("--size", type = int, default = 0, help = 'map size')
 parser.add_argument("prefabs")
 args = parser.parse_args()
@@ -42,7 +44,7 @@ end = center / precision
 bucket_range = range(start, end)
 
 special_folder = "%s/special" % bin
-specials = [ "traders", "tier3", "tier4", "tier5", "stores", "top15", "industrial" ]
+specials = args.specials
 special_prefabs = {}
 for special in specials:
     with open("%s/%s.txt" % (special_folder, special)) as f:
