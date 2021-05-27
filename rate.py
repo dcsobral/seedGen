@@ -15,7 +15,7 @@ def eprint(*args, **kwargs):
 bin = os.path.dirname(os.path.realpath(__file__))
 
 parser = argparse.ArgumentParser(description = "Rate best base location")
-parser.add_argument("--radius", dest = "radius", type = int, default = 1, help = 'radius in number of regions from the center')
+parser.add_argument("--diameter", dest = "diameter", type = int, default = 3, help = 'diameter in number of regions')
 parser.add_argument("--precision", dest = "precision", type = int, default = 512, help = 'region size')
 parser.add_argument("--size", type = int, default = 0, help = 'map size')
 parser.add_argument("prefabs")
@@ -27,7 +27,9 @@ args = parser.parse_args()
 #    sys.exit(1)
 
 precision = args.precision
-radius = args.radius
+diameter = args.diameter
+ahead = diameter / 2
+backwards = diameter - ahead
 prefabs_file = args.prefabs
 if args.size > 0:
     size = args.size
@@ -86,15 +88,15 @@ for special in specials:
     horizontal_aggregate[special] = {}
     for y in bucket_range:
         current = Counter()
-        for x in range(start - radius, start) + bucket_range:
+        for x in range(start - ahead, start) + bucket_range:
             #print("ha %s %d,%d: %s" % (special,x,y,current))
-            if x + radius in bucket_range:
-                next = "%d,%d" % (x + radius, y)
+            if x + ahead in bucket_range:
+                next = "%d,%d" % (x + ahead, y)
                 #print("Adding %s: %s" % (next, bucket_specials[next][special]))
                 current.update(bucket_specials[next][special])
 
-            if x - radius - 1 in bucket_range:
-                prev = "%d,%d" % (x - radius - 1, y)
+            if x - backwards in bucket_range:
+                prev = "%d,%d" % (x - backwards, y)
                 #print("Subtracting %s: %s" % (prev, bucket_specials[prev][special]))
                 current.subtract(bucket_specials[prev][special])
 
@@ -109,15 +111,15 @@ for special in specials:
     vertical_aggregate[special] = {}
     for x in bucket_range:
         current = Counter()
-        for y in range(start - radius, start) + bucket_range:
+        for y in range(start - ahead, start) + bucket_range:
             #print("va %s %d,%d: %s" % (special,x,y,current))
-            if y + radius in bucket_range:
-                next = "%d,%d" % (x, y + radius)
+            if y + ahead in bucket_range:
+                next = "%d,%d" % (x, y + ahead)
                 #print("Adding %s: %s" % (next, horizontal_aggregate[special][next]))
                 current.update(horizontal_aggregate[special][next])
 
-            if y - radius - 1 in bucket_range:
-                prev = "%d,%d" % (x, y - radius - 1)
+            if y - backwards in bucket_range:
+                prev = "%d,%d" % (x, y - backwards)
                 #print("Subtracting %s: %s" % (prev, horizontal_aggregate[special][prev]))
                 current.subtract(horizontal_aggregate[special][prev])
 
@@ -131,6 +133,7 @@ score = {}
 max_score = 0.0
 max_bucket = ""
 max_position = "none"
+offset = precision if diameter % 2 == 0 else precision / 2
 for x in bucket_range:
     for y in bucket_range:
         bucket = "%d,%d" % (x, y)
@@ -140,7 +143,7 @@ for x in bucket_range:
         if score[bucket] > max_score:
             max_score = score[bucket]
             max_bucket = bucket
-            max_position = "%d,%d" % (x * precision + (precision / 2), y * precision + (precision / 2))
+            max_position = "%d,%d" % (x * precision + offset, y * precision + offset)
 
 #for x in bucket_range:
 #    for y in bucket_range:
