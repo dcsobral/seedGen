@@ -68,7 +68,8 @@ if grep "Generation Complete" "$LOG"; then
 
 	WORLD="${F7D2D}/UserData/GeneratedWorlds/$COUNTY"
 
-	echo "Rating: $("${BIN}/rate.py" --size "${SIZE}" "${WORLD}/prefabs.xml")"
+	echo "Rating (${RATE_OPTS:-defaults}):"
+	"${BIN}/rate.py" ${RATE_OPTS-} --size "${SIZE}" "${WORLD}/prefabs.xml"
 
 	mkdir -p "${F7D2D}/previews"
 
