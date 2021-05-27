@@ -69,17 +69,27 @@ if grep "Generation Complete" "$LOG"; then
 	WORLD="${F7D2D}/UserData/GeneratedWorlds/$COUNTY"
 
 	echo "Rating (${RATE_OPTS:-defaults}):"
-	"${BIN}/rate.py" ${RATE_OPTS-} --size "${SIZE}" "${WORLD}/prefabs.xml"
+	if [[ -v RATE_OPTS && -n "${RATE_OPTS}" ]]; then
+		IFS=' ' RATE_OPTS=( ${RATE_OPTS} )
+	else
+		RATE_OPTS=( )
+	fi
+	RATE=$("${BIN}/rate.py" "${RATE_OPTS[@]}" --size "${SIZE}" "${WORLD}/prefabs.xml")
+	echo "${RATE}"
+	RATING=$(tail -1 <<< "$RATE" | cut -d ' ' -f 1)
+	if [[ -n "${RATING_THRESHOLD-}" && "$RATING" -lt "${RATING_THRESHOLD}" ]]; then
+		echo "Rating ${RATING} below threshold ${RATING_THRESHOLD}; skipping after $((duration / 60)) minutes and $((duration % 60)) seconds"
+	else
+		mkdir -p "${F7D2D}/previews"
 
-	mkdir -p "${F7D2D}/previews"
-
-	"${BIN}/savePreview.sh" \
-		--world "${WORLD}" \
-		--name "${COUNTY}" \
-		--output "${F7D2D}/previews/${SEED}-${SIZE}.zip" \
-		--options "${ARGS[@]}" --endoptions \
-		"${SIZE}" "${SEED}" 2>&1 | tee log.savePreview.txt
-	echo "World preview saved"
+		"${BIN}/savePreview.sh" \
+			--world "${WORLD}" \
+			--name "${COUNTY}" \
+			--output "${F7D2D}/previews/${SEED}-${SIZE}.zip" \
+			--options "${ARGS[@]}" --endoptions \
+			"${SIZE}" "${SEED}" 2>&1 | tee log.savePreview.txt
+		echo "World preview saved"
+	fi
 else
 	echo "Generation aborted after $((duration / 60)) minutes and $((duration % 60)) seconds"
 	exec "$0" "$@"
