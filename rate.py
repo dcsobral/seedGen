@@ -3,7 +3,6 @@
 from __future__ import print_function
 from collections import Counter
 import argparse
-import inspect
 import os
 import re
 import sys
@@ -52,7 +51,7 @@ debug = args.debug
 if args.size > 0:
     size = args.size
 else:
-    m = re.search('-(\d+)\.xml', prefabs_file)
+    m = re.search(r'-(\d+)\.xml', prefabs_file)
     size = int(m.group(1))
 
 ahead = diameter / 2
