@@ -67,6 +67,7 @@ complete -F _prefabThenSpecial listSpecials.sh
 complete -F _command greatest.sh
 complete -F _command tops.sh
 complete -F _special special.sh
+complete -F _seedName showSeed.sh
 complete -F _seedName showBiomeDistribution.sh
 complete -F _seedName showZoningDistribution.sh
 
