@@ -13,10 +13,11 @@ _prefabRules() {
 }
 
 _prefabNames() {
+	COMPREPLY=()
 	if [[ -n $F7D2D ]]; then
-		COMPREPLY=( $(xmlstarlet sel -t -m "//prefab_rule/prefab[starts-with(@name,'$2')]" -v @name -n "${F7D2D}/Data/Config/rwgmixer.xml" | sort -u) )
-	else
-		COMPREPLY=()
+		while IFS= read -r -d '' dir; do
+			COMPREPLY+=( $(cd "${dir}" && compgen -f -- "$2" | sort -u | sed -e 's/\.[^ ]*//g') )
+		done < <(find "${F7D2D}/Data/Prefabs" -type d -print0)
 	fi
 }
 
