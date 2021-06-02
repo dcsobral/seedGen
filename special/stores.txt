@@ -8,6 +8,7 @@ store_electronics_01
 store_electronics_02
 store_grocery_01
 store_grocery_02
+store_grocery_03
 store_gun_01
 store_gun_02
 store_hardware_01

@@ -28,6 +28,7 @@ lodge_01
 sawmill_01
 store_book_02
 store_clothing_01
+store_grocery_03
 store_gun_01
 store_hardware_02
 store_pharmacy_02

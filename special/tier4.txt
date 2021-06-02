@@ -7,6 +7,7 @@ house_modern_18
 house_old_tudor_01
 house_old_victorian_03
 installation_red_mesa
+restaurant_01
 school_01
 skyscraper_04
 store_clothing_02
