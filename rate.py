@@ -18,6 +18,8 @@ bin = os.path.dirname(os.path.realpath(__file__))
 default_specials = [
     "traders", "tier3", "tier4", "tier5", "stores", "top15", "industrial"
 ]
+precision_default = 256
+diameter_default = 8
 parser = argparse.ArgumentParser(description="Rate best base location")
 parser.add_argument("--specials",
                     nargs='+',
@@ -25,9 +27,10 @@ parser.add_argument("--specials",
                     help="special files")
 parser.add_argument("--diameter",
                     type=int,
-                    default=8,
-                    help='diameter in number of regions')
-parser.add_argument("--precision", type=int, default=256, help='region size')
+                    default=diameter_default,
+                    help='diameter in number of regions (default %d)' % diameter_default)
+parser.add_argument("--precision", type=int, default=precision_default,
+                    help='region size (default %d)' % precision_default)
 parser.add_argument("--size", type=int, default=0, help='map size')
 parser.add_argument("--verbose",
                     action='store_true',
