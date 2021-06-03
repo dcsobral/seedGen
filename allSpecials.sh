@@ -5,27 +5,23 @@ BIN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 getSorts() {
 
-	TIER3=$(wc -l < "${SPECIAL_FOLDER}/tier3.txt")
-	TIER4=$(wc -l < "${SPECIAL_FOLDER}/tier4.txt")
-	TIER5=$(wc -l < "${SPECIAL_FOLDER}/tier5.txt")
 	STORES=$(wc -l < "${SPECIAL_FOLDER}/stores.txt")
 	TOP7=$(wc -l < "${SPECIAL_FOLDER}/top7.txt")
 	TOP15=$(wc -l < "${SPECIAL_FOLDER}/top15.txt")
 	INDUSTRIAL=$(wc -l < "${SPECIAL_FOLDER}/industrial.txt")
+	DOWNTOWN=$(wc -l < "${SPECIAL_FOLDER}/downtown.txt")
 
-	printf "Pos Uniq Tier 3 (%d)\tPos Uniq Tier 4 (%d)\tPos Uniq Tier 5 (%d)\tPos Uniq Stores (%d)\tPos Uniq Top %d\tPos Uniq Top %d\tPos Uniq Industrial (%d)\n" "$TIER3" "$TIER4" "$TIER5" "$STORES" "$TOP7" "$TOP15" "$INDUSTRIAL"
+	printf "Pos Uniq Stores (%d)\tPos Uniq Top %d\tPos Uniq Top %d\tPos Uniq Industrial (%d)\tPos Uniq Downtown (%d)\n" "$STORES" "$TOP7" "$TOP15" "$INDUSTRIAL" "$DOWNTOWN"
 
 	# Hacks! I haven't figured out the best way of not hard coding this
 	paste \
-		<(SPECIAL=tier3.txt sortBySpecialPrefabs.sh | "${BIN}/grepIt.sh" "$@") \
-		<(SPECIAL=tier4.txt sortBySpecialPrefabs.sh | "${BIN}/grepIt.sh" "$@") \
-		<(SPECIAL=tier5.txt sortBySpecialPrefabs.sh | "${BIN}/grepIt.sh" "$@") \
 		<(SPECIAL=stores.txt sortBySpecialPrefabs.sh | "${BIN}/grepIt.sh" "$@") \
 		<(SPECIAL=top7.txt sortBySpecialPrefabs.sh | "${BIN}/grepIt.sh" "$@") \
 		<(SPECIAL=top15.txt sortBySpecialPrefabs.sh | "${BIN}/grepIt.sh" "$@") \
-		<(SPECIAL=industrial.txt sortBySpecialPrefabs.sh | "${BIN}/grepIt.sh" "$@")
+		<(SPECIAL=industrial.txt sortBySpecialPrefabs.sh | "${BIN}/grepIt.sh" "$@") \
+		<(SPECIAL=downtown.txt sortBySpecialPrefabs.sh | "${BIN}/grepIt.sh" "$@")
 
-	printf "Pos Uniq Tier 3 (%d)\tPos Uniq Tier 4 (%d)\tPos Uniq Tier 5 (%d)\tPos Uniq Stores (%d)\tPos Uniq Top %d\tPos Uniq Top %d\tPos Uniq Industrial (%d)\n" "$TIER3" "$TIER4" "$TIER5" "$STORES" "$TOP7" "$TOP15" "$INDUSTRIAL"
+	printf "Pos Uniq Stores (%d)\tPos Uniq Top %d\tPos Uniq Top %d\tPos Uniq Industrial (%d)\tPos Uniq Downtown (%d)\n" "$STORES" "$TOP7" "$TOP15" "$INDUSTRIAL" "$DOWNTOWN"
 }
 
 if [[ -t 1 ]]; then
