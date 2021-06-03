@@ -16,7 +16,7 @@ def eprint(*args, **kwargs):
 bin = os.path.dirname(os.path.realpath(__file__))
 
 default_specials = [
-    "traders", "tier3", "tier4", "tier5", "stores", "top15", "industrial"
+    "traders", "tier3", "tier4", "tier5", "stores", "top15", "industrial", "downtown"
 ]
 precision_default = 256
 diameter_default = 8
