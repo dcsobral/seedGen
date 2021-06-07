@@ -41,11 +41,19 @@ parser.add_argument("--quiet",
                     dest='verbose',
                     help='suppress specials list')
 parser.set_defaults(verbose=True)
+parser.add_argument("--print-defaults",
+                    action='store_true',
+                    help='print default option values')
 parser.add_argument("--debug",
                     action='store_true',
                     help='print debugging information')
 parser.add_argument("prefabs")
 args = parser.parse_args()
+
+if args.print_defaults:
+    print("--precision=%d --diameter=%d" % (precision_default, diameter_default))
+    sys.exit(0)
+
 precision = args.precision
 diameter = args.diameter
 specials = args.specials
