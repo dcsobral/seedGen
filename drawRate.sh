@@ -30,24 +30,11 @@ CX=$((CENTER + X))
 CZ=$((CENTER - Z))
 
 convert "${IMG}" \
-	-fill none -stroke 'rgba(178,34,34,0.5)' -strokewidth 8 \
-	-draw "$(printf 'circle %d,%d %d,%d' $((CX)) $((CZ)) $((CX + RADIUS)) $((CZ)))" \
-	-fill Lime \
-	-draw "$(printf "circle %d,%d %d,%d" $((CX)) $((CZ)) $((CX + 8)) $((CZ)))" \
-	"circle-${IMG}"
-
-convert "${IMG}" \
+	-fill 'rgba(255,255,255,0.2)' -stroke 'rgba(0,0,0,0.2)' -strokewidth 2 \
+	-draw "$(printf 'circle %d,%d %d,%d' $((CX)) $((CZ)) $((CX + RADIUS)) $((CZ + RADIUS)))" \
 	-fill none -stroke 'rgba(178,34,34,0.5)' -strokewidth 8 \
 	-draw "$(printf 'rectangle %d,%d %d,%d' $((CX - RADIUS)) $((CZ - RADIUS)) $((CX + RADIUS)) $((CZ + RADIUS)))" \
-	-fill Lime \
+	-fill Lime -stroke black -strokewidth 2 \
 	-draw "$(printf "circle %d,%d %d,%d" $((CX)) $((CZ)) $((CX + 8)) $((CZ)))" \
-	"square-${IMG}"
-
-convert "${IMG}" \
-	-fill 'rgba(178,34,34,0.5)' \
-	-draw "$(printf 'rectangle %d,%d %d,%d' $((CX - RADIUS)) $((CZ - RADIUS)) $((CX + RADIUS)) $((CZ + RADIUS)))" \
-	-fill Lime \
-	-draw "$(printf "circle %d,%d %d,%d" $((CX)) $((CZ)) $((CX + 8)) $((CZ)))" \
-	"square-filled-${IMG}"
-
+	"rate-${IMG}"
 

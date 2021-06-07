@@ -2,6 +2,7 @@
 
 from __future__ import print_function
 from collections import Counter
+from math import ceil, sqrt
 import argparse
 import os
 import re
@@ -19,7 +20,7 @@ default_specials = [
     "traders", "tier3", "tier4", "tier5", "stores", "top15", "industrial", "downtown"
 ]
 precision_default = 256
-diameter_default = 8
+diameter_default = 6
 parser = argparse.ArgumentParser(description="Rate best base location")
 parser.add_argument("--specials",
                     nargs='+',
@@ -143,6 +144,8 @@ score = {}
 max_score = 0.0
 max_bucket = ""
 max_position = "none"
+max_x = 0
+max_y = 0
 offset = precision if diameter % 2 == 0 else precision / 2
 for x in bucket_range:
     for y in bucket_range:
@@ -155,8 +158,9 @@ for x in bucket_range:
         if score[bucket] > max_score:
             max_score = score[bucket]
             max_bucket = bucket
-            max_position = "%d,%d" % (x * precision + offset,
-                                      y * precision + offset)
+            max_x = x * precision + offset
+            max_y = y * precision + offset
+            max_position = "%d,%d" % (max_x, max_y)
 
 if debug:
     for x in bucket_range:
@@ -176,14 +180,52 @@ if debug:
                           end='')
                 print()
 
+
+def distance(x1, y1, x2, y2):
+    return sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2))
+
+
+def get_coord(position):
+    xyz = position.split(",")
+    x = int(xyz[0])
+    z = int(xyz[2])
+    return (x, z)
+
+
+if max_position != "none":
+    true_radius=sqrt(pow(diameter * precision / 2.0, 2) * 2)
+    true_aggregate={special: set() for special in specials}
+    for prefab in prefabs:
+        name = prefab.attrib["name"]
+        position = prefab.attrib["position"]
+        x, y = get_coord(position)
+        if distance(x, y, max_x, max_y) <= true_radius:
+            if name in prefab_specials:
+                for special in prefab_specials[name]:
+                    true_aggregate[special].add(name)
+    true_score = 1.0
+    for special in specials:
+        true_score = true_score * len(true_aggregate[special]) / len(special_prefabs[special])
+else:
+    true_score = 0.0
+
 if verbose and max_position != "none":
     for special in specials:
+#        print("%s (%d/%d):\t" %
+#              (special, len(vertical_aggregate[special][max_bucket]),
+#               len(special_prefabs[special])),
+#              end='')
+#        for prefab in sorted(vertical_aggregate[special][max_bucket]):
+#            print("%s " % prefab, end='')
+#        print()
         print("%s (%d/%d):\t" %
-              (special, len(vertical_aggregate[special][max_bucket]),
+              (special, len(true_aggregate[special]),
                len(special_prefabs[special])),
               end='')
-        for prefab in vertical_aggregate[special][max_bucket]:
+        for prefab in sorted(true_aggregate[special]):
             print("%s " % prefab, end='')
         print()
 
-print("%d %s" % (max_score * 1000000, max_position))
+#print("%d %d %s" % (true_score * 1000000, max_score * 1000000, max_position))
+print("%d %s" % (true_score * 1000000, max_position))
+
