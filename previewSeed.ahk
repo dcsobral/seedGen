@@ -147,10 +147,10 @@ changeNoneToManyOption("Craters", RWGCraters, leftArrowX, rightArrowX, cratersAr
 changeNoneToManyOption("Cracks", RWGCracks, leftArrowX, rightArrowX, cracksArrowY)
 changeNoneToManyOption("Lakes", RWGLakes, leftArrowX, rightArrowX, lakesArrowY)
 
-changeZeroToTenOption("Plains Weight", RWGPlains, leftArrowX, rightArrowX, plainsArrowY)
-changeZeroToTenOption("Hills Weight", RWGHills, leftArrowX, rightArrowX, hillsArrowY)
-changeZeroToTenOption("Mountains Weight", RWGMountains, leftArrowX, rightArrowX, mountainsArrowY)
-changeZeroToTenOption("Random Weight", RWGRandom, leftArrowX, rightArrowX, randomArrowY)
+changeZeroToTenOption("Plains Weight", 6, RWGPlains, leftArrowX, rightArrowX, plainsArrowY)
+changeZeroToTenOption("Hills Weight", 6, RWGHills, leftArrowX, rightArrowX, hillsArrowY)
+changeZeroToTenOption("Mountains Weight", 1, RWGMountains, leftArrowX, rightArrowX, mountainsArrowY)
+changeZeroToTenOption("Random Weight", 0, RWGRandom, leftArrowX, rightArrowX, randomArrowY)
 
 ; Start generation
 Stdout("Generate World")
@@ -180,22 +180,15 @@ changeYesNoOption(name, value, leftArrowX, rightArrowX, arrowY)
     changeOption(name, value, move, leftArrowX, rightArrowX, arrowY)
 }
 
-changeZeroToTenOption(name, value, leftArrowX, rightArrowX, arrowY)
+changeZeroToTenOption(name, default, value, leftArrowX, rightArrowX, arrowY)
 {
     if value = Default
     {
-        if name = Random Weight
-        {
-            move := -5
-        }
-            else
-        {
-            move := 0
-        }
+        move := 0
     }
     else
     {
-        move := value - 5
+        move := value - default
     }
 
     changeOption(name, value, move, leftArrowX, rightArrowX, arrowY)
