@@ -80,7 +80,7 @@ for decoration in "${MAPFILE[@]}"; do
                 DIM["$prefab"]="$dim"
         fi
         coordsFor "${coords}" "${dim}" "${rotation}"
-	if [[ "${prefab}" =~ rwg_tile* ]]; then
+	if [[ "${prefab}" =~ rwg_tile* && -f "${PREFABS}/RWGTiles/${prefab}.jpg" ]]; then
 		PREFAB_PREVIEW="${PREFABS}/RWGTiles/${prefab}.jpg"
 		x_offset=$((-WIDTH / 2))
 		z_offset=$((-HEIGHT / 2))
