@@ -120,12 +120,12 @@ def get_decoration_max_score(special_prefabs, prefab_specials, decoration, decor
         if is_entry:
             add_decoration(prefab_specials, within_range, decorations[index])
             current_decorations.append(decorations[index])
+            score = compute_score(special_prefabs, within_range)
+            if score > best_scored_location.score:
+                best_scored_location = ScoredLocation(score, list(current_decorations))
         else:
             remove_decoration(prefab_specials, within_range, decorations[index])
             current_decorations.remove(decorations[index])
-        score = compute_score(special_prefabs, within_range)
-        if score > best_scored_location.score:
-            best_scored_location = ScoredLocation(score, list(current_decorations))
     return best_scored_location
 
 def copy_within(w):
