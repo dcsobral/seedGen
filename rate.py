@@ -74,6 +74,7 @@ def compute_rate(special_prefabs, prefab_specials, decorations, distance, debug)
     return (center, scored_location)
 
 def score_all_decorations(special_prefabs, prefab_specials, decorations, distance, debug):
+    special_count = { special: len(prefabs) for special, prefabs in special_prefabs.items() }
     diameter = distance * 2
     scored_locations = []
     locations = [xz(decoration) for decoration in decorations]
@@ -82,7 +83,7 @@ def score_all_decorations(special_prefabs, prefab_specials, decorations, distanc
     candidates = compute_candidates(special_prefabs, prefab_specials, decorations, kdtree, diameter, debug)
     for i, decoration in enumerate(decorations):
         if i in candidates:
-            scored_location = get_decoration_max_score(special_prefabs, prefab_specials, decoration, decorations, neighborhoods[i], diameter)
+            scored_location = get_decoration_max_score(special_prefabs, special_count, prefab_specials, decoration, decorations, neighborhoods[i], diameter)
         else:
             scored_location = ScoredLocation(0, [])
         scored_locations.append(scored_location)
@@ -113,18 +114,18 @@ def get_best_location(scored_locations):
             best_index = i
     return best_index
 
-def get_decoration_max_score(special_prefabs, prefab_specials, decoration, decorations, neighbors, diameter):
+def get_decoration_max_score(special_prefabs, special_count, prefab_specials, decoration, decorations, neighbors, diameter):
     within_range = { special: Counter({ prefab: 0 for prefab in special_prefabs[special]}) for special in special_prefabs }
     special_unique_count = { special: 0 for special in special_prefabs }
     add_decoration(prefab_specials, within_range, special_unique_count, decoration)
     current_decorations = [decoration]
-    best_scored_location = ScoredLocation(compute_score(special_prefabs, special_unique_count), current_decorations)
+    best_scored_location = ScoredLocation(compute_score(special_unique_count, special_count), current_decorations)
     sweep = angular_sweep_neighbors(decoration, decorations, neighbors, diameter)
     for angle, is_entry, index in sweep:
         if is_entry:
             add_decoration(prefab_specials, within_range, special_unique_count, decorations[index])
             current_decorations.append(decorations[index])
-            score = compute_score(special_prefabs, special_unique_count)
+            score = compute_score(special_unique_count, special_count)
             if score > best_scored_location.score:
                 best_scored_location = ScoredLocation(score, list(current_decorations))
         else:
@@ -135,10 +136,10 @@ def get_decoration_max_score(special_prefabs, prefab_specials, decoration, decor
 def copy_within(w):
     return { k: v + Counter() for k, v in w.items() }
 
-def compute_score(special_prefabs, special_unique_count):
+def compute_score(special_unique_count, special_count):
     score = 1.0
     for special, count in special_unique_count.items():
-        score = score * count / len(special_prefabs[special])
+        score = score * count / special_count[special]
     return score
 
 def add_decoration(prefab_specials, within_range, special_unique_count, decoration):
