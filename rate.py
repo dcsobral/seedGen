@@ -26,7 +26,7 @@ def main(args):
     prefab_specials = invert_dict_of_lists(special_prefabs)
     prefabs_of_interest = { prefab for prefabs in special_prefabs.values() for prefab in prefabs }
     decorations = load_prefabs_xml(args.prefabs, prefabs_of_interest)
-    (center, best_location) = compute_rate(special_prefabs, prefab_specials, decorations, args.radius)
+    (center, best_location) = compute_rate(special_prefabs, prefab_specials, decorations, args.radius, args.debug)
     if args.verbose:
         print_verbose(special_prefabs, prefab_specials, best_location)
     print_rating(center, best_location)
@@ -66,33 +66,20 @@ def load_prefabs_xml(prefabs_file, prefabs_of_interest):
 #            searched to the ones within 2r range of the ones in the special with the
 #            least amount of decorations
 
-def compute_rate(special_prefabs, prefab_specials, decorations, distance):
-    scored_locations = score_all_decorations(special_prefabs, prefab_specials, decorations, distance)
+def compute_rate(special_prefabs, prefab_specials, decorations, distance, debug):
+    scored_locations = score_all_decorations(special_prefabs, prefab_specials, decorations, distance, debug)
     best_location = get_best_location(scored_locations)
     scored_location = scored_locations[best_location]
     center = geometric_median(scored_location)
     return (center, scored_location)
 
-def score_all_decorations(special_prefabs, prefab_specials, decorations, distance):
+def score_all_decorations(special_prefabs, prefab_specials, decorations, distance, debug):
     diameter = distance * 2
     scored_locations = []
     locations = [xz(decoration) for decoration in decorations]
     kdtree = KDTree(locations)
     neighborhoods = kdtree.query_ball_tree(kdtree, diameter)
-
-    # TODO: extract method
-    count_per_special = count_decorations_per_special(decorations, special_prefabs.keys(), prefab_specials)
-    smallest_special = min(count_per_special.items(), key = operator.itemgetter(1))[0]
-    #print(f'{smallest_special}: {count_per_special[smallest_special]} {count_per_special}')
-    smallest_prefabs = special_prefabs[smallest_special]
-    smallest_decorations = [decoration for decoration in decorations if name(decoration) in smallest_prefabs]
-    smallest_kdtree = KDTree([xz(decoration) for decoration in smallest_decorations])
-    smallest_neighbors = smallest_kdtree.query_ball_tree(kdtree, diameter)
-    candidates = set()
-    for neighbors in smallest_neighbors:
-        candidates.update(neighbors)
-    #print(f'{len(candidates)} out of {len(decorations)}')
-
+    candidates = compute_candidates(special_prefabs, prefab_specials, decorations, kdtree, diameter, debug)
     for i, decoration in enumerate(decorations):
         if i in candidates:
             scored_location = get_decoration_max_score(special_prefabs, prefab_specials, decoration, decorations, neighborhoods[i], diameter)
@@ -100,6 +87,22 @@ def score_all_decorations(special_prefabs, prefab_specials, decorations, distanc
             scored_location = ScoredLocation(0, [])
         scored_locations.append(scored_location)
     return scored_locations
+
+def compute_candidates(special_prefabs, prefab_specials, decorations, kdtree, diameter, debug):
+    count_per_special = count_decorations_per_special(decorations, special_prefabs.keys(), prefab_specials)
+    smallest_special = min(count_per_special.items(), key = operator.itemgetter(1))[0]
+    if debug:
+        print(f'choosing neighbors of {smallest_special}: {count_per_special[smallest_special]} {count_per_special}')
+    smallest_prefabs = special_prefabs[smallest_special]
+    smallest_decorations = [decoration for decoration in decorations if name(decoration) in smallest_prefabs]
+    smallest_kdtree = KDTree([xz(decoration) for decoration in smallest_decorations])
+    smallest_neighbors = smallest_kdtree.query_ball_tree(kdtree, diameter)
+    candidates = set()
+    for neighbors in smallest_neighbors:
+        candidates.update(neighbors)
+    if debug:
+        print(f'{len(candidates)} candidates out of {len(decorations)} decorations')
+    return candidates
 
 def get_best_location(scored_locations):
     best_score = -1
