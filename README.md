@@ -88,6 +88,8 @@ This is incomplete, most likely, but:
 * XMLStarlet
 * expect
 * zip/unzip
+* Python 3
+* Python's scipy package (for rate.py, sortByRate.sh, allSorts.sh)
 
 Note that ImageMagick comes with some rather restrictive (imho) limits by default. I fixed it
 doing something someone recommended on their forums, which is commenting out the policies in
