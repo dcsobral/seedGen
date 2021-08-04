@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from collections import Counter, defaultdict, namedtuple
+from collections import defaultdict, namedtuple
 from math import acos, atan2, ceil, sqrt
 from scipy.spatial import KDTree
 from scipy.spatial.distance import cdist, euclidean
@@ -118,7 +118,7 @@ def get_best_location(scored_locations):
     return best_index
 
 def get_decoration_max_score(special_prefabs, prefab_specials, decoration, position, locations, decorations, neighbors, diameter):
-    within_range = { special: Counter({ prefab: 0 for prefab in special_prefabs[special]}) for special in special_prefabs }
+    within_range = { special: { prefab: 0 for prefab in special_prefabs[special]} for special in special_prefabs }
     special_unique_count = { special: 0 for special in special_prefabs }
     add_decoration(prefab_specials, within_range, special_unique_count, decoration)
     current_decorations = [decoration]
@@ -135,9 +135,6 @@ def get_decoration_max_score(special_prefabs, prefab_specials, decoration, posit
             remove_decoration(prefab_specials, within_range, special_unique_count, decorations[index])
             current_decorations.remove(decorations[index])
     return best_scored_location
-
-def copy_within(w):
-    return { k: v + Counter() for k, v in w.items() }
 
 def compute_score(special_unique_count):
     score = 1.0
@@ -240,7 +237,7 @@ def xz(decoration):
     return [int(pos[0]), int(pos[2])]
 
 def print_verbose(special_prefabs, prefab_specials, location):
-    within_range = { special: Counter({ prefab: 0 for prefab in special_prefabs[special]}) for special in special_prefabs }
+    within_range = { special: { prefab: 0 for prefab in special_prefabs[special]} for special in special_prefabs }
     special_unique_count = { special: 0 for special in special_prefabs }
     for decoration in location.decorations:
         add_decoration(prefab_specials, within_range, special_unique_count, decoration)
