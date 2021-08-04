@@ -86,7 +86,7 @@ def score_all_decorations(special_prefabs, prefab_specials, decorations, distanc
     candidates = compute_candidates(special_prefabs, prefab_specials, decorations, kdtree, diameter, debug)
     for i, decoration in enumerate(decorations):
         if i in candidates:
-            scored_location = get_decoration_max_score(special_prefabs, prefab_specials, decoration, decorations, neighborhoods[i], diameter)
+            scored_location = get_decoration_max_score(special_prefabs, prefab_specials, decoration, locations[i], locations, decorations, neighborhoods[i], diameter)
         else:
             scored_location = ScoredLocation(0, [])
         scored_locations.append(scored_location)
@@ -117,13 +117,13 @@ def get_best_location(scored_locations):
             best_index = i
     return best_index
 
-def get_decoration_max_score(special_prefabs, prefab_specials, decoration, decorations, neighbors, diameter):
+def get_decoration_max_score(special_prefabs, prefab_specials, decoration, position, locations, decorations, neighbors, diameter):
     within_range = { special: Counter({ prefab: 0 for prefab in special_prefabs[special]}) for special in special_prefabs }
     special_unique_count = { special: 0 for special in special_prefabs }
     add_decoration(prefab_specials, within_range, special_unique_count, decoration)
     current_decorations = [decoration]
     best_scored_location = ScoredLocation(compute_score(special_unique_count), current_decorations)
-    sweep = angular_sweep_neighbors(decoration, decorations, neighbors, diameter)
+    sweep = angular_sweep_neighbors(position, locations, neighbors, diameter)
     for angle, is_entry, index in sweep:
         if is_entry:
             add_decoration(prefab_specials, within_range, special_unique_count, decorations[index])
@@ -150,21 +150,21 @@ def add_decoration(prefab_specials, within_range, special_unique_count, decorati
     for special in prefab_specials[prefab]:
         if not within_range[special][prefab]:
             special_unique_count[special] += 1
-        within_range[special].update([prefab])
+        within_range[special][prefab] += 1
 
 def remove_decoration(prefab_specials, within_range, special_unique_count, decoration):
     prefab = name(decoration)
     for special in prefab_specials[prefab]:
-        within_range[special].subtract([prefab])
+        within_range[special][prefab] -= 1
         if not within_range[special][prefab]:
             special_unique_count[special] -= 1
 
 
-def angular_sweep_neighbors(decoration, decorations, neighbors, diameter):
-    lx, lz = xz(decoration)
+def angular_sweep_neighbors(position, locations, neighbors, diameter):
+    lx, lz = position
     angles = []
     for i in neighbors:
-        nx, nz = xz(decorations[i])
+        nx, nz = locations[i]
         neighbor_distance = sqrt((nx - lx) ** 2 + (nz - lz) ** 2)
         angle_neighbor_x_axis = atan2(nz - lz, nx - lx)
         angle_neighbor_boundary_circle_center = acos(neighbor_distance / diameter)
