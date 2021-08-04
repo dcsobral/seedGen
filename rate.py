@@ -12,7 +12,7 @@ import re
 import sys
 import xml.etree.ElementTree as ET
 
-ScoredLocation = namedtuple('ScoredLocation', ['score', 'decorations', 'within_range'])
+ScoredLocation = namedtuple('ScoredLocation', ['score', 'decorations'])
 
 DEFAULT_RADIUS = 1086
 # TODO: add weight to each special
@@ -23,11 +23,12 @@ DEFAULT_SPECIALS = [
 
 def main(args):
     special_prefabs = load_special_files(args.specials_folder, args.specials)
+    prefab_specials = invert_dict_of_lists(special_prefabs)
     prefabs_of_interest = { prefab for prefabs in special_prefabs.values() for prefab in prefabs }
     decorations = load_prefabs_xml(args.prefabs, prefabs_of_interest)
-    (center, best_location) = compute_rate(special_prefabs, decorations, args.radius)
+    (center, best_location) = compute_rate(special_prefabs, prefab_specials, decorations, args.radius)
     if args.verbose:
-        print_verbose(special_prefabs, best_location)
+        print_verbose(special_prefabs, prefab_specials, best_location)
     print_rating(center, best_location)
 
 def load_special_files(specials_folder, specials):
@@ -65,16 +66,15 @@ def load_prefabs_xml(prefabs_file, prefabs_of_interest):
 #            searched to the ones within 2r range of the ones in the special with the
 #            least amount of decorations
 
-def compute_rate(special_prefabs, decorations, distance):
-    scored_locations = score_all_decorations(special_prefabs, decorations, distance)
+def compute_rate(special_prefabs, prefab_specials, decorations, distance):
+    scored_locations = score_all_decorations(special_prefabs, prefab_specials, decorations, distance)
     best_location = get_best_location(scored_locations)
     scored_location = scored_locations[best_location]
     center = geometric_median(scored_location)
     return (center, scored_location)
 
-def score_all_decorations(special_prefabs, decorations, distance):
+def score_all_decorations(special_prefabs, prefab_specials, decorations, distance):
     diameter = distance * 2
-    prefab_specials = invert_dict_of_lists(special_prefabs)
     scored_locations = []
     locations = [xz(decoration) for decoration in decorations]
     kdtree = KDTree(locations)
@@ -97,7 +97,7 @@ def score_all_decorations(special_prefabs, decorations, distance):
         if i in candidates:
             scored_location = get_decoration_max_score(special_prefabs, prefab_specials, decoration, decorations, neighborhoods[i], diameter)
         else:
-            scored_location = ScoredLocation(0, [], {})
+            scored_location = ScoredLocation(0, [])
         scored_locations.append(scored_location)
     return scored_locations
 
@@ -114,7 +114,7 @@ def get_decoration_max_score(special_prefabs, prefab_specials, decoration, decor
     within_range = { special: Counter({ prefab: 0 for prefab in special_prefabs[special]}) for special in special_prefabs }
     add_decoration(prefab_specials, within_range, decoration)
     current_decorations = [decoration]
-    best_scored_location = ScoredLocation(compute_score(special_prefabs, within_range), current_decorations, copy_within(within_range))
+    best_scored_location = ScoredLocation(compute_score(special_prefabs, within_range), current_decorations)
     sweep = angle_sweep_neighbors(decoration, decorations, neighbors, diameter)
     for angle, is_entry, index in sweep:
         if is_entry:
@@ -125,7 +125,7 @@ def get_decoration_max_score(special_prefabs, prefab_specials, decoration, decor
             current_decorations.remove(decorations[index])
         score = compute_score(special_prefabs, within_range)
         if score > best_scored_location.score:
-            best_scored_location = ScoredLocation(score, list(current_decorations), copy_within(within_range))
+            best_scored_location = ScoredLocation(score, list(current_decorations))
     return best_scored_location
 
 def copy_within(w):
@@ -234,8 +234,10 @@ def xz(decoration):
     pos = decoration.attrib["position"].split(",")
     return [int(pos[0]), int(pos[2])]
 
-def print_verbose(special_prefabs, location):
-    within_range = location.within_range
+def print_verbose(special_prefabs, prefab_specials, location):
+    within_range = { special: Counter({ prefab: 0 for prefab in special_prefabs[special]}) for special in special_prefabs }
+    for decoration in location.decorations:
+        add_decoration(prefab_specials, within_range, decoration)
     for special in special_prefabs:
         print("%s (%d/%d):\t" %
               (special, non_zero(within_range[special]),
