@@ -22,6 +22,8 @@ DEFAULT_SPECIALS = [
 ]
 
 def main(args):
+    #bin = os.path.dirname(os.path.realpath(__file__))
+    #sys.path.append(bin)
     special_prefabs = load_special_files(args.specials_folder, args.specials)
     prefab_specials = invert_dict_of_lists(special_prefabs)
     prefabs_of_interest = { prefab for prefabs in special_prefabs.values() for prefab in prefabs }
