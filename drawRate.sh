@@ -23,7 +23,6 @@ PREFABS="${3:-${IMG%.png}.xml}"
 CENTER=$((SIZE / 2))
 
 IFS=' ' read -r score COORD RADIUS < <(${BIN}/rate.py --quiet "${PREFABS}")
-echo "$score $COORD $RADIUS"
 X="${COORD%%,*}"
 Z="${COORD##*,}"
 CX=$((CENTER + X))

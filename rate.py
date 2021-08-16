@@ -76,8 +76,24 @@ def compute_rate(special_prefabs, prefab_specials, decorations, distance, debug)
     best_location = get_best_location(scored_locations)
     scored_location = scored_locations[best_location]
     adjusted_scored_location = scored_location._replace(score = scored_location.score / special_prefabs_count)
-    center = geometric_median(adjusted_scored_location)
+    center = get_center(scored_location)
     return (center, adjusted_scored_location)
+
+def get_center(scored_location):
+    minx, minz = xz(scored_location.decorations[0])
+    maxx = minx
+    maxz = minz
+    for decoration in scored_location.decorations:
+        x, z = xz(decoration)
+        if x > maxx:
+            maxx = x
+        elif x < minx:
+            minx = x
+        if z > maxz:
+            maxz = z
+        elif z < minz:
+            minz = z
+    return (int((maxx + minx) / 2), int((maxz + minz) / 2))
 
 def score_all_decorations(special_prefabs, prefab_specials, decorations, distance, debug):
     diameter = distance * 2
@@ -206,6 +222,7 @@ def geometric_median(scored_location, eps=0.1):
 
 # https://stackoverflow.com/a/50322879/53013
 #def geometric_median(scored_location):
+#    from scipy.optimize import minimize
 #    points = [xz(decoration) for decoration in scored_location.decorations]
 #    xs = [point[0] for point in points]
 #    zs = [point[1] for point in points]
