@@ -10,7 +10,7 @@ import sys
 import xml.etree.ElementTree as ET
 
 ScoredLocation = namedtuple('ScoredLocation',
-                            ['score', 'decorations', 'center'])
+                            ['score', 'decorations', 'center', 'angle'])
 
 DEFAULT_RADIUS = 1000
 # TODO: add weight to each special
@@ -35,7 +35,10 @@ def main(args):
                                  args.radius, args.debug)
     if args.verbose:
         print_verbose(special_prefabs, prefab_specials, best_location)
-    print_rating(best_location.center, best_location, args.radius)
+    centerx = best_location.center[0] + args.radius * cos(best_location.angle)
+    centery = best_location.center[1] + args.radius * sin(best_location.angle)
+    center = (int(centerx), int(centery))
+    print_rating(center, best_location, args.radius)
 
 
 def load_special_files(specials_folder, specials):
@@ -85,9 +88,9 @@ def score_all_decorations(special_prefabs, prefab_specials, decorations,
         if i in candidates:
             scored_location = get_decoration_max_score(
                 special_prefabs, prefab_specials, decoration, locations[i],
-                locations, decorations, neighborhoods[i], distance)
+                locations, decorations, neighborhoods[i], diameter)
         else:
-            scored_location = ScoredLocation(0, [], (0, 0))
+            scored_location = ScoredLocation(0, [], (0, 0), 0)
         scored_locations.append(scored_location)
     return scored_locations
 
@@ -133,8 +136,7 @@ def get_best_location(scored_locations):
 
 def get_decoration_max_score(special_prefabs, prefab_specials, decoration,
                              position, locations, decorations, neighbors,
-                             radius):
-    diameter = radius * 2
+                             diameter):
     within_range = {
         special: {prefab: 0
                   for prefab in special_prefabs[special]}
@@ -145,7 +147,7 @@ def get_decoration_max_score(special_prefabs, prefab_specials, decoration,
                    decoration)
     current_decorations = [decoration]
     best_scored_location = ScoredLocation(compute_score(special_unique_count),
-                                          current_decorations, xz(decoration))
+                                          current_decorations, position, 0)
     sweep = angular_sweep_neighbors(position, locations, neighbors, diameter)
     for angle, is_entry, index in sweep:
         if is_entry:
@@ -154,11 +156,8 @@ def get_decoration_max_score(special_prefabs, prefab_specials, decoration,
             current_decorations.append(decorations[index])
             score = compute_score(special_unique_count)
             if score > best_scored_location.score:
-                centerx = position[0] + radius * cos(angle)
-                centery = position[1] + radius * sin(angle)
-                center = (int(centerx), int(centery))
                 best_scored_location = ScoredLocation(
-                    score, list(current_decorations), center)
+                    score, list(current_decorations), position, angle)
         else:
             remove_decoration(prefab_specials, within_range,
                               special_unique_count, decorations[index])
