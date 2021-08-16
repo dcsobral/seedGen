@@ -74,7 +74,7 @@ if grep "Generation Complete" "$LOG"; then
 	else
 		RATE_OPTS=( )
 	fi
-	RATE=$("${BIN}/rate.py" "${RATE_OPTS[@]}" --size "${SIZE}" "${WORLD}/prefabs.xml")
+	RATE=$("${BIN}/rate.py" "${RATE_OPTS[@]}" "${WORLD}/prefabs.xml")
 	echo "${RATE}"
 	RATING=$(tail -1 <<< "$RATE" | cut -d ' ' -f 1)
 	if [[ -n "${RATING_THRESHOLD-}" && "$RATING" -lt "${RATING_THRESHOLD}" ]]; then
