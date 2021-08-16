@@ -4,8 +4,8 @@ IFS=$'\t\n'
 
 : "${F7D2D:?Please export F7D2D with 7D2D install folder}"
 
-if [[ $# -ne 4 ]]; then
-        echo >&2 "$0 <image> <size> <distance> <coord>"
+if [[ $# -lt 2 || $# -gt 3 ]]; then
+        echo >&2 "$0 <image> <size> [prefabs.xml]"
         exit 1
 fi
 
@@ -19,9 +19,11 @@ BIN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 IMG="$1"
 SIZE="$2"
-RADIUS="$3"
-COORD="$4"
+PREFABS="${3:-${IMG%.png}.xml}"
 CENTER=$((SIZE / 2))
+
+IFS=' ' read -r score COORD RADIUS < <(${BIN}/rate.py --quiet "${PREFABS}")
+echo "$score $COORD $RADIUS"
 X="${COORD%%,*}"
 Z="${COORD##*,}"
 CX=$((CENTER + X))
