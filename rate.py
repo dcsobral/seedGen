@@ -31,7 +31,7 @@ def main(args):
     (center, best_location) = compute_rate(special_prefabs, prefab_specials, decorations, args.radius, args.debug)
     if args.verbose:
         print_verbose(special_prefabs, prefab_specials, best_location)
-    print_rating(center, best_location)
+    print_rating(center, best_location, args.radius)
 
 def load_special_files(specials_folder, specials):
     special_prefabs = {}
@@ -253,8 +253,8 @@ def print_verbose(special_prefabs, prefab_specials, location):
                 print("%s " % prefab, end='')
         print()
 
-def print_rating(center, best_location):
-    print(f'{int(best_location.score * 1000000)} {center[0]},{center[1]}')
+def print_rating(center, best_location, radius):
+    print(f'{int(best_location.score * 1000000)} {center[0]},{center[1]} {radius}')
 
 def parse_args(args = None, script_path = os.path.dirname(os.path.realpath(__file__))):
     specials_folder = "%s/special" % script_path
