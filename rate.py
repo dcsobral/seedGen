@@ -14,7 +14,7 @@ import xml.etree.ElementTree as ET
 
 ScoredLocation = namedtuple('ScoredLocation', ['score', 'decorations'])
 
-DEFAULT_RADIUS = 1086
+DEFAULT_RADIUS = 1000
 # TODO: add weight to each special
 # TODO: count unique vs total
 DEFAULT_SPECIALS = [
