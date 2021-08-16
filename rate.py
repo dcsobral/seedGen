@@ -249,7 +249,8 @@ def print_verbose(special_prefabs, prefab_specials, location):
                len(special_prefabs[special])),
               end='')
         for prefab in sorted(within_range[special]):
-            print("%s " % prefab, end='')
+            if within_range[special][prefab]:
+                print("%s " % prefab, end='')
         print()
 
 def print_rating(center, best_location):
