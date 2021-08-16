@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from collections import defaultdict, namedtuple
-from math import acos, atan2, ceil, sqrt
+from math import acos, atan2, ceil, cos, sin, sqrt
 from scipy.spatial import KDTree
 from scipy.spatial.distance import cdist, euclidean
 import argparse
@@ -12,7 +12,7 @@ import re
 import sys
 import xml.etree.ElementTree as ET
 
-ScoredLocation = namedtuple('ScoredLocation', ['score', 'decorations'])
+ScoredLocation = namedtuple('ScoredLocation', ['score', 'decorations', 'center'])
 
 DEFAULT_RADIUS = 1000
 # TODO: add weight to each special
@@ -28,10 +28,10 @@ def main(args):
     prefab_specials = invert_dict_of_lists(special_prefabs)
     prefabs_of_interest = { prefab for prefabs in special_prefabs.values() for prefab in prefabs }
     decorations = load_prefabs_xml(args.prefabs, prefabs_of_interest)
-    (center, best_location) = compute_rate(special_prefabs, prefab_specials, decorations, args.radius, args.debug)
+    best_location = compute_rate(special_prefabs, prefab_specials, decorations, args.radius, args.debug)
     if args.verbose:
         print_verbose(special_prefabs, prefab_specials, best_location)
-    print_rating(center, best_location, args.radius)
+    print_rating(best_location.center, best_location, args.radius)
 
 def load_special_files(specials_folder, specials):
     special_prefabs = {}
@@ -51,23 +51,6 @@ def load_prefabs_xml(prefabs_file, prefabs_of_interest):
             decorations.append(decoration)
     return decorations
 
-# all_coords = [xz(prefab) for prefab in prefabs]
-# kd = KDTree(all_cords)
-# for coord in all_cords:
-#     nn = kd.query_ball_point(coord, r)
-# traders_coords = [xz(prefab) for prefab in prefabs if prefab.attrib["name"] in special_prefabs["traders"]]
-# kdtrader = KDTree(traders_coords)
-# trader_pairs = kdtrader.query_pairs(distance)
-# prox_traders = kdtrader.query_ball_tree(kdtraders, distance)
-# prox_to_traders = kdtrader.query_ball_tree(kd, distance)
-# decorations = [special: [prefab for prefab in prefabs if prefab.attrib["name"] in special_prefabs[special]] for special in special_prefabs]
-# kdtrees = {special: KDTree([xz(decoration) for decoration in decorations[special]]) for special in decorations.keys()}
-# for nn in kdtrees["traders"].query_ball_tree(kdtrees["top15"], 1024):
-#     {kdtrees["top15"][i].attrib["name"] for i in nn}
-# Heuristic: count decorations for each special then limit the set of decorations to be
-#            searched to the ones within 2r range of the ones in the special with the
-#            least amount of decorations
-
 def compute_rate(special_prefabs, prefab_specials, decorations, distance, debug):
     special_prefabs_count = 1.0
     for prefabs in special_prefabs.values():
@@ -76,24 +59,7 @@ def compute_rate(special_prefabs, prefab_specials, decorations, distance, debug)
     best_location = get_best_location(scored_locations)
     scored_location = scored_locations[best_location]
     adjusted_scored_location = scored_location._replace(score = scored_location.score / special_prefabs_count)
-    center = get_center(scored_location)
-    return (center, adjusted_scored_location)
-
-def get_center(scored_location):
-    minx, minz = xz(scored_location.decorations[0])
-    maxx = minx
-    maxz = minz
-    for decoration in scored_location.decorations:
-        x, z = xz(decoration)
-        if x > maxx:
-            maxx = x
-        elif x < minx:
-            minx = x
-        if z > maxz:
-            maxz = z
-        elif z < minz:
-            minz = z
-    return (int((maxx + minx) / 2), int((maxz + minz) / 2))
+    return adjusted_scored_location
 
 def score_all_decorations(special_prefabs, prefab_specials, decorations, distance, debug):
     diameter = distance * 2
@@ -104,9 +70,9 @@ def score_all_decorations(special_prefabs, prefab_specials, decorations, distanc
     candidates = compute_candidates(special_prefabs, prefab_specials, decorations, kdtree, diameter, debug)
     for i, decoration in enumerate(decorations):
         if i in candidates:
-            scored_location = get_decoration_max_score(special_prefabs, prefab_specials, decoration, locations[i], locations, decorations, neighborhoods[i], diameter)
+            scored_location = get_decoration_max_score(special_prefabs, prefab_specials, decoration, locations[i], locations, decorations, neighborhoods[i], distance)
         else:
-            scored_location = ScoredLocation(0, [])
+            scored_location = ScoredLocation(0, [], (0, 0))
         scored_locations.append(scored_location)
     return scored_locations
 
@@ -135,12 +101,13 @@ def get_best_location(scored_locations):
             best_index = i
     return best_index
 
-def get_decoration_max_score(special_prefabs, prefab_specials, decoration, position, locations, decorations, neighbors, diameter):
+def get_decoration_max_score(special_prefabs, prefab_specials, decoration, position, locations, decorations, neighbors, radius):
+    diameter = radius * 2
     within_range = { special: { prefab: 0 for prefab in special_prefabs[special]} for special in special_prefabs }
     special_unique_count = { special: 0 for special in special_prefabs }
     add_decoration(prefab_specials, within_range, special_unique_count, decoration)
     current_decorations = [decoration]
-    best_scored_location = ScoredLocation(compute_score(special_unique_count), current_decorations)
+    best_scored_location = ScoredLocation(compute_score(special_unique_count), current_decorations, xz(decoration))
     sweep = angular_sweep_neighbors(position, locations, neighbors, diameter)
     for angle, is_entry, index in sweep:
         if is_entry:
@@ -148,7 +115,10 @@ def get_decoration_max_score(special_prefabs, prefab_specials, decoration, posit
             current_decorations.append(decorations[index])
             score = compute_score(special_unique_count)
             if score > best_scored_location.score:
-                best_scored_location = ScoredLocation(score, list(current_decorations))
+                centerx = position[0] + radius * cos(angle)
+                centery = position[1] + radius * sin(angle)
+                center = (int(centerx), int(centery))
+                best_scored_location = ScoredLocation(score, list(current_decorations), center)
         else:
             remove_decoration(prefab_specials, within_range, special_unique_count, decorations[index])
             current_decorations.remove(decorations[index])
@@ -189,49 +159,6 @@ def angular_sweep_neighbors(position, locations, neighbors, diameter):
         angles.append((angle_exit, 0, i))
     angles.sort()
     return angles
-
-# https://stackoverflow.com/a/30305181/53013
-def geometric_median(scored_location, eps=0.1):
-    X = np.array([xz(decoration) for decoration in scored_location.decorations])
-    y = np.mean(X, 0)
-
-    while True:
-        D = cdist(X, [y])
-        nonzeros = (D != 0)[:, 0]
-
-        Dinv = 1 / D[nonzeros]
-        Dinvs = np.sum(Dinv)
-        W = Dinv / Dinvs
-        T = np.sum(W * X[nonzeros], 0)
-
-        num_zeros = len(X) - np.sum(nonzeros)
-        if num_zeros == 0:
-            y1 = T
-        elif num_zeros == len(X):
-            return y.astype(int)
-        else:
-            R = (T - y) * Dinvs
-            r = np.linalg.norm(R)
-            rinv = 0 if r == 0 else num_zeros/r
-            y1 = max(0, 1-rinv)*T + min(1, rinv)*y
-
-        if euclidean(y, y1) < eps:
-            return y1.astype(int)
-
-        y = y1
-
-# https://stackoverflow.com/a/50322879/53013
-#def geometric_median(scored_location):
-#    from scipy.optimize import minimize
-#    points = [xz(decoration) for decoration in scored_location.decorations]
-#    xs = [point[0] for point in points]
-#    zs = [point[1] for point in points]
-#
-#    x0 = np.array([sum(xs) / len(xs), sum(zs) / len(zs)])
-#    def dist_func(x0):
-#        return sum(((np.full(len(xs), x0[0]) - xs) ** 2 + (np.full(len(xs), x0[1]) - zs) ** 2) ** 0.5)
-#    res = minimize(dist_func, x0, method='nelder-mead', options={'xtol': 1e-8, 'disp': True})
-#    return res.x.astype(int)
 
 def invert_dict_of_lists(d):
     inverted_d = defaultdict(list)
