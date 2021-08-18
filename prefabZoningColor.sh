@@ -20,18 +20,47 @@ for prefab; do
 	fi
 
         if [[ "$prefab" =~ rwg_tile* ]]; then
-		FILE="${PREFABS}/RWGTiles/${prefab}.xml"
+		case "$prefab" in
+			rwg_tile_citycenter* | rwg_tile_downtown*)
+				zones="downtown"
+				;;
+			rwg_tile_commercial*)
+				zones="commercial"
+				;;
+			rwg_tile_countryresidential* | rwg_tile_countrytown* | rwg_tile_rural*)
+				zones="residentialold"
+				;;
+			rwg_tile_residential*)
+				zones="residentialold,residentialnew"
+				;;
+			rwg_tile_ghosttown* | rwg_tile_oldwest*)
+				zones="oldwest"
+				;;
+			rwg_tile_industrial*)
+				zones="industrial"
+				;;
+			*)
+				zones="any"
+				;;
+		esac
+		if [[ -z $zones ]]; then
+			FILE="${PREFABS}/RWGTiles/${prefab}.xml"
+		fi
 	else
+		zones=""
 		FILE="${PREFABS}/POIs/${prefab}.xml"
 	fi
-	[[ -f "${FILE}" ]] || FILE="$(find "${PREFABS}" -name "${prefab}.xml" -print)"
-	zones="$(xmlstarlet sel -t -m /prefab -v "property[@name='Zoning']/@value" \
-		"${FILE}" | tr '[:upper:]' '[:lower:]' || :)"
+
+	if [[ -z "${zones}" ]]; then
+		[[ -f "${FILE}" ]] || FILE="$(find "${PREFABS}" -name "${prefab}.xml" -print)"
+		zones="$(xmlstarlet sel -t -m /prefab -v "property[@name='Zoning']/@value" \
+			"${FILE}" | tr '[:upper:]' '[:lower:]' || :)"
+	fi
 
 	if [[ $zones == *any* ]]; then
 		echo white
 		exit 0
-	elif [[ $zones == *nozone* ]]; then
+	elif [[ $zones == *nozone* || $zones == *oldwest* ]]; then
 		echo saddlebrown
 		exit 0
 	fi
