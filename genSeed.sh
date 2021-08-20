@@ -45,7 +45,7 @@ SEED="$2"
 BIN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LOG="${F7D2D}/log.txt"
 
-echo "Generating seed '$SEED' at $SIZE"
+echo "*** Generating seed '$SEED' at $SIZE"
 sleep 1 # Last chance to abort
 
 SECONDS=0
@@ -68,15 +68,20 @@ if grep "Generation Complete" "$LOG"; then
 
 	WORLD="${F7D2D}/UserData/GeneratedWorlds/$COUNTY"
 
-	echo "Rating (${RATE_OPTS:-defaults}):"
-	if [[ -v RATE_OPTS && -n "${RATE_OPTS}" ]]; then
-		IFS=' ' RATE_OPTS=( ${RATE_OPTS} )
+	if [[ -n "${RATING_THRESHOLD-}" ]]; then
+		echo "Rating (${RATE_OPTS:-defaults}):"
+		if [[ -v RATE_OPTS && -n "${RATE_OPTS}" ]]; then
+			IFS=' ' RATE_OPTS=( ${RATE_OPTS} )
+		else
+			RATE_OPTS=( )
+		fi
+		RATE=$("${BIN}/rate.py" "${RATE_OPTS[@]}" "${WORLD}/prefabs.xml")
+		echo "${RATE}"
+		RATING=$(tail -1 <<< "$RATE" | cut -d ' ' -f 1)
 	else
-		RATE_OPTS=( )
+		RATING=0
 	fi
-	RATE=$("${BIN}/rate.py" "${RATE_OPTS[@]}" "${WORLD}/prefabs.xml")
-	echo "${RATE}"
-	RATING=$(tail -1 <<< "$RATE" | cut -d ' ' -f 1)
+
 	if [[ -n "${RATING_THRESHOLD-}" && "$RATING" -lt "${RATING_THRESHOLD}" ]]; then
 		echo "Rating ${RATING} below threshold ${RATING_THRESHOLD}; skipping after $((duration / 60)) minutes and $((duration % 60)) seconds"
 	else

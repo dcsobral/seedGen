@@ -62,7 +62,8 @@ for size in "${SIZES[@]}"; do
                 SEED="$("${BIN}"/seed.sh)"
                 "${BIN}"/genSeed.sh "${ARGS[@]}" "$size" "${SEED}"
                 COUNT=$((COUNT + 1))
-                echo "World #${COUNT} for size ${size} done (time elapsed: $(ellapsed))"
+                echo "*** World #${COUNT} for size ${size} done (time elapsed: $(ellapsed))"
+		echo
         done
 done
 
