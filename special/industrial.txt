@@ -1,13 +1,9 @@
-business_burnt_01
-business_burnt_02
 business_old_08
 factory_lg_01
 factory_lg_02
 gas_station_01
 gas_station_03
 gas_station_11
-junkyard_lg_01
-junkyard_med_01
 lot_industrial_01
 lot_industrial_03
 lot_industrial_04
@@ -34,11 +30,6 @@ lot_vacant_05
 remnant_burnt_05
 remnant_burnt_06
 remnant_business_01
-remnant_gas_station_01
-remnant_industrial_01
-remnant_industrial_02
-remnant_industrial_03
-remnant_industrial_04
 remnant_waste_05
 remnant_waste_06
 remnant_waste_08

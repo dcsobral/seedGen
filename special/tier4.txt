@@ -1,9 +1,12 @@
+business_strip_old_02
 business_strip_old_03
 church_01
 downtown_building_02
 downtown_building_03
 hotel_01
+house_burnt_06
 house_modern_18
+house_old_mansard_02
 house_old_tudor_01
 house_old_victorian_03
 installation_red_mesa
