@@ -86,6 +86,7 @@ def score_all_decorations(special_prefabs, prefab_specials, decorations,
                                     decorations, kdtree, diameter, debug)
     for i, decoration in enumerate(decorations):
         if i in candidates:
+            neighborhoods[i].remove(i) # decoration isn't neighbor of itself
             scored_location = get_decoration_max_score(
                 special_prefabs, prefab_specials, decoration, locations[i],
                 locations, decorations, neighborhoods[i], diameter)
@@ -176,8 +177,11 @@ def add_decoration(prefab_specials, within_range, special_unique_count,
                    decoration):
     prefab = name(decoration)
     for special in prefab_specials[prefab]:
-        if not within_range[special][prefab]:
-            special_unique_count[special] += 1
+        if special == 'traders':
+                special_unique_count[special] += 1
+        else:
+            if not within_range[special][prefab]:
+                special_unique_count[special] += 1
         within_range[special][prefab] += 1
 
 
@@ -186,8 +190,11 @@ def remove_decoration(prefab_specials, within_range, special_unique_count,
     prefab = name(decoration)
     for special in prefab_specials[prefab]:
         within_range[special][prefab] -= 1
-        if not within_range[special][prefab]:
-            special_unique_count[special] -= 1
+        if special == 'traders':
+                special_unique_count[special] -= 1
+        else:
+            if not within_range[special][prefab]:
+                special_unique_count[special] -= 1
 
 
 def angular_sweep_neighbors(position, locations, neighbors, diameter):
@@ -244,12 +251,20 @@ def print_verbose(special_prefabs, prefab_specials, location):
         add_decoration(prefab_specials, within_range, special_unique_count,
                        decoration)
     for special in special_prefabs:
-        print("%s (%d/%d):\t" % (special, special_unique_count[special],
-                                 len(special_prefabs[special])),
-              end='')
+        if special == 'traders':
+            print('%s (%d):\t' % (special, special_unique_count[special]),
+                  end='')
+        else:
+            print('%s (%d/%d):\t' % (special, special_unique_count[special],
+                                     len(special_prefabs[special])),
+                  end='')
         for prefab in sorted(within_range[special]):
-            if within_range[special][prefab]:
-                print("%s " % prefab, end='')
+            if special == 'traders':
+                if within_range[special][prefab]:
+                    print("%s (%d)" % (prefab, within_range[special][prefab]), end='')
+            else:
+                if within_range[special][prefab]:
+                    print("%s " % prefab, end='')
         print()
 
 
