@@ -22,7 +22,13 @@ SIZE="$2"
 PREFABS="${3:-${IMG%.png}.xml}"
 CENTER=$((SIZE / 2))
 
-IFS=' ' read -r score COORD RADIUS < <(${BIN}/rate.py --quiet "${PREFABS}")
+if [[ -v RATE_OPTS && -n "${RATE_OPTS}" ]]; then
+	IFS=' ' RATE_OPTS=( ${RATE_OPTS} )
+else
+	RATE_OPTS=( )
+fi
+
+IFS=' ' read -r score COORD RADIUS < <(${BIN}/rate.py "${RATE_OPTS[@]}" --quiet "${PREFABS}")
 X="${COORD%%,*}"
 Z="${COORD##*,}"
 CX=$((CENTER + X))
