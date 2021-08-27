@@ -33,17 +33,46 @@ _special() {
 	fi
 }
 
+_prefab() {
+	IFS=$'\n'
+	COMPREPLY=( $(compgen -o dirnames -o filenames -f -X '!*.xml' -- "$2") )
+	IFS=$' \t\n'
+}
+
+_image() {
+	IFS=$'\n'
+	COMPREPLY=( $(compgen -o dirnames -o filenames -f -X '!*.png' -- "$2") )
+	IFS=$' \t\n'
+}
+
+_size() {
+	nosuffix="${1%.*}"
+	noprefix="${nosuffix##*-}"
+	if [[ "$noprefix" =~ [0-9]+ ]]; then
+		COMPREPLY=( "$noprefix" )
+	else
+		COMPREPLY=( 4096 6144 8192 10240 )
+	fi
+}
+
 _prefabThenSpecial() {
 	if [[ "${COMP_CWORD}" == "1" ]]; then
-		IFS=$'\n'
-		COMPREPLY=( $(compgen -o dirnames -o filenames -f -X '!*.xml' -- "$2") )
-		IFS=$' \t\n'
+		_prefab "$@"
 	elif [[ "${COMP_CWORD}" == "2" ]]; then
 		BIN="$(cd "$(dirname "$(type -P special.sh)")" && pwd)"
 		: "${SPECIAL_FOLDER:=${BIN}/special}"
 		IFS=$'\n'
 		COMPREPLY=( $(cd "${SPECIAL_FOLDER}" && compgen -f -X '.*' -- "$2") )
 		IFS=$' \t\n'
+	fi
+}
+
+_imageThenSize() {
+	local nosuffix noprefix
+	if [[ "${COMP_CWORD}" == "1" ]]; then
+		_image "$@"
+	elif [[ "${COMP_CWORD}" == "2" ]]; then
+		_size "${COMP_WORDS[1]}"
 	fi
 }
 
@@ -63,8 +92,10 @@ complete -F _prefabNames -o filenames showPrefab.sh
 complete -o dirnames -o filenames -f -X '!*.xml' uniquePrefabs.sh
 complete -o dirnames -o filenames -f -X '!*.zip' uz.sh
 complete -o dirnames -o filenames -f -X '!*.xml' prefabRules.sh
+complete -o dirnames -o filenames -f -X '!*.xml' rate.py
 complete -F _prefabThenSpecial missingPrefabs.sh
 complete -F _prefabThenSpecial listSpecials.sh
+complete -F _imageThenSize drawRate.sh
 complete -F _command greatest.sh
 complete -F _command tops.sh
 complete -F _special special.sh
