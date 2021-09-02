@@ -2,8 +2,8 @@
 set -euo pipefail
 IFS=$'\t\n'
 
-if [[ $# -lt 2 || $# -gt 3 ]]; then
-	echo >&2 "$0 <size> <seed> [<water_level>]"
+if [[ $# -ne 2 ]]; then
+	echo >&2 "$0 <size> <seed>"
 	exit 1
 fi
 
@@ -11,10 +11,8 @@ BIN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SIZE="${1}"
 IMGSIZE="${SIZE}x${SIZE}"
 SEED="${2}"
-LEVEL="${3:-0}"
 NAME="${SEED}-${SIZE}"
 PREVIEW="${NAME}.png"
-THRESHOLD=$((LEVEL * 256 + 128))
 
 optional() {
 	declare -n VAR="$1"
@@ -38,17 +36,17 @@ optional() {
 	splatmap.png
 
 [[ ! -f splat4map.png ]] && convert splat4.png \
-	-alpha off  -transparent black \
-	-fill '#738cce' +opaque '#00000000' \
+	-alpha off  \
+	-set colorspace Gray \
+	-channel green -separate \
 	splat4map.png
 
-[[ ! -f watermap.png && $# -eq 3 ]] && convert splat4map.png \
-	\( \
-		dtm.png \
-		-threshold $THRESHOLD \
-		-transparent black \
-	\) \
-	-composite \
+[[ ! -f watermap.png ]] && convert \
+	dtm.png \
+	splat4map.png \
+	-compose MinusSrc -composite \
+	-threshold 128 \
+	-fill '#738cce' -opaque black \
 	-transparent white \
 	watermap.png
 
@@ -59,15 +57,6 @@ optional() {
 	radiationmap.png
 
 IFS=$' \t\n' MOUNTAINS=( $( "${BIN}/drawMountains.sh" "$SIZE" ) )
-
-declare -a WATER_ARGS
-if [[ $# -eq 3 ]]; then
-	optional WATER_ARGS \
-		watermap.png \
-		-compose Over -composite
-else
-	optional WATER_ARGS
-fi
 
 if [[ -f radiationmap.png ]]; then
 	optional RADIATION_ARGS \
@@ -80,7 +69,7 @@ convert biomemap.png \
 	splatmap.png -composite \
 	"${MOUNTAINS[0]}" -compose screen -composite \
 	\( "${MOUNTAINS[1]}" -negate \) -compose multiply -composite \
-	"${WATER_ARGS[@]}" \
+	watermap.png -compose Over -composite \
 	"${RADIATION_ARGS[@]}" \
 	-depth 8 \
 	-set comment "${SEED}" \
