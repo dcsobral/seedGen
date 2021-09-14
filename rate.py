@@ -261,7 +261,7 @@ def print_verbose(special_prefabs, prefab_specials, location):
         for prefab in sorted(within_range[special]):
             if special == 'traders':
                 if within_range[special][prefab]:
-                    print("%s (%d)" % (prefab, within_range[special][prefab]), end='')
+                    print("%s (%d) " % (prefab, within_range[special][prefab]), end='')
             else:
                 if within_range[special][prefab]:
                     print("%s " % prefab, end='')
