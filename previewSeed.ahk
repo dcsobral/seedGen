@@ -139,8 +139,8 @@ else if RWGSize = Default
 
 changeOption("World Size", RWGSize, move, leftArrowX, rightArrowX, sizeArrowY)
 
-changeYesNoOption("Gen Towns", RWGTowns, leftArrowX, rightArrowX, townsArrowY)
-changeYesNoOption("Gen Wilderness", RWGWilderness, leftArrowX, rightArrowX, wildernessArrowY)
+changeNoneToManyOption("Gen Towns", RWGTowns, leftArrowX, rightArrowX, townsArrowY)
+changeNoneToManyOption("Gen Wilderness", RWGWilderness, leftArrowX, rightArrowX, wildernessArrowY)
 
 changeNoneToManyOption("Rivers", RWGRivers, leftArrowX, rightArrowX, riversArrowY)
 changeNoneToManyOption("Craters", RWGCraters, leftArrowX, rightArrowX, cratersArrowY)

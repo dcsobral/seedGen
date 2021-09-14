@@ -9,7 +9,8 @@ usage() {
 		$0 [options] <count> [{<size>}]
 
 		Options:
-		  --towns Yes | No
+		  --towns None | Few | Default | Many
+		  --wilderness None | Few | Default | Many
 		  --rivers None | Few | Default | Many
 		  --craters None | Few | Default | Many
 		  --cracks None | Few | Default | Many
@@ -26,7 +27,7 @@ declare -a ARGS
 ARGS=( )
 while [[ $# -gt 0 && $1 == -* ]]; do
         case "$1" in
-        --towns | --rivers | --craters | --cracks | --lakes | --plains | --hills | --mountains | --random)
+        --towns | --wilderness | --rivers | --craters | --cracks | --lakes | --plains | --hills | --mountains | --random)
 		ARGS=( "${ARGS[@]}" "$1" "$2" )
 		shift 2
                 ;;

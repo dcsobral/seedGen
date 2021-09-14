@@ -16,8 +16,8 @@ usage() {
 		$0 [options] <size> <seed>
 
 		Options:
-		  --towns Yes | No
-		  --wilderness Yes | No
+		  --towns None | Few | Default | Many
+		  --wilderness None | Few | Default | Many
 		  --rivers None | Few | Default | Many
 		  --craters None | Few | Default | Many
 		  --cracks None | Few | Default | Many
