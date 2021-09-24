@@ -38,7 +38,7 @@ optional() {
 [[ ! -f splat4map.png ]] && convert splat4.png \
 	-alpha off  \
 	-set colorspace Gray \
-	-channel green -separate \
+	-channel blue -separate \
 	splat4map.png
 
 [[ ! -f watermap.png ]] && convert \
