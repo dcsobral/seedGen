@@ -112,6 +112,10 @@ def compute_candidates(special_prefabs, prefab_specials, decorations, kdtree,
         decoration for decoration in decorations
         if name(decoration) in smallest_prefabs
     ]
+
+    if not len(smallest_decorations):
+        return set()
+
     smallest_kdtree = KDTree(
         [xz(decoration) for decoration in smallest_decorations])
     smallest_neighbors = smallest_kdtree.query_ball_tree(kdtree, diameter)
