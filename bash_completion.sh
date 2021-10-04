@@ -23,7 +23,7 @@ _prefabNames() {
 
 _special() {
 	if [[ "${COMP_CWORD}" == "1" ]]; then
-		BIN="$(cd "$(dirname "$(type -P special.sh)")" && pwd)"
+		BIN="$(cd "$(dirname "$(type -P withSpecial.sh)")" && pwd)"
 		: "${SPECIAL_FOLDER:=${BIN}/special}"
 		IFS=$'\n'
 		COMPREPLY=( $(cd "${SPECIAL_FOLDER}" && compgen -f -X '.*' -P '-' -- "${2#-}") )
@@ -59,7 +59,7 @@ _prefabThenSpecial() {
 	if [[ "${COMP_CWORD}" == "1" ]]; then
 		_prefab "$@"
 	elif [[ "${COMP_CWORD}" == "2" ]]; then
-		BIN="$(cd "$(dirname "$(type -P special.sh)")" && pwd)"
+		BIN="$(cd "$(dirname "$(type -P withSpecial.sh)")" && pwd)"
 		: "${SPECIAL_FOLDER:=${BIN}/special}"
 		IFS=$'\n'
 		COMPREPLY=( $(cd "${SPECIAL_FOLDER}" && compgen -f -X '.*' -- "$2") )
@@ -98,7 +98,7 @@ complete -F _prefabThenSpecial listSpecials.sh
 complete -F _imageThenSize drawRate.sh
 complete -F _command greatest.sh
 complete -F _command tops.sh
-complete -F _special special.sh
+complete -F _special withSpecial.sh
 complete -F _seedName showSeed.sh
 complete -F _seedName showBiomeDistribution.sh
 complete -F _seedName showZoningDistribution.sh

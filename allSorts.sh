@@ -6,7 +6,7 @@ getSorts() {
 	echo $'          # of Prefabs\t         # of Traders\t         Unique Prefabs\t           Rate'
 	paste \
 		<(sortByPrefabs.sh | "${BIN}/grepIt.sh" "$@")  \
-		<(special.sh -traders.txt sortByTotalSpecialPrefabs.sh | "${BIN}/grepIt.sh" "$@") \
+		<(withSpecial.sh -traders.txt sortByTotalSpecialPrefabs.sh | "${BIN}/grepIt.sh" "$@") \
 		<(sortByUniquePrefabs.sh | "${BIN}/grepIt.sh" "$@") \
 		<(sortByRate.sh | "${BIN}/grepIt.sh" "$@")
 	echo $'          # of Prefabs\t         # of Traders\t         Unique Prefabs\t           Rate'

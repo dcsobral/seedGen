@@ -35,7 +35,7 @@ the most common ones being:
   - `greatest.sh`: Highlights seeds that are first in multiple criteria (use: `greatest.sh allSpecials.sh`);
   - `tops.sh`: Highlights seeds that are first in at least one criteria (use: `tops.sh allSorts.sh`);
   - `bestSeeds.sh`: Sort top seeds by number of criteria they are top of;
-  - `special.sh`: Select special list (example: `special.sh -top5.txt allSorts.sh`);
+  - `withSpecial.sh`: Select special list (example: `withSpecial.sh -top5.txt allSorts.sh`);
 * Evaluating seed:
   - `showSeed.sh`: Opens seed preview image on windows;
   - `rate.py`: Shows best base location and prefabs around it;
@@ -57,7 +57,7 @@ Special prefabs come in many different types. By default, it includes all tier 4
 prefabs plus traders. It can be changed by setting SPECIAL to one of the included
 categories (check `special/` folder). You can point to your own separately maintained list
 of special prefabs with the `SPECIAL_FOLDER`, which is where files mentioned by `SPECIAL`
-will be looked for. One can also use `special.sh` to pick a special file to use from
+will be looked for. One can also use `withSpecial.sh` to pick a special file to use from
 the special folder, and both `listSpecials.sh` and `missingPrefabs.sh` accept an optional
 parameter with the special list to use, from the special folder.
 
