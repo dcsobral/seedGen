@@ -47,8 +47,9 @@ the most common ones being:
   - `special/special.txt`: List of prefabs deemed "interesting". Other lists can be found on
     the same folder;
 * Helpful stuff:
- - `showPrefab.sh`: displays the image preview of a prefab.
- - `bash_completion.sh`: auto-complete for these scripts;
+  - `listAllPrefabs.sh`: Lists all prefabs that may appear in a world, including parts and tiles.
+  - `showPrefab.sh`: displays the image preview of a prefab.
+  - `bash_completion.sh`: auto-complete for these scripts;
 
 There's more in here, some used by the above scripts, others used by me for more arcane
 purposes. Some, in fact, I no longer have use for at all.

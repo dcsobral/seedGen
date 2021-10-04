@@ -4,13 +4,34 @@ IFS=$'\t\n'
 
 : "${F7D2D:?Please export F7D2D with 7D2D install folder}"
 
+usage() {
+	echo >&2 "$0 [--parts] [--tiles] <prefab.xml> [<special.txt>]"
+        exit 1
+}
+
+while [[ $# -gt 0 && $1 == -* ]]; do
+        case "$1" in
+        --parts)
+                PARTS="1"
+                ;;
+        --tiles)
+                TILES="1"
+                ;;
+        *)
+                usage
+                ;;
+        esac
+        shift
+done
+
 if [[ $# -lt 1 || $# -gt 2 ]]; then
-	echo >&2 "$0 <prefab.xml> [<special.txt>]"
-	exit 1
+	usage
 fi
 
 BIN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 : "${SPECIAL_FOLDER:=${BIN}/special}"
+: "${PARTS:=}"
+: "${TILES:=}"
 
 # "SPECIAL" used differently here than the exported version used by other scripts
 if [[ $# -gt 1 && -n $2 ]]; then
@@ -32,12 +53,17 @@ findIt() {
 
 
 	mapfile -t < <( \
-		cd "${F7D2D}/Data/Prefabs/POIs" \
-		&& grep -L -E -i "zoning.*none" -- *.xml \
-		|| : \
+		"${BIN}/listAllPrefabs.sh"
 		)
-	for file in "${MAPFILE[@]}"; do
-		prefab="${file%.xml}"
+	for prefab in "${MAPFILE[@]}"; do
+		if [[ -z "$PARTS" && "$prefab" == part_* ]]; then
+			continue
+		fi
+
+		if [[ -z "$TILES" && "$prefab" == rwg_tile_* ]]; then
+			continue
+		fi
+
 		if [[ -z ${prefabs["$prefab"]+abc} ]]; then
 			echo "$prefab"
 		fi
