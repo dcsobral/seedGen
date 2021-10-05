@@ -11,7 +11,9 @@ usage() {
 		Defaults to all features and topologies with size 6144 and random seed.
 
 		Options:
-		  --features    Generate variations of all four features below
+		  --features    Generate variations of all six features below
+		  --towns
+		  --wilderness
 		  --rivers
 		  --craters
 		  --cracks
@@ -31,16 +33,18 @@ fi
 
 declare -a FEATURES=( )
 declare -a TERRAIN=( )
+# TODO: accept "reference" options to select the default to compare against
+# TODO: accept options to change the "default" settings
 while [[ $# -gt 0 && $1 == -* ]]; do
 	case "$1" in
-	--rivers | --craters | --cracks | --lakes)
+	--towns | --wilderness | --rivers | --craters | --cracks | --lakes)
 		FEATURES=( "${FEATURES[@]}" "${1:2}" )
 		;;
 	--plains | --hills | --mountains | --random)
 		TERRAIN=( "${TERRAIN[@]}" "${1:2}" )
 		;;
 	--features)
-		FEATURES=( rivers craters cracks lakes )
+		FEATURES=( towns wilderness rivers craters cracks lakes )
 		;;
 	--terrain)
 		TERRAIN=( plains hills mountains random )
@@ -106,18 +110,43 @@ genOpt() {
 	done
 }
 
+NAME="Default"
+if [[ -f "${OUTDIR}/${NAME}.zip" ]]; then
+	echo >&2 "Skipping ${NAME}"
+else
+	rm -fr "${F7D2D}/UserData"
+	SECONDS=0
+	startClient.sh "${SIZE}" "${SEED}"
+	timeIt
+
+	# shellcheck disable=SC2012
+	COUNTY=$( ls -1rt "${F7D2D}/UserData/GeneratedWorlds/" | tail -1 )
+	WORLD="${F7D2D}/UserData/GeneratedWorlds/${COUNTY}"
+	savePreview.sh --world "${WORLD}" --name "${NAME}" --output "${OUTDIR}/${NAME}.zip" \
+		"${SIZE}" "${NAME}"
+
+	TASK_LIST="$(tasklist.exe)"
+	if grep -q ^7DaysToDie.exe <<<"${TASK_LIST}"; then
+		taskkill.exe /IM "7DaysToDie.exe" /F /T
+	fi
+fi
+
 if [[ ${#FEATURES[@]} -gt 0 ]]; then
 	echo "Generating features ${FEATURES[*]}"
 	for feature in "${FEATURES[@]}"; do
 		[[ -f stop ]] && break
-		genOpt "${feature}" None Few Default Many
+		if [[ "$feature" == towns ]]; then
+			genOpt "${feature}" Few Many
+		else
+			genOpt "${feature}" None Few Many
+		fi
 	done
 fi
 
 if [[ ${#TERRAIN[@]} -gt 0 ]]; then
 	echo "Generating topologies ${TERRAIN[*]}"
 	declare -a SEQ
-	SEQ=( $( seq 1 10 ) )
+	SEQ=( $( seq 0 10 ) )
 	for topology in "${TERRAIN[@]}"; do
 		[[ -f stop ]] && break
 		genOpt "${topology}" "${SEQ[@]}"
@@ -129,13 +158,17 @@ if [[ ${#FEATURES[@]} -gt 0 && ! -f stop ]]; then
 	find . -name '*.zip' -print0 | xargs -0 -x -n1 -i unzip -u {} 'thumbs/*'
 
 	cd "${THUMBS}"
-	declare -a FILES=( )
+	declare -a FILES=( -label Default "Default-${SIZE}.png" -label '%c' )
 	for feature in "${FEATURES[@]}"; do
-		FILES=( "${FILES[@]}" "${feature}-"{None,Few,Default,Many}"-${SIZE}.png" )
+		if [[ "$feature" == towns ]]; then
+			FILES=( "${FILES[@]}" "${feature}-"{Few,Many}"-${SIZE}.png" )
+		else
+			FILES=( "${FILES[@]}" "${feature}-"{None,Few,Many}"-${SIZE}.png" )
+		fi
 	done
 	montage -geometry "+4+3" \
-		-tile 4x \
-		-pointsize 48 -label '%c' \
+		-tile 6x \
+		-pointsize 48 \
 		"${FILES[@]}" \
 		features.png
 
@@ -144,13 +177,14 @@ if [[ ${#FEATURES[@]} -gt 0 && ! -f stop ]]; then
 
 	cd "${DTM}"
 	for feature in "${FEATURES[@]}"; do
-		for level in Few Default Many; do
+		for level in None Few Many; do
 			[[ -f "${feature}-${level}-${SIZE}-diff.png" ]] && continue
+			[[ -f "${feature}-${level}-${SIZE}-dtm.png" ]] || continue
 			compare \
 				-highlight-color red \
 				-lowlight-color black \
 				-set label $level \
-				"${feature}-None-${SIZE}-dtm.png" \
+				"Default-${SIZE}-dtm.png" \
 				"${feature}-${level}-${SIZE}-dtm.png" \
 				"${feature}-${level}-${SIZE}-diff.png" \
 				|| :  # Do not fail if images are different
@@ -160,8 +194,9 @@ if [[ ${#FEATURES[@]} -gt 0 && ! -f stop ]]; then
 	cd "${THUMBS}"
 	DIM=$((SIZE / 16))
 	for feature in "${FEATURES[@]}"; do
-		for level in Few Default Many; do
-			# [[ -f "${feature}-${level}-${SIZE}-diff.png" ]] && continue
+		for level in None Few Many; do
+			[[ -f "${feature}-${level}-${SIZE}-diff.png" ]] && continue
+			[[ -f "${feature}-${level}-${SIZE}.png" ]] || continue
 			convert \
 				"${feature}-${level}-${SIZE}.png" \
 				\( \
@@ -178,13 +213,17 @@ if [[ ${#FEATURES[@]} -gt 0 && ! -f stop ]]; then
 		done
 	done
 
-	FILES=( )
+	FILES=( -label Default "Default-${SIZE}.png" -label '%c' )
 	for feature in "${FEATURES[@]}"; do
-		FILES=( "${FILES[@]}" "${feature}-None-${SIZE}.png" "${feature}-"{Few,Default,Many}"-${SIZE}-diff.png" )
+		if [[ "$feature" == towns ]]; then
+			FILES=( "${FILES[@]}" "${feature}-"{Few,Many}"-${SIZE}-diff.png" )
+		else
+			FILES=( "${FILES[@]}" "${feature}-"{None,Few,Many}"-${SIZE}-diff.png" )
+		fi
 	done
 	montage -geometry "+4+3" \
-		-tile 4x \
-		-pointsize 48 -label '%c' \
+		-tile 6x \
+		-pointsize 48 \
 		"${FILES[@]}" \
 		features-diff.png
 
