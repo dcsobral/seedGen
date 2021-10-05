@@ -113,8 +113,6 @@ timeIt "Map drawn"
 if [[ ! -f "${HERE}/nodraw" ]]; then
 	PREFABS_PREVIEW="$("${BIN}/drawPrefabs.sh" "${PREFABS}" "${PREVIEW}" "${SIZE}" "${SPAWN_FILE}")"
 	timeIt "Prefabs drawn"
-	# WATER_PREVIEW="$("${BIN}/drawWater.sh" water_info.xml "${PREFABS_PREVIEW}" "${SIZE}")"
-	# timeIt "Water drawn"
 	mv "${PREFABS_PREVIEW}" "${PREVIEW}"
 	THUMBNAIL="thumbs/${PREVIEW}"
 else
