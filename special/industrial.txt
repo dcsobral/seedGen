@@ -1,9 +1,9 @@
-business_old_08
+factory_03
 factory_lg_01
 factory_lg_02
 gas_station_01
 gas_station_03
-gas_station_11
+industrial_business_08
 lot_industrial_01
 lot_industrial_03
 lot_industrial_04
@@ -12,6 +12,7 @@ lot_industrial_06
 lot_industrial_07
 lot_industrial_08
 lot_industrial_09
+lot_industrial_10
 lot_industrial_11
 lot_industrial_12
 lot_industrial_13
