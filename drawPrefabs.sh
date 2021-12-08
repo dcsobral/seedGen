@@ -133,6 +133,8 @@ if [[ -f "$SPAWN_XML" ]]; then
 	mapfile < <(xmlstarlet sel -t -m "/spawnpoints/spawnpoint" -v "@position" -n - < "$SPAWN_XML")
 	for spawnpoint in "${MAPFILE[@]}"; do
 		IFS=',' read -r x _ y <<<"$spawnpoint"
+		x="${x%.*}"
+		y="${y%.*}"
 		x=$((x+CENTER))
 		y=$((-y+CENTER))
 		echo "circle $x,$y $((x+8)),$((y+8))" >> "${SPAWN}"
