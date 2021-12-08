@@ -75,5 +75,12 @@ convert biomemap.png \
 	-set comment "${SEED}" \
 	"${PREVIEW}"
 
+mkdir -p thumbs
+NAILSIZE="$((SIZE/16))"
+convert "${PREVIEW}" \
+        -depth 8 \
+        -resize "${NAILSIZE}x${NAILSIZE}" \
+        "thumbs/${PREVIEW}"
+
 echo "${PREVIEW}"
 

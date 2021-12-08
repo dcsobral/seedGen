@@ -108,16 +108,15 @@ cp prefabs.xml "${PREFABS}"
 cp spawnpoints.xml "${SPAWN_FILE}"
 
 PREVIEW="$("${BIN}/drawMap.sh" "${SIZE}" "${SEED}")"
+THUMBNAIL="thumbs/${PREVIEW}"
 timeIt "Map drawn"
 
 if [[ ! -f "${HERE}/nodraw" ]]; then
 	PREFABS_PREVIEW="$("${BIN}/drawPrefabs.sh" "${PREFABS}" "${PREVIEW}" "${SIZE}" "${SPAWN_FILE}")"
 	timeIt "Prefabs drawn"
 	mv "${PREFABS_PREVIEW}" "${PREVIEW}"
-	THUMBNAIL="thumbs/${PREVIEW}"
 else
-	THUMBNAIL=""
-	echo >&2 "Skipping prefab and water drawing"
+	echo >&2 "Skipping prefab drawing"
 fi
 
 echo "$COUNTY" > "${COUNTY_FILE}"

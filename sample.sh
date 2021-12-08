@@ -33,6 +33,8 @@ fi
 
 declare -a FEATURES=( )
 declare -a TERRAIN=( )
+# TODO: towns and wilderness as a different category than features
+# TODO: compare terrain and features without prefabs
 # TODO: accept "reference" options to select the default to compare against
 # TODO: accept options to change the "default" settings
 while [[ $# -gt 0 && $1 == -* ]]; do
@@ -94,7 +96,7 @@ genOpt() {
 
 		rm -fr "${F7D2D}/UserData"
 		SECONDS=0
-		startClient.sh "--${OPT_NAME}" "${opt}" "${SIZE}" "${SEED}"
+		startClient.sh "--${OPT_NAME}" "${opt}" --wilderness None "${SIZE}" "${SEED}"
 		timeIt
 
 		# shellcheck disable=SC2012
@@ -116,7 +118,7 @@ if [[ -f "${OUTDIR}/${NAME}.zip" ]]; then
 else
 	rm -fr "${F7D2D}/UserData"
 	SECONDS=0
-	startClient.sh "${SIZE}" "${SEED}"
+	startClient.sh --wilderness None "${SIZE}" "${SEED}"
 	timeIt
 
 	# shellcheck disable=SC2012
@@ -158,16 +160,16 @@ if [[ ${#FEATURES[@]} -gt 0 && ! -f stop ]]; then
 	find . -name '*.zip' -print0 | xargs -0 -x -n1 -i unzip -u {} 'thumbs/*'
 
 	cd "${THUMBS}"
-	declare -a FILES=( -label Default "Default-${SIZE}.png" -label '%c' )
+	declare -a FILES=( -label Default "Default-${SIZE}.png" -label '%c' null: null: )
 	for feature in "${FEATURES[@]}"; do
 		if [[ "$feature" == towns ]]; then
-			FILES=( "${FILES[@]}" "${feature}-"{Few,Many}"-${SIZE}.png" )
+			FILES=( "${FILES[@]}" null: "${feature}-"{Few,Many}"-${SIZE}.png" )
 		else
 			FILES=( "${FILES[@]}" "${feature}-"{None,Few,Many}"-${SIZE}.png" )
 		fi
 	done
 	montage -geometry "+4+3" \
-		-tile 6x \
+		-tile 3x \
 		-pointsize 48 \
 		"${FILES[@]}" \
 		features.png
@@ -213,16 +215,16 @@ if [[ ${#FEATURES[@]} -gt 0 && ! -f stop ]]; then
 		done
 	done
 
-	FILES=( -label Default "Default-${SIZE}.png" -label '%c' )
+	FILES=( -label Default "Default-${SIZE}.png" -label '%c' null: null: )
 	for feature in "${FEATURES[@]}"; do
 		if [[ "$feature" == towns ]]; then
-			FILES=( "${FILES[@]}" "${feature}-"{Few,Many}"-${SIZE}-diff.png" )
+			FILES=( "${FILES[@]}" null: "${feature}-"{Few,Many}"-${SIZE}-diff.png" )
 		else
 			FILES=( "${FILES[@]}" "${feature}-"{None,Few,Many}"-${SIZE}-diff.png" )
 		fi
 	done
 	montage -geometry "+4+3" \
-		-tile 6x \
+		-tile 3x \
 		-pointsize 48 \
 		"${FILES[@]}" \
 		features-diff.png
