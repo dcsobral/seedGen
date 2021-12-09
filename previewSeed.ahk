@@ -149,7 +149,7 @@ changeNoneToManyOption("Lakes", RWGLakes, leftArrowX, rightArrowX, lakesArrowY)
 
 changeZeroToTenOption("Plains Weight", 6, RWGPlains, leftArrowX, rightArrowX, plainsArrowY)
 changeZeroToTenOption("Hills Weight", 6, RWGHills, leftArrowX, rightArrowX, hillsArrowY)
-changeZeroToTenOption("Mountains Weight", 1, RWGMountains, leftArrowX, rightArrowX, mountainsArrowY)
+changeZeroToTenOption("Mountains Weight", 3, RWGMountains, leftArrowX, rightArrowX, mountainsArrowY)
 changeZeroToTenOption("Random Weight", 0, RWGRandom, leftArrowX, rightArrowX, randomArrowY)
 
 ; Start generation
