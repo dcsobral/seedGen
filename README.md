@@ -92,6 +92,12 @@ This is incomplete, most likely, but:
 * Python 3
 * Python's scipy package (for rate.py, sortByRate.sh, allSorts.sh)
 
+To make it easier to work with Python 3 you may want to switch Ubuntu to using it by default:
+
+```bash
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1
+```
+
 Note that ImageMagick comes with some rather restrictive (imho) limits by default. I fixed it
 doing something someone recommended on their forums, which is commenting out the policies in
 policy.xml (/etc/ImageMagick-6/policy.xml on Ubuntu). Like this:
