@@ -42,5 +42,18 @@ convert "${IMG}" \
 	-draw "$(printf "circle %d,%d %d,%d" $((CX)) $((CZ)) $((CX + 8)) $((CZ)))" \
 	"${OUTPUT}"
 
+if [[ -f "thumbs/${IMG}" ]]; then
+	CX=$((CX/16))
+	CZ=$((CZ/16))
+	RADIUS=$((RADIUS/16))
+	convert "thumbs/${IMG}" \
+		-fill 'rgba(255,255,255,0.2)' -stroke 'rgba(0,0,0,0.2)' -strokewidth 2 \
+		-draw "$(printf 'circle %d,%d %d,%d' $((CX)) $((CZ)) $((CX + RADIUS)) $((CZ)))" \
+		-fill Lime -stroke black -strokewidth 2 \
+		-draw "$(printf "circle %d,%d %d,%d" $((CX)) $((CZ)) $((CX + 2)) $((CZ)))" \
+		"thumbs/${OUTPUT}"
+	mv "thumbs/${OUTPUT}" "thumbs/${IMG}"
+fi
+
 echo "${OUTPUT}"
 
