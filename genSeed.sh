@@ -92,6 +92,7 @@ if grep "Generation Complete" "$LOG"; then
 			--world "${WORLD}" \
 			--name "${COUNTY}" \
 			--output "${F7D2D}/previews/${SEED}-${SIZE}.zip" \
+			${RATING_THRESHOLD:+--base} \
 			--options "${ARGS[@]}" --endoptions \
 			"${SIZE}" "${SEED}" 2>&1 | tee log.savePreview.txt
 		echo "World preview saved"

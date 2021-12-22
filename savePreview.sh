@@ -9,10 +9,11 @@ usage() {
 		$0 [options] <size> <seed>
 
 		Options:
-		  --name <world name>
-		  --world <path to world folder>
-		  --output <filename>
-		  --options [anything] --endoptions
+		  --name <name>                      World name
+		  --world <path>                     World folder
+		  --output <filename>                ZIP file destination
+		  --base                             Draws suggested base location
+		  --options [anything] --endoptions  World generation options
 	USAGE
 	exit 1
 }
@@ -32,6 +33,9 @@ while [[ $# -gt 0 && $1 == -* ]]; do
 	--output)
 		shift
 		OUTPUT="$1"
+		;;
+	--base)
+		BASE=1
 		;;
 	--options)
 		shift
@@ -56,6 +60,7 @@ fi
 : "${COUNTY:=}"
 : "${OUTPUT:=}"
 : "${WORLD:=}"
+: "${BASE:=}"
 
 BIN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SIZE="${1}"
@@ -117,6 +122,12 @@ if [[ ! -f "${HERE}/nodraw" ]]; then
 	mv "${PREFABS_PREVIEW}" "${PREVIEW}"
 else
 	echo >&2 "Skipping prefab drawing"
+fi
+
+if [[ -n $BASE ]]; then
+	BASE_PREVIEW="$("${BIN}/drawRate.sh" "${PREVIEW}" "${SIZE}" "${PREFABS}")"
+	timeIt "Suggested base location drawn"
+	mv "${BASE_PREVIEW}" "${PREVIEW}"
 fi
 
 echo "$COUNTY" > "${COUNTY_FILE}"

@@ -21,6 +21,7 @@ IMG="$1"
 SIZE="$2"
 PREFABS="${3:-${IMG%.png}.xml}"
 CENTER=$((SIZE / 2))
+OUTPUT="rate-${IMG}"
 
 if [[ -v RATE_OPTS && -n "${RATE_OPTS}" ]]; then
 	IFS=' ' RATE_OPTS=( ${RATE_OPTS} )
@@ -39,5 +40,7 @@ convert "${IMG}" \
 	-draw "$(printf 'circle %d,%d %d,%d' $((CX)) $((CZ)) $((CX + RADIUS)) $((CZ)))" \
 	-fill Lime -stroke black -strokewidth 2 \
 	-draw "$(printf "circle %d,%d %d,%d" $((CX)) $((CZ)) $((CX + 8)) $((CZ)))" \
-	"rate-${IMG}"
+	"${OUTPUT}"
+
+echo "${OUTPUT}"
 
