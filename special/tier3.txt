@@ -3,7 +3,6 @@ bank_02
 countrytown_business_03
 countrytown_business_08
 countrytown_business_09
-courthouse_med_01
 docks_03
 downtown_building_01
 downtown_filler_02
@@ -12,7 +11,10 @@ downtown_filler_11
 downtown_filler_12
 downtown_filler_22
 downtown_filler_23
+downtown_filler_24
 downtown_filler_25
+downtown_filler_27
+downtown_filler_30
 downtown_filler_31
 downtown_strip_01
 downtown_strip_04

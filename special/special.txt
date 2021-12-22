@@ -1,7 +1,9 @@
 apartment_brick_6_flr
 apartments_01
 church_01
+city_center_01
 countrytown_business_05
+courthouse_med_01
 downtown_building_02
 downtown_building_03
 downtown_strip_02
@@ -16,6 +18,7 @@ hospital_01
 hotel_01
 house_burnt_06
 house_modern_18
+house_modern_23
 house_old_mansard_02
 house_old_tudor_01
 house_old_victorian_03
