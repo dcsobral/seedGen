@@ -20,6 +20,17 @@ DEFAULT_SPECIALS = [
     "downtown"
 ]
 
+# new env variable used when piping output, defaults to 1
+DEFAULT_COLUMNS = int(os.getenv("RATE_COLUMNS", 1))
+
+# FIXME: replace with Colorama? https://stackoverflow.com/a/3332860/53013
+# FIXME: don't use if not connected to a terminal, unless overridden with flag
+# colors, perhaps these should be env options as well such as RATE_CEND, RATE_CRED, etc with defaults
+# so each user can have their own based on their shell colors???
+CEND = '\33[0m'
+CRED = '\33[31m'
+CGREEN = '\33[32m'
+
 
 def main(args):
     # bin = os.path.dirname(os.path.realpath(__file__))
@@ -34,7 +45,8 @@ def main(args):
     best_location = compute_rate(special_prefabs, prefab_specials, decorations,
                                  args.radius, args.debug)
     if args.verbose:
-        print_verbose(special_prefabs, prefab_specials, best_location)
+        print_verbose(special_prefabs, prefab_specials,
+                      best_location, args.columns)
     centerx = best_location.center[0] + args.radius * cos(best_location.angle)
     centery = best_location.center[1] + args.radius * sin(best_location.angle)
     center = (int(centerx), int(centery))
@@ -86,7 +98,7 @@ def score_all_decorations(special_prefabs, prefab_specials, decorations,
                                     decorations, kdtree, diameter, debug)
     for i, decoration in enumerate(decorations):
         if i in candidates:
-            neighborhoods[i].remove(i) # decoration isn't neighbor of itself
+            neighborhoods[i].remove(i)  # decoration isn't neighbor of itself
             scored_location = get_decoration_max_score(
                 special_prefabs, prefab_specials, decoration, locations[i],
                 locations, decorations, neighborhoods[i], diameter)
@@ -182,7 +194,7 @@ def add_decoration(prefab_specials, within_range, special_unique_count,
     prefab = name(decoration)
     for special in prefab_specials[prefab]:
         if special == 'traders':
-                special_unique_count[special] += 1
+            special_unique_count[special] += 1
         else:
             if not within_range[special][prefab]:
                 special_unique_count[special] += 1
@@ -195,7 +207,7 @@ def remove_decoration(prefab_specials, within_range, special_unique_count,
     for special in prefab_specials[prefab]:
         within_range[special][prefab] -= 1
         if special == 'traders':
-                special_unique_count[special] -= 1
+            special_unique_count[special] -= 1
         else:
             if not within_range[special][prefab]:
                 special_unique_count[special] -= 1
@@ -244,7 +256,9 @@ def xz(decoration):
     return [int(pos[0]), int(pos[2])]
 
 
-def print_verbose(special_prefabs, prefab_specials, location):
+# TODO: extract 38 into a constant here and in terminal size detection
+def print_verbose(special_prefabs, prefab_specials, location, columns):
+    row_size = 38 * columns
     within_range = {
         special: {prefab: 0
                   for prefab in special_prefabs[special]}
@@ -254,22 +268,45 @@ def print_verbose(special_prefabs, prefab_specials, location):
     for decoration in location.decorations:
         add_decoration(prefab_specials, within_range, special_unique_count,
                        decoration)
+
+    divider = "-" * row_size
+
     for special in special_prefabs:
+        print()
+
+        column_count = 0
         if special == 'traders':
-            print('%s (%d):\t' % (special, special_unique_count[special]),
-                  end='')
+            header = '%s (%d)' % (special, special_unique_count[special])
         else:
-            print('%s (%d/%d):\t' % (special, special_unique_count[special],
-                                     len(special_prefabs[special])),
-                  end='')
+            header = '%s (%d/%d)' % (special,
+                                     special_unique_count[special], len(special_prefabs[special]))
+        print(("{:^"+str(row_size)+"}").format(header))
+
+        print(divider)
+        formated_string = ""
+
         for prefab in sorted(within_range[special]):
+            #print (column_count, "     ")
             if special == 'traders':
                 if within_range[special][prefab]:
-                    print("%s (%d) " % (prefab, within_range[special][prefab]), end='')
+                    #print("%s (%d) \t" % (prefab, within_range[special][prefab]), end='')
+                    formated_string += "{:<35}".format(prefab)
             else:
                 if within_range[special][prefab]:
-                    print("%s " % prefab, end='')
-        print()
+                    exists = "x"
+                    formated_string += CGREEN + \
+                        "{:^1}  {:<35}".format(exists, prefab) + CEND
+                else:
+                    exists = ""
+                    formated_string += CRED + \
+                        "{:^1}  {:<35}".format(exists, prefab) + CEND
+                column_count += 1
+
+                if column_count % columns == 0 and column_count != 0:
+                    print(formated_string)
+                    formated_string = ""
+
+        print(formated_string)
 
 
 def print_rating(center, best_location, radius):
@@ -279,7 +316,8 @@ def print_rating(center, best_location, radius):
 
 
 def parse_args(args=None,
-               script_path=os.path.dirname(os.path.realpath(__file__))):
+               script_path=os.path.dirname(os.path.realpath(__file__)),
+               default_columns=6):
     specials_folder = "%s/special" % script_path
     parser = argparse.ArgumentParser(description="Rate best base location")
     parser.add_argument("--specials",
@@ -309,6 +347,10 @@ def parse_args(args=None,
     parser.add_argument("--debug",
                         action='store_true',
                         help='print debugging information')
+    parser.add_argument("--columns",
+                        type=int,
+                        default=default_columns,
+                        help='number of columns when listing prefabs')
     parser.add_argument("prefabs")
     args = parser.parse_args(args)
     if args.print_defaults:
@@ -318,4 +360,10 @@ def parse_args(args=None,
 
 
 if __name__ == '__main__':
-    main(parse_args(sys.argv[1:]))
+    # Check if connected to a terminal
+    if sys.stdout.isatty():
+        columns = int(os.get_terminal_size().columns / 38)
+    else:
+        columns = DEFAULT_COLUMNS
+
+    main(parse_args(sys.argv[1:], default_columns=columns))
