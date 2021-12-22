@@ -3,7 +3,6 @@ bank_02
 countrytown_business_03
 countrytown_business_08
 countrytown_business_09
-docks_03
 downtown_building_01
 downtown_filler_02
 downtown_filler_06
