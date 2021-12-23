@@ -1,0 +1,7 @@
+* text=auto
+*.ahk text
+*.md text
+*.py text
+*.sh text eol=lf
+*.png binary
+*.jpg binary
