@@ -9,11 +9,6 @@ if [[ $# -lt 2 || $# -gt 3 ]]; then
         exit 1
 fi
 
-coordsFor() {
-        WIDTH="${DIM%%,*}"
-        HEIGHT="${DIM##*,}"
-}
-
 PREFABS="${F7D2D}/Data/Prefabs"
 BIN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -29,7 +24,9 @@ else
 	RATE_OPTS=( )
 fi
 
-IFS=' ' read -r score COORD RADIUS < <(${BIN}/rate.py "${RATE_OPTS[@]}" --quiet "${PREFABS}")
+# Unused variables left for readability
+# shellcheck disable=SC2034
+IFS=' ' read -r _score COORD RADIUS < <("${BIN}/rate.py" "${RATE_OPTS[@]}" --quiet "${PREFABS}")
 X="${COORD%%,*}"
 Z="${COORD##*,}"
 CX=$((CENTER + X))

@@ -85,11 +85,13 @@ for decoration in "${MAPFILE[@]}"; do
 		x_offset=$((-WIDTH / 2))
 		z_offset=$((-HEIGHT / 2))
 		tl="$((X1 - x_offset)),$((Z1 - z_offset))"
-		echo "push graphic-context" >> "${DRAW}"
-		echo "translate ${tl}" >> "${DRAW}"
-		echo "rotate $(((4 - rotation) % 4 * 90))" >> "${DRAW}"
-		echo "image over ${x_offset},${z_offset} ${dim} '${PREFAB_PREVIEW}'" >> "${DRAW}"
-		echo "pop graphic-context" >> "${DRAW}"
+		{
+			echo "push graphic-context"
+			echo "translate ${tl}"
+			echo "rotate $(((4 - rotation) % 4 * 90))"
+			echo "image over ${x_offset},${z_offset} ${dim} '${PREFAB_PREVIEW}'"
+			echo "pop graphic-context"
+		} >> "${DRAW}"
 	else
 		PREFAB_PREVIEW="${PREFABS}/POIs/${prefab}.jpg"
 		if [[ ! -f "${PREFAB_PREVIEW}" ]]; then
@@ -122,10 +124,12 @@ for m in $(seq $((-Ms)) $((Ms))); do
 	P=$((m * 512 + CENTER))
 	echo "path 'M 0,$P L $SIZE,$P'" >> "${GRID}"
 	echo "path 'M $P,0 L $P,$SIZE'" >> "${GRID}"
-	printf "text %d,%d '%4d'" 4 $((P - 8)) $((-m * 512)) >> "${COORDS}"
-	printf "text %d,%d '%4d'" $((SIZE - 264)) $((P - 8)) $((-m * 512)) >> "${COORDS}"
-	printf "text %d,%d '%4d'" $((P + 8)) $((SIZE - 8)) $((m * 512)) >> "${COORDS}"
-	printf "text %d,%d '%4d'" $((P + 8)) 72 $((m * 512)) >> "${COORDS}"
+	{
+		printf "text %d,%d '%4d'" 4 $((P - 8)) $((-m * 512))
+		printf "text %d,%d '%4d'" $((SIZE - 264)) $((P - 8)) $((-m * 512))
+		printf "text %d,%d '%4d'" $((P + 8)) $((SIZE - 8)) $((m * 512))
+		printf "text %d,%d '%4d'" $((P + 8)) 72 $((m * 512))
+	} >> "${COORDS}"
 done
 
 echo "stroke-width 1 fill red" > "${SPAWN}"

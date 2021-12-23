@@ -10,7 +10,7 @@ if [[ $# -ne 3 ]]; then
 fi
 
 coordsFor() {
-        declare -g tl br bl dim max_size
+        declare -g tl br bl dim
         declare COORDS DIM ROT
         COORDS="$1"
         DIM="$2"
@@ -34,11 +34,12 @@ coordsFor() {
         br="${X2},${Z2}"
 	bl="${X1},${Z2}"
         dim="${WIDTH},${HEIGHT}"
-	if [[ $WIDTH -ge $HEIGHT ]]; then
-		max_size="${WIDTH}"
-	else
-		max_size="${HEIGHT}"
-	fi
+#	declare -g max_size
+#	if [[ $WIDTH -ge $HEIGHT ]]; then
+#		max_size="${WIDTH}"
+#	else
+#		max_size="${HEIGHT}"
+#	fi
 }
 
 PREFABS="${F7D2D}/Data/Prefabs/POIs"
