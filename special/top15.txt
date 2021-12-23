@@ -1,4 +1,6 @@
+church_01
 house_construction_01
+house_modern_05
 house_modern_14
 house_modern_18
 house_modern_23
@@ -11,5 +13,3 @@ store_book_02
 store_gun_01
 store_gun_02
 store_hardware_01
-store_hardware_02
-store_hardware_03
