@@ -271,7 +271,7 @@ def print_verbose(special_prefabs, prefab_specials, location, columns):
 
     divider = "-" * row_size
 
-    for special in special_prefabs:
+    for special in sorted(special_prefabs):
         print()
 
         column_count = 0
@@ -286,20 +286,21 @@ def print_verbose(special_prefabs, prefab_specials, location, columns):
         formated_string = ""
 
         for prefab in sorted(within_range[special]):
-            #print (column_count, "     ")
             if special == 'traders':
+                trader_count = within_range[special][prefab]
                 if within_range[special][prefab]:
-                    #print("%s (%d) \t" % (prefab, within_range[special][prefab]), end='')
-                    formated_string += "{:<35}".format(prefab)
+                    formated_string += CGREEN
+                else:
+                    formated_string += CRED
+                formated_string += "{:>1}  {:<35}".format(trader_count, prefab) + CEND
             else:
                 if within_range[special][prefab]:
                     exists = "x"
-                    formated_string += CGREEN + \
-                        "{:^1}  {:<35}".format(exists, prefab) + CEND
+                    formated_string += CGREEN
                 else:
                     exists = ""
-                    formated_string += CRED + \
-                        "{:^1}  {:<35}".format(exists, prefab) + CEND
+                    formated_string += CRED
+                formated_string += "{:^1}  {:<35}".format(exists, prefab) + CEND
                 column_count += 1
 
                 if column_count % columns == 0 and column_count != 0:
