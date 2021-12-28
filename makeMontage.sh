@@ -27,9 +27,9 @@ for SIZE; do (
 
 	#shellcheck disable=SC2012
 	COUNT="$(ls thumbs | wc -l || echo 0)"
-	if [[ $COUNT -gt 121 ]]; then
+	if [[ $COUNT -gt 20 ]]; then
 		echo "Generating multiple montages"
-		TILING=( "-tile" "10x10" )
+		TILING=( "-tile" "5x4" )
 	else
 		TILING=( )
 	fi
