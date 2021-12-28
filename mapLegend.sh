@@ -11,10 +11,12 @@ montage -title 'Map Preview Legend' -pointsize 16 \
 	-label D/R xc:teal \
 	-label D/C xc:slategray \
 	-label Downtown xc:gray \
-	-label "Residential Old" xc:green \
 	-label "Residential New" xc:chartreuse \
+	-label "Residential Old" xc:green \
 	-label Commercial xc:blue \
 	-label Industrial xc:yellow \
+	-label Rural xc:olivedrab \
+	-label "Country Town" xc:sandybrown \
 	-label "Spawn Location" xc:red \
 	-label Wasteland 'xc:#949442' \
 	-label 'Burnt Forest' 'xc:#393931' \
