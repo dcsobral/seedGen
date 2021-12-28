@@ -46,7 +46,7 @@ if [[ -f "thumbs/${IMG}" ]]; then
 	convert "thumbs/${IMG}" \
 		-fill 'rgba(255,255,255,0.2)' -stroke 'rgba(0,0,0,0.2)' -strokewidth 2 \
 		-draw "$(printf 'circle %d,%d %d,%d' $((CX)) $((CZ)) $((CX + RADIUS)) $((CZ)))" \
-		-fill Lime -stroke black -strokewidth 2 \
+		-fill Lime -stroke black -strokewidth 1 \
 		-draw "$(printf "circle %d,%d %d,%d" $((CX)) $((CZ)) $((CX + 2)) $((CZ)))" \
 		"thumbs/${OUTPUT}"
 	mv "thumbs/${OUTPUT}" "thumbs/${IMG}"

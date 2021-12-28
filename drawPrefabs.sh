@@ -56,6 +56,7 @@ DRAW="draw-${NAME}.txt"
 ZONING="zoning-${NAME}.txt"
 THUMB="thumb-${NAME}.txt"
 SPAWN="spawn-${NAME}.txt"
+SPAWNT="spawn-thumb-${NAME}.txt"
 GRID="grid-${NAME}.txt"
 COORDS="coords-${NAME}.txt"
 PREVIEW="prefabs-${IMG}"
@@ -133,6 +134,7 @@ for m in $(seq $((-Ms)) $((Ms))); do
 done
 
 echo "stroke-width 1 fill red" > "${SPAWN}"
+echo "stroke-width 2 fill red" > "${SPAWNT}"
 if [[ -f "$SPAWN_XML" ]]; then
 	mapfile < <(xmlstarlet sel -t -m "/spawnpoints/spawnpoint" -v "@position" -n - < "$SPAWN_XML")
 	for spawnpoint in "${MAPFILE[@]}"; do
@@ -142,6 +144,7 @@ if [[ -f "$SPAWN_XML" ]]; then
 		x=$((x+CENTER))
 		y=$((-y+CENTER))
 		echo "circle $x,$y $((x+8)),$((y+8))" >> "${SPAWN}"
+		echo "circle $x,$y $((x+32)),$((y+32))" >> "${SPAWNT}"
 	done
 fi
 
@@ -158,7 +161,7 @@ mkdir -p thumbs
 NAILSIZE="$((SIZE/16))"
 convert "${IMG}" \
 	-draw "@${THUMB}" \
-	-draw "@${SPAWN}" \
+	-draw "@${SPAWNT}" \
 	-depth 8 \
 	-resize "${NAILSIZE}x${NAILSIZE}" \
 	"thumbs/${IMG}"
