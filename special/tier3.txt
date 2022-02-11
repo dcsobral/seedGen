@@ -1,5 +1,6 @@
 army_barracks_01
 bank_02
+bombshelter_02
 countrytown_business_03
 countrytown_business_08
 countrytown_business_09

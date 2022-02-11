@@ -37,6 +37,7 @@ downtown_filler_plaza_04
 downtown_filler_plaza_05
 downtown_strip_01
 downtown_strip_02
+downtown_strip_03
 downtown_strip_04
 downtown_strip_05
 downtown_strip_07
@@ -58,6 +59,7 @@ remnant_downtown_filler_07
 remnant_downtown_filler_08
 remnant_downtown_filler_11
 remnant_downtown_filler_12
+remnant_downtown_filler_14
 remnant_downtown_filler_15
 remnant_downtown_filler_16
 remnant_downtown_filler_17

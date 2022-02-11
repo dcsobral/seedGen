@@ -7,6 +7,7 @@ courthouse_med_01
 downtown_building_02
 downtown_building_03
 downtown_strip_02
+downtown_strip_03
 downtown_strip_05
 downtown_strip_07
 downtown_strip_11
