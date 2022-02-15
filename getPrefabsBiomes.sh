@@ -77,9 +77,9 @@ for decoration in "${MAPFILE[@]}"; do
         coordsFor "${coords}" "${dim}" "${rotation}"
 
 	if [[ -n ${REVERSE["${bl}"]+abc} ]]; then
-		REVERSE["${bl}"]="${REVERSE["${bl}"]} ${coords}"
+		REVERSE["${bl}"]="${REVERSE["${bl}"]}${coords}"$'\n'
 	else
-		REVERSE["${bl}"]="${coords}"
+		REVERSE["${bl}"]="${coords}"$'\n'
 	fi
 
 	echo "point ${bl}" >> "${MASK}"
@@ -124,7 +124,7 @@ for coords_and_color in "${COLORS[@]}"; do
 	esac
 
 	if [[ -n $biome ]]; then
-		mapfile -d ' ' -t coords <<<"${REVERSE["$x,$z"]}"
+		mapfile -t coords <<<"${REVERSE["$x,$z"]}"
 		for coord in "${coords[@]}"; do
 			xmlstarlet ed -P -L \
 				--append "/prefabs/decoration[@position='$coord']" \
