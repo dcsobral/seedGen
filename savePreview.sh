@@ -34,6 +34,10 @@ while [[ $# -gt 0 && $1 == -* ]]; do
 		shift
 		OUTPUT="$1"
 		;;
+	--rating)
+		shift
+		RATING="$1"
+		;;
 	--base)
 		BASE=1
 		;;
@@ -61,6 +65,7 @@ fi
 : "${OUTPUT:=}"
 : "${WORLD:=}"
 : "${BASE:=}"
+: "${RATING:=}"
 
 BIN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SIZE="${1}"
@@ -110,6 +115,9 @@ echo >&2 "Saving preview for '${COUNTY}'"
 
 cd "${WORLD}"
 cp prefabs.xml "${PREFABS}"
+if [[ -n $RATING ]]; then
+	xmlstarlet ed -P -L --append /prefabs --type attr -n rating -v "${RATING}" "${PREFABS}"
+fi
 cp spawnpoints.xml "${SPAWN_FILE}"
 
 PREVIEW="$("${BIN}/drawMap.sh" "${SIZE}" "${SEED}")"

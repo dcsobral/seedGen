@@ -69,19 +69,15 @@ if grep "Generation Complete" "$LOG"; then
 
 	WORLD="${F7D2D}/UserData/GeneratedWorlds/$COUNTY"
 
-	if [[ -n "${RATING_THRESHOLD-}" ]]; then
-		echo "Rating (${RATE_OPTS:-defaults}):"
-		if [[ -v RATE_OPTS && -n "${RATE_OPTS}" ]]; then
-			IFS=' ' RATE_OPTS=( ${RATE_OPTS} )
-		else
-			RATE_OPTS=( )
-		fi
-		RATE=$("${BIN}/rate.py" "${RATE_OPTS[@]}" "${WORLD}/prefabs.xml")
-		echo "${RATE}"
-		RATING=$(tail -1 <<< "$RATE" | cut -d ' ' -f 1)
+	echo "Rating (${RATE_OPTS:-defaults}):"
+	if [[ -v RATE_OPTS && -n "${RATE_OPTS}" ]]; then
+		IFS=' ' RATE_OPTS=( ${RATE_OPTS} )
 	else
-		RATING=0
+		RATE_OPTS=( )
 	fi
+	RATE=$("${BIN}/rate.py" "${RATE_OPTS[@]}" "${WORLD}/prefabs.xml")
+	echo "${RATE}"
+	RATING=$(tail -1 <<< "$RATE" | cut -d ' ' -f 1)
 
 	if [[ -n "${RATING_THRESHOLD-}" && "$RATING" -lt "${RATING_THRESHOLD}" ]]; then
 		echo "Rating ${RATING} below threshold ${RATING_THRESHOLD}; skipping after $((duration / 60)) minutes and $((duration % 60)) seconds"
@@ -92,6 +88,7 @@ if grep "Generation Complete" "$LOG"; then
 			--world "${WORLD}" \
 			--name "${COUNTY}" \
 			--output "${F7D2D}/previews/${SEED}-${SIZE}.zip" \
+			--rating "${RATING}" \
 			${RATING_THRESHOLD:+--base} \
 			--options "${ARGS[@]}" --endoptions \
 			"${SIZE}" "${SEED}" 2>&1 | tee log.savePreview.txt
