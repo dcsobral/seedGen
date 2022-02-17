@@ -26,7 +26,7 @@ fi
 
 # Unused variables left for readability
 # shellcheck disable=SC2034
-IFS=' ' read -r _score COORD RADIUS < <("${BIN}/rate.py" "${RATE_OPTS[@]}" --quiet "${PREFABS}")
+IFS=' ' read -r _score COORD RADIUS < <("${BIN}/rate.py" --quiet "${RATE_OPTS[@]}" "${PREFABS}")
 X="${COORD%%,*}"
 Z="${COORD##*,}"
 CX=$((CENTER + X))
