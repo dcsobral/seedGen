@@ -127,7 +127,7 @@ for coords_and_color in "${COLORS[@]}"; do
 		mapfile -t coords <<<"${REVERSE["$x,$z"]}"
 		for coord in "${coords[@]}"; do
 			xmlstarlet ed -P -L \
-				--append "/prefabs/decoration[@position='$coord']" \
+				--append "/prefabs/decoration[@position='$coord'][not(@biome)][1]" \
 				--type attr -n biome -v "${biome}" \
 				"${XML}"
 		done
