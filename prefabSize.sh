@@ -14,7 +14,7 @@ readValues() {
 	file="$1"
 	offset="$2"
 	length="$3"
-	xxd -c1 -p "-l${3:-1}" -s "$offset" "$file"
+	xxd -c1 -p "-l${3:-1}" -s "$offset" "$file" || (echo 2>&1 "Missing $file"; exit 1)
 }
 
 toUint16() {
