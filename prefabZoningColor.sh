@@ -27,6 +27,10 @@ hasZone() {
 for prefab; do
 	zones=()
 
+	if [[ $prefab =~ trader* ]]; then
+		zones+=(trader)
+	fi
+
 	if [[ $prefab == *field* ]]; then
 		zones+=(crop)
 	fi
