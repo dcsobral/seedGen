@@ -6,6 +6,8 @@ courthouse_med_01
 downtown_building_01
 downtown_building_02
 downtown_building_03
+downtown_building_04
+downtown_building_05
 downtown_business_06
 downtown_business_07
 downtown_filler_01
@@ -35,6 +37,7 @@ downtown_filler_plaza_02
 downtown_filler_plaza_03
 downtown_filler_plaza_04
 downtown_filler_plaza_05
+downtown_parking_lot_01
 downtown_strip_01
 downtown_strip_02
 downtown_strip_03
@@ -44,9 +47,12 @@ downtown_strip_07
 downtown_strip_09
 downtown_strip_10
 downtown_strip_11
-hospital_01
+downtown_strip_12
+hotel_ostrich
 large_park_01
+large_park_02
 lot_downtown_filler_01
+office_06
 parking_garage_01
 parking_garage_02
 parking_garage_03
@@ -55,8 +61,11 @@ remnant_business_04
 remnant_church_01
 remnant_downtown_filler_01
 remnant_downtown_filler_02
+remnant_downtown_filler_03
+remnant_downtown_filler_06
 remnant_downtown_filler_07
 remnant_downtown_filler_08
+remnant_downtown_filler_09
 remnant_downtown_filler_11
 remnant_downtown_filler_12
 remnant_downtown_filler_14
@@ -65,6 +74,7 @@ remnant_downtown_filler_16
 remnant_downtown_filler_17
 remnant_downtown_filler_18
 remnant_skyscraper_01
+remnant_waste_19
 rubble_downtown_filler_01
 rubble_downtown_filler_02
 rubble_downtown_filler_03

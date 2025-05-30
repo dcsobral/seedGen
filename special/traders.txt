@@ -1,5 +1,1 @@
-trader_bob
-trader_hugh
-trader_jen
-trader_joel
-trader_rekt
+

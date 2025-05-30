@@ -1,9 +1,12 @@
+country_junkyard_02
+factory_01
+factory_02
 factory_03
-factory_lg_01
-factory_lg_02
+fire_station_02
 gas_station_01
 gas_station_03
 industrial_business_08
+junkyard_01
 lot_industrial_01
 lot_industrial_03
 lot_industrial_04
@@ -28,6 +31,9 @@ lot_vacant_02
 lot_vacant_03
 lot_vacant_04
 lot_vacant_05
+parking_lot_01
+parking_lot_02
+parking_lot_03
 remnant_burnt_05
 remnant_burnt_06
 remnant_business_01
@@ -35,9 +41,11 @@ remnant_waste_05
 remnant_waste_06
 remnant_waste_08
 remnant_waste_15
+trader_bob
 utility_celltower_01
 utility_celltower_02
 utility_electric_co_01
+utility_electric_co_02
 utility_refinery_01
 utility_waterworks_01
 warehouse_01
@@ -47,3 +55,4 @@ warehouse_04
 warehouse_05
 warehouse_06
 warehouse_07
+warehouse_08
